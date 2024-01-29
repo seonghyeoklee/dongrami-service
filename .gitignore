@@ -1,0 +1,53 @@
+# IntelliJ
+.idea/
+
+# Compiled class file
+*.class
+
+# Log files
+*.log
+
+# Compiled files
+bin/
+out/
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# Dependency directories
+target/
+node_modules/
+bower_components/
+
+# macOS
+.DS_Store
+
+# Thumbnails
+._*
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Eclipse
+.settings/
+.metadata/
+
+# Gradle
+.gradle/
+build/
+
+# Visual Studio Code
+.vscode/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+.env
+
+db
