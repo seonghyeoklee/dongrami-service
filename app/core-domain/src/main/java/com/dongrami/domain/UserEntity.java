@@ -30,9 +30,6 @@ public class UserEntity {
     @Column(length = 512, unique = true)
     private String email;
 
-    @Column(length = 1)
-    private String emailVerifiedYn;
-
     @Setter
     @Column(length = 512)
     private String profileImageUrl;
@@ -49,7 +46,6 @@ public class UserEntity {
             String userId,
             String username,
             String email,
-            String emailVerifiedYn,
             String profileImageUrl,
             ProviderType providerType,
             RoleType roleType
@@ -58,7 +54,6 @@ public class UserEntity {
         this.username = username;
         this.password = "NO_PASS";
         this.email = email != null ? email : "NO_EMAIL";
-        this.emailVerifiedYn = emailVerifiedYn;
         this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
         this.providerType = providerType;
         this.roleType = roleType;
