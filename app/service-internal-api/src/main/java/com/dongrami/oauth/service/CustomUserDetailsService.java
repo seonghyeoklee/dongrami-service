@@ -1,8 +1,8 @@
 package com.dongrami.oauth.service;
 
-import com.dongrami.domain.UserEntity;
 import com.dongrami.oauth.info.UserPrincipal;
-import com.dongrami.repository.UserRepository;
+import com.dongrami.user.domain.UserEntity;
+import com.dongrami.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,9 +1,9 @@
 package com.dongrami.oauth.info;
 
-import com.dongrami.domain.ProviderType;
 import com.dongrami.oauth.info.impl.GoogleOAuth2UserInfo;
 import com.dongrami.oauth.info.impl.KakaoOAuth2UserInfo;
 import com.dongrami.oauth.info.impl.NaverOAuth2UserInfo;
+import com.dongrami.user.domain.ProviderType;
 
 import java.util.Map;
 

@@ -1,6 +1,6 @@
-package com.dongrami.repository;
+package com.dongrami.user.repository;
 
-import com.dongrami.domain.UserRefreshTokenEntity;
+import com.dongrami.user.domain.UserRefreshTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

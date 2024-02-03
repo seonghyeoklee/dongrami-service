@@ -1,7 +1,7 @@
 package com.dongrami.user.ui;
 
-import com.dongrami.domain.UserEntity;
 import com.dongrami.user.application.UserService;
+import com.dongrami.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;

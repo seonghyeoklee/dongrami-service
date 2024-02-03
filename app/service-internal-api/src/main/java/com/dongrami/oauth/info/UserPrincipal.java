@@ -1,8 +1,8 @@
 package com.dongrami.oauth.info;
 
-import com.dongrami.domain.ProviderType;
-import com.dongrami.domain.RoleType;
-import com.dongrami.domain.UserEntity;
+import com.dongrami.user.domain.ProviderType;
+import com.dongrami.user.domain.RoleType;
+import com.dongrami.user.domain.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

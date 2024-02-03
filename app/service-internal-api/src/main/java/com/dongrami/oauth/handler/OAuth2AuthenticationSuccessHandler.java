@@ -1,15 +1,15 @@
 package com.dongrami.oauth.handler;
 
 import com.dongrami.config.properties.AppProperties;
-import com.dongrami.domain.ProviderType;
-import com.dongrami.domain.RoleType;
-import com.dongrami.domain.UserRefreshTokenEntity;
 import com.dongrami.oauth.info.OAuth2UserInfo;
 import com.dongrami.oauth.info.OAuth2UserInfoFactory;
 import com.dongrami.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.dongrami.oauth.token.AuthToken;
 import com.dongrami.oauth.token.AuthTokenProvider;
-import com.dongrami.repository.UserRefreshTokenRepository;
+import com.dongrami.user.domain.ProviderType;
+import com.dongrami.user.domain.RoleType;
+import com.dongrami.user.domain.UserRefreshTokenEntity;
+import com.dongrami.user.repository.UserRefreshTokenRepository;
 import com.dongrami.utils.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
