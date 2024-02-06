@@ -40,4 +40,11 @@ public class TodoEntity extends BaseTimeEntity {
         this.todoStatus = todoStatus;
         this.alarmDateTime = alarmDateTime;
     }
+
+    public void update(String title, String content, TodoStatus todoStatus, LocalDateTime alarmDateTime) {
+        this.title = title;
+        this.content = content;
+        this.todoStatus = todoStatus;
+        this.alarmDateTime = alarmDateTime;
+    }
 }

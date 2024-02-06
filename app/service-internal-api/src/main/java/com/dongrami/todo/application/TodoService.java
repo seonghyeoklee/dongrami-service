@@ -1,14 +1,16 @@
 package com.dongrami.todo.application;
 
 import com.dongrami.todo.domain.TodoEntity;
-import com.dongrami.todo.dto.request.RequestTodoDto;
+import com.dongrami.todo.dto.request.RequestCreateTodoDto;
+import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
 import com.dongrami.todo.repository.TodoRepository;
+import com.dongrami.todo.repository.support.TodoSearchDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -16,12 +18,20 @@ import java.util.List;
 public class TodoService {
     private final TodoRepository todoRepository;
 
-    public void createTodo(RequestTodoDto requestTodoDto) {
-        todoRepository.save(requestTodoDto.toEntity());
+    public void createTodo(RequestCreateTodoDto requestCreateTodoDto) {
+        todoRepository.save(requestCreateTodoDto.toEntity());
     }
 
-    public void updateTodo(Long id) {
+    public void updateTodo(Long id, RequestUpdateTodoDto requestUpdateTodoDto) {
+        TodoEntity todoEntity = todoRepository.findById(id)
+                .orElseThrow();
 
+        todoEntity.update(
+                requestUpdateTodoDto.getTitle(),
+                requestUpdateTodoDto.getContent(),
+                requestUpdateTodoDto.getTodoStatus(),
+                requestUpdateTodoDto.getAlarmDateTime()
+        );
     }
 
     public void deleteTodo(Long id) {
@@ -29,7 +39,7 @@ public class TodoService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseTodoDto getTodo(Long id) {
+    public ResponseTodoDto getTodoById(Long id) {
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow();
 
@@ -37,8 +47,11 @@ public class TodoService {
     }
 
     @Transactional(readOnly = true)
-    public List<RequestTodoDto> getTodoList() {
+    public Page<ResponseTodoDto> getTodoPageBySearch(Pageable pageable, TodoSearchDto todoSearchDto) {
+        Page<TodoEntity> todoRepositoryBySearch = todoRepository.findBySearch(pageable, todoSearchDto);
 
-        return null;
+        return todoRepositoryBySearch
+                .map(ResponseTodoDto::from);
     }
+
 }
