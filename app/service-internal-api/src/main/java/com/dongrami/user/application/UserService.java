@@ -13,6 +13,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserEntity getUser(String userId) {
-        return userRepository.findByUserId(userId);
+        return userRepository.findByUserUniqueId(userId);
     }
 }

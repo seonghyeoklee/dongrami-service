@@ -34,7 +34,6 @@ public class ResponseTodoDto {
                 .title(todoEntity.getTitle())
                 .content(todoEntity.getContent())
                 .todoStatus(todoEntity.getTodoStatus())
-                .alarmDateTime(todoEntity.getAlarmDateTime())
                 .createdDateTime(todoEntity.getCreatedDateTime())
                 .updatedDateTime(todoEntity.getUpdatedDateTime())
                 .build();

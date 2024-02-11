@@ -29,8 +29,7 @@ public class TodoService {
         todoEntity.update(
                 requestUpdateTodoDto.getTitle(),
                 requestUpdateTodoDto.getContent(),
-                requestUpdateTodoDto.getTodoStatus(),
-                requestUpdateTodoDto.getAlarmDateTime()
+                requestUpdateTodoDto.getTodoStatus()
         );
     }
 
