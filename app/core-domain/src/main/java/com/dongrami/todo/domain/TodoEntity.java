@@ -1,18 +1,18 @@
 package com.dongrami.todo.domain;
 
 import com.dongrami.common.BaseTimeEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.dongrami.user.domain.UserEntity;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
 @Table(name = "todo")
+@Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class TodoEntity extends BaseTimeEntity {
 
     @Id
@@ -31,6 +31,10 @@ public class TodoEntity extends BaseTimeEntity {
 
     @Column
     private LocalDateTime alarmDateTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
     @Builder
     public TodoEntity(Long id, String title, String content, TodoStatus todoStatus, LocalDateTime alarmDateTime) {

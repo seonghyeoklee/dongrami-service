@@ -17,8 +17,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -61,8 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private UserEntity createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-        LocalDateTime now = LocalDateTime.now();
-        UserEntity user = new UserEntity(
+        UserEntity userEntity = UserEntity.createUser(
                 userInfo.getId(),
                 userInfo.getName(),
                 userInfo.getEmail(),
@@ -72,7 +69,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 RoleType.USER
         );
 
-        return userRepository.saveAndFlush(user);
+        return userRepository.saveAndFlush(userEntity);
     }
 
     private UserEntity updateUser(UserEntity user, OAuth2UserInfo userInfo) {

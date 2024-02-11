@@ -1,17 +1,19 @@
 package com.dongrami.user.domain;
 
 import com.dongrami.common.BaseTimeEntity;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.dongrami.todo.domain.TodoEntity;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Getter
 @Table(name = "user")
+@Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class UserEntity extends BaseTimeEntity {
 
     @Id
@@ -46,7 +48,34 @@ public class UserEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
-    public UserEntity(
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_group_id")
+    private UserGroupEntity userGroupEntity;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<TodoEntity> todoEntities = new ArrayList<>();
+
+    public static UserEntity createUser(
+            String userId,
+            String username,
+            String email,
+            String emailVerifiedYn,
+            String profileImageUrl,
+            ProviderType providerType,
+            RoleType roleType
+    ) {
+        return new UserEntity(
+                userId,
+                username,
+                email,
+                emailVerifiedYn,
+                profileImageUrl,
+                providerType,
+                roleType
+        );
+    }
+
+    private UserEntity(
             String userId,
             String username,
             String email,
