@@ -6,22 +6,34 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class ApiResponse<T> {
     private int status;
-    private String message;
     private String error;
+    private String message;
     private T data;
 
-    public ApiResponse(T data) {
-        this.status = HttpStatus.OK.value();
-        this.message = "요청이 정상 처리되었습니다.";
+    public ApiResponse(HttpStatus httpStatus, T data) {
+        this.status = httpStatus.value();
         this.error = null;
+        this.message = null;
+        this.data = data;
+    }
+
+    public ApiResponse(HttpStatus httpStatus, String error, String message, T data) {
+        this.status = httpStatus.value();
+        this.error = error;
+        this.message = message;
         this.data = data;
     }
 
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(data);
+        return new ApiResponse<>(HttpStatus.OK, data);
     }
 
     public static <T> ApiResponse<T> success() {
-        return new ApiResponse<>(null);
+        return new ApiResponse<>(HttpStatus.OK, null);
     }
+
+    public static <T> ApiResponse<T> error(String error, String message, T data) {
+        return new ApiResponse<>(HttpStatus.BAD_REQUEST, error, message, data);
+    }
+
 }

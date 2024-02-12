@@ -1,6 +1,7 @@
 package com.dongrami.todo.domain;
 
 import com.dongrami.common.BaseTimeEntity;
+import com.dongrami.emoji.domain.EmojiEntity;
 import com.dongrami.user.domain.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -21,8 +22,9 @@ public class TodoEmojiEntity extends BaseTimeEntity {
     private Long id;
 
     @Comment("이모지")
-    @Column(length = 64, nullable = false)
-    private String emoji;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emoji_id", foreignKey = @ForeignKey(name = "fk_todo_emoji_emoji"))
+    private EmojiEntity emojiEntity;
 
     @Comment("이모지 누른 사용자")
     @ManyToOne(fetch = FetchType.LAZY)

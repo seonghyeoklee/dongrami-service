@@ -8,7 +8,6 @@ import com.dongrami.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.dongrami.oauth.handler.TokenAccessDeniedHandler;
 import com.dongrami.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.dongrami.oauth.service.CustomOAuth2UserService;
-import com.dongrami.oauth.service.CustomUserDetailsService;
 import com.dongrami.oauth.token.AuthTokenProvider;
 import com.dongrami.user.repository.UserRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,6 @@ public class SecurityConfig {
 
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
-    private final CustomUserDetailsService userDetailsService;
     private final CustomOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
@@ -37,6 +35,8 @@ public class SecurityConfig {
     private static final String[] PERMIT_URL = {
             "/health/port",
             "/actuator/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
             "/api/v1/auth/login"
     };
 
