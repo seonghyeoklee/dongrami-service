@@ -1,13 +1,13 @@
 package com.dongrami.oauth.service;
 
-import com.dongrami.domain.ProviderType;
-import com.dongrami.domain.RoleType;
-import com.dongrami.domain.UserEntity;
 import com.dongrami.oauth.exception.OAuthProviderMissMatchException;
 import com.dongrami.oauth.info.OAuth2UserInfo;
 import com.dongrami.oauth.info.OAuth2UserInfoFactory;
 import com.dongrami.oauth.info.UserPrincipal;
-import com.dongrami.repository.UserRepository;
+import com.dongrami.user.domain.ProviderType;
+import com.dongrami.user.domain.RoleType;
+import com.dongrami.user.domain.UserEntity;
+import com.dongrami.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
