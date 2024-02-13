@@ -1,8 +1,8 @@
 package com.dongrami.oauth.service;
 
-import com.dongrami.domain.UserEntity;
 import com.dongrami.oauth.info.UserPrincipal;
-import com.dongrami.repository.UserRepository;
+import com.dongrami.user.domain.UserEntity;
+import com.dongrami.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUserId(username);
+        UserEntity user = userRepository.findByUserUniqueId(username);
         if (user == null) {
             throw new UsernameNotFoundException("Can not find username.");
         }

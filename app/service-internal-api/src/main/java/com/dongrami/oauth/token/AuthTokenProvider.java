@@ -1,7 +1,7 @@
 package com.dongrami.oauth.token;
 
-import com.dongrami.domain.RoleType;
 import com.dongrami.oauth.exception.TokenValidFailedException;
+import com.dongrami.user.domain.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;

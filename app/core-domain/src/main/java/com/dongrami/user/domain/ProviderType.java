@@ -1,4 +1,4 @@
-package com.dongrami.domain;
+package com.dongrami.user.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

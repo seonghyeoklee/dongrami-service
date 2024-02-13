@@ -1,7 +1,6 @@
 package com.dongrami.config.security;
 
 import com.dongrami.config.properties.AppProperties;
-import com.dongrami.domain.RoleType;
 import com.dongrami.oauth.exception.RestAuthenticationEntryPoint;
 import com.dongrami.oauth.filter.TokenAuthenticationFilter;
 import com.dongrami.oauth.handler.OAuth2AuthenticationFailureHandler;
@@ -9,9 +8,8 @@ import com.dongrami.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.dongrami.oauth.handler.TokenAccessDeniedHandler;
 import com.dongrami.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.dongrami.oauth.service.CustomOAuth2UserService;
-import com.dongrami.oauth.service.CustomUserDetailsService;
 import com.dongrami.oauth.token.AuthTokenProvider;
-import com.dongrami.repository.UserRefreshTokenRepository;
+import com.dongrami.user.repository.UserRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +28,6 @@ public class SecurityConfig {
 
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
-    private final CustomUserDetailsService userDetailsService;
     private final CustomOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
@@ -38,6 +35,8 @@ public class SecurityConfig {
     private static final String[] PERMIT_URL = {
             "/health/port",
             "/actuator/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
             "/api/v1/auth/login"
     };
 
@@ -67,10 +66,10 @@ public class SecurityConfig {
                 .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers(PERMIT_URL).permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
-                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+                .antMatchers(PERMIT_URL).permitAll()
+//                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()

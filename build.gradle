@@ -38,6 +38,7 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-mail'
         implementation 'org.springframework.boot:spring-boot-starter-test'
         implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
+        implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 
         annotationProcessor 'org.projectlombok:lombok'
         compileOnly 'org.projectlombok:lombok'

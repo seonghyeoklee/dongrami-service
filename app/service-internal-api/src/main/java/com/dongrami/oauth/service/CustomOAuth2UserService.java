@@ -40,7 +40,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        UserEntity savedUser = userRepository.findByUserId(userInfo.getId());
+        UserEntity savedUser = userRepository.findByUserUniqueId(userInfo.getId());
 
         if (savedUser != null) {
             if (providerType != savedUser.getProviderType()) {
@@ -58,19 +58,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private UserEntity createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-        UserEntity user = new UserEntity(
+        UserEntity userEntity = UserEntity.createUser(
                 userInfo.getId(),
                 userInfo.getName(),
                 userInfo.getEmail(),
+                "Y",
                 userInfo.getImageUrl(),
                 providerType,
                 RoleType.USER
         );
 
-        return userRepository.saveAndFlush(user);
+        return userRepository.saveAndFlush(userEntity);
     }
 
-    private void updateUser(UserEntity user, OAuth2UserInfo userInfo) {
+    private UserEntity updateUser(UserEntity user, OAuth2UserInfo userInfo) {
         if (userInfo.getName() != null && !user.getUsername().equals(userInfo.getName())) {
             user.setUsername(userInfo.getName());
         }
@@ -78,5 +79,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (userInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(userInfo.getImageUrl())) {
             user.setProfileImageUrl(userInfo.getImageUrl());
         }
+
+        return user;
     }
 }

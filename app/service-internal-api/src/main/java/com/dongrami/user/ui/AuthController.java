@@ -1,12 +1,12 @@
 package com.dongrami.user.ui;
 
 import com.dongrami.config.properties.AppProperties;
-import com.dongrami.domain.RoleType;
-import com.dongrami.domain.UserRefreshTokenEntity;
 import com.dongrami.oauth.token.AuthToken;
 import com.dongrami.oauth.token.AuthTokenProvider;
-import com.dongrami.repository.UserRefreshTokenRepository;
+import com.dongrami.user.domain.RoleType;
+import com.dongrami.user.domain.UserRefreshTokenEntity;
 import com.dongrami.user.dto.request.AuthReqModel;
+import com.dongrami.user.repository.UserRefreshTokenRepository;
 import com.dongrami.utils.CookieUtil;
 import com.dongrami.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;

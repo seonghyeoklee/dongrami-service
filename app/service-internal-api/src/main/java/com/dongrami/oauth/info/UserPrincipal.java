@@ -1,8 +1,8 @@
 package com.dongrami.oauth.info;
 
-import com.dongrami.domain.ProviderType;
-import com.dongrami.domain.RoleType;
-import com.dongrami.domain.UserEntity;
+import com.dongrami.user.domain.ProviderType;
+import com.dongrami.user.domain.RoleType;
+import com.dongrami.user.domain.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -88,7 +88,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
     public static UserPrincipal create(UserEntity user) {
         return new UserPrincipal(
-                user.getUserId(),
+                user.getUserUniqueId(),
                 user.getPassword(),
                 user.getProviderType(),
                 RoleType.USER,
