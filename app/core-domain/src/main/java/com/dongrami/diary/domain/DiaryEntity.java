@@ -36,6 +36,10 @@ public class DiaryEntity extends BaseTimeEntity {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_diary_user"))
     private UserEntity userEntity;
 
+    @Comment("일기 공개 여부")
+    @Column
+    private boolean isPublic;
+
     @OneToMany(mappedBy = "diaryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DiaryFileEntity> diaryFileEntities = new ArrayList<>();
 
