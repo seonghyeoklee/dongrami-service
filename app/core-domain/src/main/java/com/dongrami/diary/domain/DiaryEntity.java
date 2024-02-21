@@ -1,6 +1,7 @@
 package com.dongrami.diary.domain;
 
 import com.dongrami.common.BaseTimeEntity;
+import com.dongrami.tag.domain.TagEntity;
 import com.dongrami.user.domain.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -37,5 +38,8 @@ public class DiaryEntity extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "diaryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DiaryFileEntity> diaryFileEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "diaryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TagEntity> tagEntities = new ArrayList<>();
 
 }

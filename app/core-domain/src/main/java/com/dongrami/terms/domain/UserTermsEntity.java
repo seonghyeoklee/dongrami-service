@@ -1,7 +1,6 @@
-package com.dongrami.setting.domain;
+package com.dongrami.terms.domain;
 
 import com.dongrami.common.BaseTimeEntity;
-import com.dongrami.terms.domain.TermsEntity;
 import com.dongrami.user.domain.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -34,5 +33,9 @@ public class UserTermsEntity extends BaseTimeEntity {
     @Comment("동의 여부")
     @Column
     private boolean isAgreed;
+
+    @Comment("동의 만료 기한")
+    @Column
+    private boolean isExpired;
 
 }
