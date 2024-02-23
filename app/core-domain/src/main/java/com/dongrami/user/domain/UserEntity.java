@@ -68,6 +68,9 @@ public class UserEntity extends BaseTimeEntity {
     @Column(length = 512)
     private String blockReason;
 
+    @Embedded
+    private PartnerCode partnerCode;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_group_id", foreignKey = @ForeignKey(name = "fk_user_user_group"))
     private UserGroupEntity userGroupEntity;
