@@ -6,6 +6,8 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,19 @@ public class TodoEntity extends BaseTimeEntity {
     @Comment("할일 삭제여부")
     @Column
     private boolean isDeleted;
+
+    @Comment("할일 시작 날짜")
+    @Column
+    private LocalDateTime startDateTime;
+
+    @Comment("할일 종료 날짜")
+    @Column
+    private LocalDateTime endDateTime;
+
+    @Comment("할일 제외 날짜")
+    @Column
+    @Convert(converter = LocalDateListConverter.class)
+    private List<LocalDate> excludedDates;
 
     @OneToMany(mappedBy = "todoEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TodoEmojiEntity> todoEmojiEntities = new ArrayList<>();
