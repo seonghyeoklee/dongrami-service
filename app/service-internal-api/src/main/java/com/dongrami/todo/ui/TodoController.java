@@ -5,6 +5,7 @@ import com.dongrami.todo.application.TodoReadService;
 import com.dongrami.todo.application.TodoWriteService;
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
+import com.dongrami.todo.dto.response.ResponseTodoAchievementRateDto;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
 import com.dongrami.todo.repository.support.TodoSearchDto;
 import lombok.RequiredArgsConstructor;
@@ -82,7 +83,7 @@ public class TodoController implements TodoControllerInterface {
         double achievementRate = todoReadService.getTodoAchievementRate(principal.getUsername(), LocalDate.now());
 
         return ResponseEntity.ok().body(
-                ApiResponse.success(achievementRate)
+                ApiResponse.success(ResponseTodoAchievementRateDto.from(achievementRate))
         );
     }
 

@@ -30,9 +30,22 @@ class TodoControllerTest extends AcceptanceTest {
                 .when().post("/api/v1/todos")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .assertThat().body("data.content", equalTo("test content!"))
-                .assertThat().body("data.memmo", equalTo("test memo!"))
-                .assertThat().body("data.todoStatus", equalTo("TODO"));
+                .body("data.content", equalTo("test content!"))
+                .body("data.memo", equalTo("test memo!"))
+                .body("data.todoStatus", equalTo("TODO"));
+    }
+
+    @DisplayName("사용자의 하루동안 달성률을 조회한다.")
+    @Test
+    void getTodoAchievementRate() {
+        createTodo();
+
+        given().log().all()
+                .auth().oauth2("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTA4MDQ5MzU3NzE4NDMzNTYwOTQiLCJyb2xlIjoiUk9MRV9VU0VSIn0.LPAlvZel7i79nDad3NvmpphUHv1Pmr5A_tgXNriwYTQ")
+                .when().get("/api/v1/todos/achievement-rate")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("data.achievementRate", equalTo("0.0"));
     }
 
 }

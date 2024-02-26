@@ -1,6 +1,9 @@
 package com.dongrami;
 
+import com.dongrami.todo.repository.TodoNotificationRepository;
+import com.dongrami.todo.repository.TodoRepository;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,15 +22,24 @@ public class AcceptanceTest {
     @Autowired
     protected MockMvc mockMvc;
 
+    @Autowired
+    private TodoRepository todoRepository;
+
+    @Autowired
+    private TodoNotificationRepository todoNotificationRepository;
+
     @LocalServerPort
     int port;
 
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
+    }
 
-        // token 생성
-
+    @AfterEach
+    void afterEach() {
+        todoNotificationRepository.deleteAllInBatch();
+        todoRepository.deleteAllInBatch();
     }
 
 }
