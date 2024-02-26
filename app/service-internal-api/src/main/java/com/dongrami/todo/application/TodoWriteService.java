@@ -22,10 +22,10 @@ public class TodoWriteService {
     private final UserService userService;
     private final TodoRepository todoRepository;
 
-    public ResponseTodoDto createTodo(String username, RequestCreateTodoDto request) {
+    public ResponseTodoDto createTodo(String userUniqueId, RequestCreateTodoDto request) {
 
         // 1. 사용자 조회
-        UserEntity userEntity = userService.getUser(username);
+        UserEntity userEntity = userService.getUser(userUniqueId);
 
         // 2-1 알림이 존재하지 않는 경우
         if(request.getNotificationTime() == null) {

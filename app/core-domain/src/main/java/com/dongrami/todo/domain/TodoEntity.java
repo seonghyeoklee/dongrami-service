@@ -70,4 +70,8 @@ public class TodoEntity extends BaseTimeEntity {
         todoNotificationEntity.setTodoEntity(this);
     }
 
+    public boolean isCompleted() {
+        return this.todoStatus.isCompleted();
+    }
+
 }

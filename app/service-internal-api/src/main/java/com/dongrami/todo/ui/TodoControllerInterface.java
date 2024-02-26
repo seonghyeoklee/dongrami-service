@@ -1,6 +1,5 @@
 package com.dongrami.todo.ui;
 
-import com.dongrami.todo.dto.request.RequestCreateTodoDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
 import com.dongrami.todo.repository.support.TodoSearchDto;
@@ -13,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -41,14 +38,14 @@ public interface TodoControllerInterface {
     )
     ResponseEntity<?> getTodoById(@PathVariable Long id);
 
-    @Operation(
-            summary = "Todo 생성",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "성공",
-                            content = @Content(schema = @Schema(implementation = ResponseTodoDto.class))),
-            }
-    )
-    ResponseEntity<?> createTodo(@AuthenticationPrincipal User principal, @Valid @RequestBody RequestCreateTodoDto requestCreateTodoDto);
+//    @Operation(
+//            summary = "Todo 생성",
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "성공",
+//                            content = @Content(schema = @Schema(implementation = ResponseTodoDto.class))),
+//            }
+//    )
+//    ResponseEntity<?> createTodo(@AuthenticationPrincipal UserPrincipal principal, @Valid @RequestBody RequestCreateTodoDto requestCreateTodoDto);
 
     @Operation(
             summary = "Todo 수정",

@@ -1,6 +1,7 @@
 package com.dongrami.todo.repository.support;
 
 import com.dongrami.todo.domain.TodoEntity;
+import com.dongrami.user.domain.UserEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -12,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.dongrami.todo.domain.QTodoEntity.todoEntity;
 
@@ -42,6 +46,17 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
         sort(pageable, query);
 
         return new PageImpl<>(query.fetch(), pageable, totalCount);
+    }
+
+    @Override
+    public List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(UserEntity userEntity, LocalDateTime from, LocalDateTime to) {
+        return queryFactory.selectFrom(todoEntity)
+                .where(
+                        todoEntity.userEntity.eq(userEntity)
+                                .and(todoEntity.createdDateTime.between(from, to))
+                                .and(todoEntity.isDeleted.eq(false))
+                )
+                .fetch();
     }
 
     /**

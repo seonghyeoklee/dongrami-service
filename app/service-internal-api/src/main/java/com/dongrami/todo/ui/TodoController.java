@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -73,6 +74,15 @@ public class TodoController implements TodoControllerInterface {
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()
+        );
+    }
+
+    @GetMapping("/todos/achievement-rate")
+    public ResponseEntity<?> getTodoAchievementRate(@AuthenticationPrincipal User principal) {
+        double achievementRate = todoReadService.getTodoAchievementRate(principal.getUsername(), LocalDate.now());
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success(achievementRate)
         );
     }
 

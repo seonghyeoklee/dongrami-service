@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserEntity getUser(String userId) {
-        return userRepository.findByUserUniqueId(userId);
+    public UserEntity getUser(String userUniqueId) {
+        return userRepository.findByUserUniqueId(userUniqueId);
     }
 }
