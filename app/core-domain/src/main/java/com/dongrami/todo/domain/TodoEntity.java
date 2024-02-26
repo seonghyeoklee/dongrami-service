@@ -6,10 +6,6 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "todo")
@@ -24,13 +20,13 @@ public class TodoEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Comment("할일 제목")
-    @Column(length = 256, nullable = false)
-    private String title;
-
     @Comment("할일 내용")
-    @Column(length = 1000, nullable = false)
+    @Column(length = 512, nullable = false)
     private String content;
+
+    @Comment("할일 메모")
+    @Column(length = 512)
+    private String memo;
 
     @Comment("할일 상태")
     @Column(length = 20, nullable = false)
@@ -46,37 +42,32 @@ public class TodoEntity extends BaseTimeEntity {
     @Column
     private boolean isDeleted;
 
-    @Comment("할일 시작 날짜")
-    @Column
-    private LocalDateTime startDateTime;
+    @Embedded
+    private TodoEmojiEntities todoEmojiEntities;
 
-    @Comment("할일 종료 날짜")
-    @Column
-    private LocalDateTime endDateTime;
+    @Embedded
+    private TodoNotificationEntities todoNotificationEntities;
 
-    @Comment("할일 제외 날짜")
-    @Column
-    @Convert(converter = LocalDateListConverter.class)
-    private List<LocalDate> excludedDates;
+    public static TodoEntity create(String content, String memo, TodoStatus todoStatus, UserEntity userEntity) {
+        return TodoEntity.builder()
+                .content(content)
+                .memo(memo)
+                .todoStatus(todoStatus)
+                .userEntity(userEntity)
+                .isDeleted(false)
+                .todoEmojiEntities(new TodoEmojiEntities())
+                .todoNotificationEntities(new TodoNotificationEntities())
+                .build();
+    }
 
-    @OneToMany(mappedBy = "todoEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TodoEmojiEntity> todoEmojiEntities = new ArrayList<>();
-
-    @OneToMany(mappedBy = "todoEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TodoNotificationEntity> todoNotificationEntities = new ArrayList<>();
-
-    @Builder
-    public TodoEntity(Long id, String title, String content, TodoStatus todoStatus) {
-        this.id = id;
-        this.title = title;
+    public void update(String content, TodoStatus todoStatus) {
         this.content = content;
         this.todoStatus = todoStatus;
     }
 
-    public void update(String title, String content, TodoStatus todoStatus) {
-        this.title = title;
-        this.content = content;
-        this.todoStatus = todoStatus;
+    public void addTodoNotification(TodoNotificationEntity todoNotificationEntity) {
+        this.todoNotificationEntities.add(todoNotificationEntity);
+        todoNotificationEntity.setTodoEntity(this);
     }
 
 }
