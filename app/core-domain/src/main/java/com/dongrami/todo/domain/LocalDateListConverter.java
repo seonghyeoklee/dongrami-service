@@ -14,6 +14,10 @@ public class LocalDateListConverter implements AttributeConverter<List<LocalDate
 
     @Override
     public String convertToDatabaseColumn(List<LocalDate> attribute) {
+        if (attribute == null || attribute.isEmpty()) {
+            return "";
+        }
+
         return attribute.stream()
                 .map(LocalDate::toString)
                 .collect(Collectors.joining(SPLIT_CHAR));
@@ -21,6 +25,10 @@ public class LocalDateListConverter implements AttributeConverter<List<LocalDate
 
     @Override
     public List<LocalDate> convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.isEmpty()) {
+            return List.of();
+        }
+
         return Arrays.stream(dbData.split(SPLIT_CHAR))
                 .map(LocalDate::parse)
                 .collect(Collectors.toList());

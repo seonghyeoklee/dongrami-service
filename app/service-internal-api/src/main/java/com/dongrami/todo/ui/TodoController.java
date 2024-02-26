@@ -1,7 +1,8 @@
 package com.dongrami.todo.ui;
 
 import com.dongrami.common.ApiResponse;
-import com.dongrami.todo.application.TodoService;
+import com.dongrami.todo.application.TodoReadService;
+import com.dongrami.todo.application.TodoWriteService;
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,15 +22,16 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class TodoController {
-    private final TodoService todoService;
+public class TodoController implements TodoControllerInterface {
+    private final TodoWriteService todoWriteService;
+    private final TodoReadService todoReadService;
 
     @GetMapping("/todos")
     public ResponseEntity<?> getTodoPage(
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
             TodoSearchDto todoSearchDto
     ) {
-        Page<ResponseTodoDto> responses = todoService.getTodoPageBySearch(pageable, todoSearchDto);
+        Page<ResponseTodoDto> responses = todoReadService.getTodoPageBySearch(pageable, todoSearchDto);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(responses)
@@ -36,7 +40,7 @@ public class TodoController {
 
     @GetMapping("/todos/{id}")
     public ResponseEntity<?> getTodoById(@PathVariable Long id) {
-        ResponseTodoDto response = todoService.getTodoById(id);
+        ResponseTodoDto response = todoReadService.getTodoById(id);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(response)
@@ -44,17 +48,19 @@ public class TodoController {
     }
 
     @PostMapping("/todos")
-    public ResponseEntity<?> createTodo(@Valid @RequestBody RequestCreateTodoDto requestCreateTodoDto) {
-        todoService.createTodo(requestCreateTodoDto);
+    public ResponseEntity<?> createTodo(@AuthenticationPrincipal User principal,
+                                        @Valid @RequestBody RequestCreateTodoDto requestCreateTodoDto
+    ) {
+        ResponseTodoDto response = todoWriteService.createTodo(principal.getUsername(), requestCreateTodoDto);
 
         return ResponseEntity.ok().body(
-                ApiResponse.success()
+                ApiResponse.success(response)
         );
     }
 
     @PutMapping("/todos/{id}")
     public ResponseEntity<?> updateTodo(@PathVariable Long id, @Valid @RequestBody RequestUpdateTodoDto requestUpdateTodoDto) {
-        todoService.updateTodo(id, requestUpdateTodoDto);
+        todoWriteService.updateTodo(id, requestUpdateTodoDto);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()
@@ -63,7 +69,7 @@ public class TodoController {
 
     @DeleteMapping("/todos/{id}")
     public ResponseEntity<?> deleteTodo(@PathVariable Long id) {
-        todoService.deleteTodo(id);
+        todoWriteService.deleteTodo(id);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()

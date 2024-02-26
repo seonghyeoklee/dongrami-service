@@ -1,29 +1,24 @@
 package com.dongrami.todo.dto.request;
 
-import com.dongrami.todo.domain.TodoEntity;
-import com.dongrami.todo.domain.TodoStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.time.LocalTime;
 
 @Data
 public class RequestCreateTodoDto {
 
-    @NotBlank(message = "제목을 입력해주세요.")
-    private String title;
-
+    @Schema(description = "할일 내용", example = "코딩")
     @NotBlank(message = "내용을 입력해주세요.")
     private String content;
 
-    @NotNull(message = "상태를 입력해주세요.")
-    private TodoStatus todoStatus;
+    @Schema(description = "할일 메모", example = "코딩하기")
+    private String memo;
 
-    public TodoEntity toEntity() {
-        return TodoEntity.builder()
-                .title(title)
-                .content(content)
-                .todoStatus(todoStatus)
-                .build();
-    }
+    @Schema(description = "할일 알림", example = "22:10:30")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime notificationTime;
+
 }
