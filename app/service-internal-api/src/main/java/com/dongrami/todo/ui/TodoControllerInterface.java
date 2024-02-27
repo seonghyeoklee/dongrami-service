@@ -66,4 +66,20 @@ public interface TodoControllerInterface {
     )
     ResponseEntity<?> deleteTodo(@PathVariable Long id);
 
+    @Operation(
+            summary = "Todo 달성률 조회",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> getTodoAchievementRate(@AuthenticationPrincipal User principal);
+
+    @Operation(
+            summary = "저장된 Todo",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> getTodoRemember(@AuthenticationPrincipal User principal);
+
 }

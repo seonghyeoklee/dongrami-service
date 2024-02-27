@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -84,6 +85,15 @@ public class TodoController implements TodoControllerInterface {
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(ResponseTodoAchievementRateDto.from(achievementRate))
+        );
+    }
+
+    @GetMapping("/todos/remember")
+    public ResponseEntity<?> getTodoRemember(@AuthenticationPrincipal User principal) {
+        List<ResponseTodoDto> responses = todoReadService.getTodoRemember(principal.getUsername());
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success(responses)
         );
     }
 

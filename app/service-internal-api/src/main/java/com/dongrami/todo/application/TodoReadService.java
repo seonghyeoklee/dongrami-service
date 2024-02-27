@@ -1,7 +1,9 @@
 package com.dongrami.todo.application;
 
 import com.dongrami.todo.domain.TodoEntity;
+import com.dongrami.todo.domain.TodoRememberEntity;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
+import com.dongrami.todo.repository.TodoRememberRepository;
 import com.dongrami.todo.repository.TodoRepository;
 import com.dongrami.todo.repository.support.TodoSearchDto;
 import com.dongrami.user.application.UserService;
@@ -21,6 +23,7 @@ import java.util.List;
 public class TodoReadService {
     private final UserService userService;
     private final TodoRepository todoRepository;
+    private final TodoRememberRepository todoRememberRepository;
 
     public ResponseTodoDto getTodoById(Long id) {
         TodoEntity todoEntity = todoRepository.findById(id)
@@ -55,6 +58,19 @@ public class TodoReadService {
         }
 
         return 0;
+    }
+
+    public List<ResponseTodoDto> getTodoRemember(String username) {
+
+        // 1. 사용자 조회
+        UserEntity userEntity = userService.getUser(username);
+
+        // 2. 사용자의 저장된 할 일 조회
+        List<TodoRememberEntity> todoRememberEntities = todoRememberRepository.findByUserEntityAndIsDeletedFalse(userEntity);
+
+        return todoRememberEntities.stream()
+                .map(entity -> ResponseTodoDto.from(entity.getTodoEntity()))
+                .toList();
     }
 
 }
