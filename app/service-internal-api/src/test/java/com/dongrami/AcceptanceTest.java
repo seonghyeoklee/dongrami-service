@@ -1,6 +1,7 @@
 package com.dongrami;
 
 import com.dongrami.todo.repository.TodoNotificationRepository;
+import com.dongrami.todo.repository.TodoRememberRepository;
 import com.dongrami.todo.repository.TodoRepository;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
@@ -28,6 +29,9 @@ public class AcceptanceTest {
     @Autowired
     private TodoNotificationRepository todoNotificationRepository;
 
+    @Autowired
+    private TodoRememberRepository todoRememberRepository;
+
     @LocalServerPort
     int port;
 
@@ -38,6 +42,7 @@ public class AcceptanceTest {
 
     @AfterEach
     void afterEach() {
+        todoRememberRepository.deleteAllInBatch();
         todoNotificationRepository.deleteAllInBatch();
         todoRepository.deleteAllInBatch();
     }

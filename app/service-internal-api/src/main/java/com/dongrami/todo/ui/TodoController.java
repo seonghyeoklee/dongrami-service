@@ -4,6 +4,7 @@ import com.dongrami.common.ApiResponse;
 import com.dongrami.todo.application.TodoReadService;
 import com.dongrami.todo.application.TodoWriteService;
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
+import com.dongrami.todo.dto.request.RequestCreateTodoRememberDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
 import com.dongrami.todo.dto.response.ResponseTodoAchievementRateDto;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
@@ -94,6 +95,17 @@ public class TodoController implements TodoControllerInterface {
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(responses)
+        );
+    }
+
+    @PostMapping("/todos/remember")
+    public ResponseEntity<?> createTodoRemember(@AuthenticationPrincipal User principal,
+                                                @Valid @RequestBody RequestCreateTodoRememberDto request
+    ) {
+        todoWriteService.createTodoRemember(principal.getUsername(), request.getTodoId());
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success()
         );
     }
 

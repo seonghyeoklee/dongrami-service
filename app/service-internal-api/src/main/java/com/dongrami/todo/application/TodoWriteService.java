@@ -2,10 +2,12 @@ package com.dongrami.todo.application;
 
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoNotificationEntity;
+import com.dongrami.todo.domain.TodoRememberEntity;
 import com.dongrami.todo.domain.TodoStatus;
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
+import com.dongrami.todo.repository.TodoRememberRepository;
 import com.dongrami.todo.repository.TodoRepository;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
@@ -21,6 +23,7 @@ import java.time.LocalDate;
 public class TodoWriteService {
     private final UserService userService;
     private final TodoRepository todoRepository;
+    private final TodoRememberRepository todoRememberRepository;
 
     public ResponseTodoDto createTodo(String userUniqueId, RequestCreateTodoDto request) {
 
@@ -72,6 +75,25 @@ public class TodoWriteService {
 
     public void deleteTodo(Long id) {
         todoRepository.deleteById(id);
+    }
+
+    public void createTodoRemember(String userUniqueId, Long todoId) {
+
+        // 1. 사용자 조회
+        UserEntity userEntity = userService.getUser(userUniqueId);
+
+        // 2. To-do 조회
+        TodoEntity todoEntity = todoRepository.findById(todoId)
+                .orElseThrow();
+
+        // 3. TodoRemember 생성
+        TodoRememberEntity todoRememberEntity = TodoRememberEntity.builder()
+                .userEntity(userEntity)
+                .todoEntity(todoEntity)
+                .isDeleted(false)
+                .build();
+
+        todoRememberRepository.save(todoRememberEntity);
     }
 
 }
