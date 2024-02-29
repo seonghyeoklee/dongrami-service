@@ -1,6 +1,7 @@
 package com.dongrami.todo.ui;
 
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
+import com.dongrami.todo.dto.request.RequestCreateTodoRememberDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
 import com.dongrami.todo.repository.support.TodoSearchDto;
@@ -75,11 +76,19 @@ public interface TodoControllerInterface {
     ResponseEntity<?> getTodoAchievementRate(@AuthenticationPrincipal User principal);
 
     @Operation(
-            summary = "저장된 Todo",
+            summary = "저장된 Todo 조회",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
     ResponseEntity<?> getTodoRemember(@AuthenticationPrincipal User principal);
+
+    @Operation(
+            summary = "Todo 저장하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> createTodoRemember(@AuthenticationPrincipal User principal, @Valid @RequestBody RequestCreateTodoRememberDto request);
 
 }
