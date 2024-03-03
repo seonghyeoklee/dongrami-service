@@ -65,18 +65,26 @@ public class TodoWriteService {
         return ResponseTodoDto.from(todoRepository.save(todoEntity));
     }
 
-    public void updateTodo(Long id, RequestUpdateTodoDto requestUpdateTodoDto) {
+    public void updateTodo(String userUniqueId, Long id, RequestUpdateTodoDto requestUpdateTodoDto) {
+        UserEntity userEntity = userService.getUser(userUniqueId);
+
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
         todoEntity.update(
+                userEntity,
                 requestUpdateTodoDto.getContent(),
                 requestUpdateTodoDto.getTodoStatus()
         );
     }
 
-    public void deleteTodo(Long id) {
-        todoRepository.deleteById(id);
+    public void deleteTodo(String userUniqueId, Long id) {
+        UserEntity userEntity = userService.getUser(userUniqueId);
+
+        TodoEntity todoEntity = todoRepository.findById(id)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+
+        todoEntity.delete(userEntity);
     }
 
     public void createTodoRemember(String userUniqueId, Long todoId) {

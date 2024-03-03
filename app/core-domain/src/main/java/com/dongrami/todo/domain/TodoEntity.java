@@ -1,6 +1,8 @@
 package com.dongrami.todo.domain;
 
 import com.dongrami.common.BaseTimeEntity;
+import com.dongrami.exception.BaseException;
+import com.dongrami.exception.ErrorCode;
 import com.dongrami.user.domain.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -60,7 +62,8 @@ public class TodoEntity extends BaseTimeEntity {
                 .build();
     }
 
-    public void update(String content, TodoStatus todoStatus) {
+    public void update(UserEntity userEntity, String content, TodoStatus todoStatus) {
+        validateUser(userEntity);
         this.content = content;
         this.todoStatus = todoStatus;
     }
@@ -74,4 +77,18 @@ public class TodoEntity extends BaseTimeEntity {
         return this.todoStatus.isCompleted();
     }
 
+    public boolean isOwner(UserEntity userEntity) {
+        return this.userEntity.equals(userEntity);
+    }
+
+    public void delete(UserEntity userEntity) {
+        validateUser(userEntity);
+        this.isDeleted = true;
+    }
+
+    private void validateUser(UserEntity userEntity) {
+        if (!isOwner(userEntity)) {
+            throw new BaseException(ErrorCode.HANDLE_ACCESS_DENIED);
+        }
+    }
 }

@@ -63,8 +63,11 @@ public class TodoController implements TodoControllerInterface {
     }
 
     @PutMapping("/todos/{id}")
-    public ResponseEntity<?> updateTodo(@PathVariable Long id, @Valid @RequestBody RequestUpdateTodoDto requestUpdateTodoDto) {
-        todoWriteService.updateTodo(id, requestUpdateTodoDto);
+    public ResponseEntity<?> updateTodo(@AuthenticationPrincipal User principal,
+                                        @PathVariable Long id,
+                                        @Valid @RequestBody RequestUpdateTodoDto requestUpdateTodoDto
+    ) {
+        todoWriteService.updateTodo(principal.getUsername(), id, requestUpdateTodoDto);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()
@@ -72,8 +75,8 @@ public class TodoController implements TodoControllerInterface {
     }
 
     @DeleteMapping("/todos/{id}")
-    public ResponseEntity<?> deleteTodo(@PathVariable Long id) {
-        todoWriteService.deleteTodo(id);
+    public ResponseEntity<?> deleteTodo(@AuthenticationPrincipal User principal, @PathVariable Long id) {
+        todoWriteService.deleteTodo(principal.getUsername(), id);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()

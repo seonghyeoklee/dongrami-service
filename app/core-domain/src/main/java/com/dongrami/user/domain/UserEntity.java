@@ -17,6 +17,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class UserEntity extends BaseTimeEntity {
 
     @Comment("PK")
