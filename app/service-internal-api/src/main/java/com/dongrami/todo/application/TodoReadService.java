@@ -1,5 +1,7 @@
 package com.dongrami.todo.application;
 
+import com.dongrami.exception.BaseException;
+import com.dongrami.exception.ErrorCode;
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoRememberEntity;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
@@ -27,7 +29,7 @@ public class TodoReadService {
 
     public ResponseTodoDto getTodoById(Long id) {
         TodoEntity todoEntity = todoRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
         return ResponseTodoDto.from(todoEntity);
     }

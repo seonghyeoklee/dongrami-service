@@ -15,4 +15,14 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<?> handleException(BaseException e) {
+        ErrorCode errorCode = e.getErrorCode();
+
+        return ResponseEntity.status(errorCode.getStatus()).body(
+                ApiResponse.error(errorCode.getStatus(), errorCode.getCode(), errorCode.getMessage(), null)
+        );
+    }
+
+
 }

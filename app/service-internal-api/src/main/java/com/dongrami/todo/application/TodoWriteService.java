@@ -1,5 +1,7 @@
 package com.dongrami.todo.application;
 
+import com.dongrami.exception.BaseException;
+import com.dongrami.exception.ErrorCode;
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoNotificationEntity;
 import com.dongrami.todo.domain.TodoRememberEntity;
@@ -65,7 +67,7 @@ public class TodoWriteService {
 
     public void updateTodo(Long id, RequestUpdateTodoDto requestUpdateTodoDto) {
         TodoEntity todoEntity = todoRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
         todoEntity.update(
                 requestUpdateTodoDto.getContent(),
@@ -84,7 +86,7 @@ public class TodoWriteService {
 
         // 2. To-do 조회
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow();
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
         // 3. TodoRemember 생성
         TodoRememberEntity todoRememberEntity = TodoRememberEntity.builder()

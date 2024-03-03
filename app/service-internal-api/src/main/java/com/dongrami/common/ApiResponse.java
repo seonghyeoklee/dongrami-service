@@ -24,6 +24,13 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
+    public ApiResponse(int status, String error, String message, T data) {
+        this.status = status;
+        this.error = error;
+        this.message = message;
+        this.data = data;
+    }
+
     public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>(HttpStatus.OK, data);
     }
@@ -34,6 +41,10 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> error(String error, String message, T data) {
         return new ApiResponse<>(HttpStatus.BAD_REQUEST, error, message, data);
+    }
+
+    public static <T> ApiResponse<T> error(int status, String error, String message, T data) {
+        return new ApiResponse<>(status, error, message, data);
     }
 
 }
