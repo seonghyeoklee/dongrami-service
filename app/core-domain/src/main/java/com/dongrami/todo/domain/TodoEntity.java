@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "todo")
@@ -35,6 +36,18 @@ public class TodoEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private TodoStatus todoStatus;
 
+    @Comment("할일 알림")
+    @Column
+    private LocalDateTime notificationDateTime;
+
+    @Comment("할일 핀셋")
+    @Column
+    private boolean isPinned;
+
+    @Comment("할일 핀셋 설정 시간")
+    @Column
+    private LocalDateTime pinnedDateTime;
+
     @Comment("할일 작성자")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_todo_user"))
@@ -47,18 +60,15 @@ public class TodoEntity extends BaseTimeEntity {
     @Embedded
     private TodoEmojiEntities todoEmojiEntities;
 
-    @Embedded
-    private TodoNotificationEntities todoNotificationEntities;
-
-    public static TodoEntity create(String content, String memo, TodoStatus todoStatus, UserEntity userEntity) {
+    public static TodoEntity create(String content, String memo, LocalDateTime notificationDateTime, TodoStatus todoStatus, UserEntity userEntity) {
         return TodoEntity.builder()
                 .content(content)
                 .memo(memo)
+                .notificationDateTime(notificationDateTime)
                 .todoStatus(todoStatus)
                 .userEntity(userEntity)
                 .isDeleted(false)
                 .todoEmojiEntities(new TodoEmojiEntities())
-                .todoNotificationEntities(new TodoNotificationEntities())
                 .build();
     }
 
@@ -66,11 +76,6 @@ public class TodoEntity extends BaseTimeEntity {
         validateUser(userEntity);
         this.content = content;
         this.todoStatus = todoStatus;
-    }
-
-    public void addTodoNotification(TodoNotificationEntity todoNotificationEntity) {
-        this.todoNotificationEntities.add(todoNotificationEntity);
-        todoNotificationEntity.setTodoEntity(this);
     }
 
     public boolean isCompleted() {
@@ -95,6 +100,12 @@ public class TodoEntity extends BaseTimeEntity {
     public void changeTodoStatus(UserEntity userEntity, TodoStatus todoStatus) {
         validateUser(userEntity);
         this.todoStatus = todoStatus;
+    }
+
+    public void changeTodoPinned(UserEntity userEntity, boolean isPinned) {
+        validateUser(userEntity);
+        this.isPinned = isPinned;
+        this.pinnedDateTime = isPinned ? LocalDateTime.now() : null;
     }
 
 }

@@ -124,4 +124,15 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
+    @PutMapping("/todos/{id}/pinned")
+    public ResponseEntity<?> changeTodoPinned(@AuthenticationPrincipal User principal,
+                                              @PathVariable Long id,
+                                              @RequestParam boolean isPinned) {
+        todoWriteService.changeTodoPinned(principal.getUsername(), id, isPinned);
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success()
+        );
+    }
+
 }

@@ -104,4 +104,13 @@ public interface TodoControllerInterface {
             }
     )
     ResponseEntity<?> changeTodoStatus(@Parameter(hidden = true) User principal, @PathVariable Long id, @RequestParam TodoStatus todoStatus);
+
+    @Operation(
+            summary = "Todo 핀셋",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> changeTodoPinned(@Parameter(hidden = true) User principal, @PathVariable Long id, @RequestParam boolean isPinned);
+
 }
