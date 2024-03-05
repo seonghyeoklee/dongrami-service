@@ -37,7 +37,7 @@ public class TodoWriteService {
             TodoEntity todoEntity = TodoEntity.create(
                     request.getContent(),
                     request.getMemo(),
-                    TodoStatus.TODO,
+                    TodoStatus.NOT_COMPLETED,
                     userEntity
             );
 
@@ -56,7 +56,7 @@ public class TodoWriteService {
         TodoEntity todoEntity = TodoEntity.create(
                 request.getContent(),
                 request.getMemo(),
-                TodoStatus.TODO,
+                TodoStatus.NOT_COMPLETED,
                 userEntity
         );
 
@@ -104,6 +104,15 @@ public class TodoWriteService {
                 .build();
 
         todoRememberRepository.save(todoRememberEntity);
+    }
+
+    public void changeTodoStatus(String userUniqueId, Long id, TodoStatus todoStatus) {
+        UserEntity userEntity = userService.getUser(userUniqueId);
+
+        TodoEntity todoEntity = todoRepository.findById(id)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+
+        todoEntity.changeTodoStatus(userEntity, todoStatus);
     }
 
 }

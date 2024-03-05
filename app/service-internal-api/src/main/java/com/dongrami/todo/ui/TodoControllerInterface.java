@@ -1,5 +1,6 @@
 package com.dongrami.todo.ui;
 
+import com.dongrami.todo.domain.TodoStatus;
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
 import com.dongrami.todo.dto.request.RequestCreateTodoRememberDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
@@ -95,4 +97,11 @@ public interface TodoControllerInterface {
     )
     ResponseEntity<?> createTodoRemember(@Parameter(hidden = true) User principal, @ParameterObject @Valid @RequestBody RequestCreateTodoRememberDto request);
 
+    @Operation(
+            summary = "Todo 상태 변경하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> changeTodoStatus(@Parameter(hidden = true) User principal, @PathVariable Long id, @RequestParam TodoStatus todoStatus);
 }

@@ -3,6 +3,7 @@ package com.dongrami.todo.ui;
 import com.dongrami.common.ApiResponse;
 import com.dongrami.todo.application.TodoReadService;
 import com.dongrami.todo.application.TodoWriteService;
+import com.dongrami.todo.domain.TodoStatus;
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
 import com.dongrami.todo.dto.request.RequestCreateTodoRememberDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
@@ -106,6 +107,17 @@ public class TodoController implements TodoControllerInterface {
                                                 @Valid @RequestBody RequestCreateTodoRememberDto request
     ) {
         todoWriteService.createTodoRemember(principal.getUsername(), request.getTodoId());
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success()
+        );
+    }
+
+    @PutMapping("/todos/{id}/status")
+    public ResponseEntity<?> changeTodoStatus(@AuthenticationPrincipal User principal,
+                                              @PathVariable Long id,
+                                              @RequestParam TodoStatus todoStatus) {
+        todoWriteService.changeTodoStatus(principal.getUsername(), id, todoStatus);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()

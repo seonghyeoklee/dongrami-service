@@ -91,4 +91,10 @@ public class TodoEntity extends BaseTimeEntity {
             throw new BaseException(ErrorCode.HANDLE_ACCESS_DENIED);
         }
     }
+
+    public void changeTodoStatus(UserEntity userEntity, TodoStatus todoStatus) {
+        validateUser(userEntity);
+        this.todoStatus = todoStatus;
+    }
+
 }

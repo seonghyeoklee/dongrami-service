@@ -8,9 +8,9 @@ import java.util.Arrays;
 @Getter
 @AllArgsConstructor
 public enum TodoStatus {
-    TODO("TODO", "할 일"),
-    IN_PROGRESS("IN_PROGRESS", "진행 중"),
-    DONE("DONE", "완료"),
+    NOT_COMPLETED("NOT_COMPLETED", "미완료"),
+    COMPLETED("COMPLETED", "완료"),
+    DELETED("DELETED", "삭제"),
     ;
 
     private final String code;
@@ -24,7 +24,7 @@ public enum TodoStatus {
     }
 
     public boolean isCompleted() {
-        return this == DONE;
+        return this == COMPLETED;
     }
 
 }
