@@ -41,10 +41,9 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
                 .from(todoEntity)
                 .where(searchByBuilder(todoSearchDto))
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
-
-        // 정렬
-        sort(pageable, query);
+                .limit(pageable.getPageSize())
+                .orderBy(todoEntity.pinnedDateTime.desc())
+                .orderBy(todoEntity.createdDateTime.desc());
 
         return new PageImpl<>(query.fetch(), pageable, totalCount);
     }
