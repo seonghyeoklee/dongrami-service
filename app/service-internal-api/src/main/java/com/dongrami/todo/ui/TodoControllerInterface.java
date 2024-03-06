@@ -113,4 +113,12 @@ public interface TodoControllerInterface {
     )
     ResponseEntity<?> changeTodoPinned(@Parameter(hidden = true) User principal, @PathVariable Long id, @RequestParam boolean isPinned);
 
+    @Operation(
+            summary = "Todo 내일하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> copyTodoToNextDay(@Parameter(hidden = true) User principal, @PathVariable Long id);
+
 }

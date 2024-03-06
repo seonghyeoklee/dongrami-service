@@ -50,7 +50,8 @@ MYSQL_PASSWORD={password}
 - [X] Todo 상세 조회
 - [X] Todo 상태 변경
 - [X] Todo 핀셋 설정/해제
-- [ ] Todo 내일하기
+- [X] Todo 내일하기
+  - default : 조회된 Todo 내용 다음날로 복사
 - [X] Todo 기억해두기
 
 #### Diary

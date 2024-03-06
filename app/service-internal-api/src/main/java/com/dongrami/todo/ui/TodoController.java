@@ -135,4 +135,14 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
+    @PostMapping("/todos/{id}/tomorrow")
+    public ResponseEntity<?> copyTodoToNextDay(@AuthenticationPrincipal User principal,
+                                               @PathVariable Long id) {
+        todoWriteService.copyTodoToNextDay(principal.getUsername(), id, LocalDate.now());
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success()
+        );
+    }
+
 }

@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -38,10 +40,10 @@ public class TodoWriteService {
         return ResponseTodoDto.from(todoRepository.save(todoEntity));
     }
 
-    public void updateTodo(String userUniqueId, Long id, RequestUpdateTodoDto requestUpdateTodoDto) {
+    public void updateTodo(String userUniqueId, Long todoId, RequestUpdateTodoDto requestUpdateTodoDto) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
-        TodoEntity todoEntity = todoRepository.findById(id)
+        TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
         todoEntity.update(
@@ -51,10 +53,10 @@ public class TodoWriteService {
         );
     }
 
-    public void deleteTodo(String userUniqueId, Long id) {
+    public void deleteTodo(String userUniqueId, Long todoId) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
-        TodoEntity todoEntity = todoRepository.findById(id)
+        TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
         todoEntity.delete(userEntity);
@@ -75,22 +77,43 @@ public class TodoWriteService {
         todoRememberRepository.save(todoRememberEntity);
     }
 
-    public void changeTodoStatus(String userUniqueId, Long id, TodoStatus todoStatus) {
+    public void changeTodoStatus(String userUniqueId, Long todoId, TodoStatus todoStatus) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
-        TodoEntity todoEntity = todoRepository.findById(id)
+        TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
         todoEntity.changeTodoStatus(userEntity, todoStatus);
     }
 
-    public void changeTodoPinned(String userUniqueId, Long id, boolean isPinned) {
+    public void changeTodoPinned(String userUniqueId, Long todoId, boolean isPinned) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
-        TodoEntity todoEntity = todoRepository.findById(id)
+        TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
         todoEntity.changeTodoPinned(userEntity, isPinned);
+    }
+
+    public void copyTodoToNextDay(String userUniqueId, Long todoId, LocalDate currentDate) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
+
+        TodoEntity todoEntity = todoRepository.findById(todoId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+
+        if (!todoEntity.isOwner(userEntity)) {
+            throw new BaseException(ErrorCode.HANDLE_ACCESS_DENIED);
+        }
+
+        TodoEntity copyTodoEntity = TodoEntity.create(
+                todoEntity.getContent(),
+                todoEntity.getMemo(),
+                currentDate.plusDays(1).atStartOfDay(),
+                TodoStatus.NOT_COMPLETED,
+                userEntity
+        );
+
+        todoRepository.save(copyTodoEntity);
     }
 
 }
