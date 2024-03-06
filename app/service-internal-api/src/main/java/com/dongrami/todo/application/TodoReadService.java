@@ -44,7 +44,7 @@ public class TodoReadService {
     public double getTodoAchievementRate(String userUniqueId, LocalDate currentDate) {
 
         // 1. 사용자 조회
-        UserEntity userEntity = userService.getUser(userUniqueId);
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         // 2. 사용자의 해당 일의 모든 할일 조회
         List<TodoEntity> todoEntities = todoRepository.findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(userEntity, currentDate.atStartOfDay(), currentDate.plusDays(1).atStartOfDay());
@@ -65,7 +65,7 @@ public class TodoReadService {
     public List<ResponseTodoDto> getTodoRemember(String username) {
 
         // 1. 사용자 조회
-        UserEntity userEntity = userService.getUser(username);
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
 
         // 2. 사용자의 저장된 할 일 조회
         List<TodoRememberEntity> todoRememberEntities = todoRememberRepository.findByUserEntityAndIsDeletedFalse(userEntity);

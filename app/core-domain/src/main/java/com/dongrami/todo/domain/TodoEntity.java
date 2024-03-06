@@ -8,6 +8,8 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "todo")
@@ -35,30 +37,41 @@ public class TodoEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private TodoStatus todoStatus;
 
+    @Comment("할일 날짜")
+    @Column(nullable = false)
+    private LocalDate todoDate;
+
+    @Comment("할일 알림")
+    @Column
+    private LocalDateTime notificationDateTime;
+
+    @Comment("할일 핀셋")
+    @Column
+    private boolean isPinned;
+
+    @Comment("할일 핀셋 설정 시간")
+    @Column
+    private LocalDateTime pinnedDateTime;
+
     @Comment("할일 작성자")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_todo_user"))
     private UserEntity userEntity;
 
-    @Comment("할일 삭제여부")
-    @Column
-    private boolean isDeleted;
-
     @Embedded
     private TodoEmojiEntities todoEmojiEntities;
 
-    @Embedded
-    private TodoNotificationEntities todoNotificationEntities;
-
-    public static TodoEntity create(String content, String memo, TodoStatus todoStatus, UserEntity userEntity) {
+    public static TodoEntity create(String content, String memo, LocalDateTime notificationDateTime, TodoStatus todoStatus, UserEntity userEntity) {
         return TodoEntity.builder()
                 .content(content)
                 .memo(memo)
                 .todoStatus(todoStatus)
+                .todoDate(LocalDate.now())
+                .notificationDateTime(notificationDateTime)
+                .isPinned(false)
+                .pinnedDateTime(null)
                 .userEntity(userEntity)
-                .isDeleted(false)
                 .todoEmojiEntities(new TodoEmojiEntities())
-                .todoNotificationEntities(new TodoNotificationEntities())
                 .build();
     }
 
@@ -66,11 +79,6 @@ public class TodoEntity extends BaseTimeEntity {
         validateUser(userEntity);
         this.content = content;
         this.todoStatus = todoStatus;
-    }
-
-    public void addTodoNotification(TodoNotificationEntity todoNotificationEntity) {
-        this.todoNotificationEntities.add(todoNotificationEntity);
-        todoNotificationEntity.setTodoEntity(this);
     }
 
     public boolean isCompleted() {
@@ -83,7 +91,7 @@ public class TodoEntity extends BaseTimeEntity {
 
     public void delete(UserEntity userEntity) {
         validateUser(userEntity);
-        this.isDeleted = true;
+        this.todoStatus = TodoStatus.DELETED;
     }
 
     private void validateUser(UserEntity userEntity) {
@@ -95,6 +103,12 @@ public class TodoEntity extends BaseTimeEntity {
     public void changeTodoStatus(UserEntity userEntity, TodoStatus todoStatus) {
         validateUser(userEntity);
         this.todoStatus = todoStatus;
+    }
+
+    public void changeTodoPinned(UserEntity userEntity, boolean isPinned) {
+        validateUser(userEntity);
+        this.isPinned = isPinned;
+        this.pinnedDateTime = isPinned ? LocalDateTime.now() : null;
     }
 
 }

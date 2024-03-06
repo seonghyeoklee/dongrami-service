@@ -1,5 +1,7 @@
 package com.dongrami.user.application;
 
+import com.dongrami.exception.BaseException;
+import com.dongrami.exception.ErrorCode;
 import com.dongrami.user.domain.UserEntity;
 import com.dongrami.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,5 +16,10 @@ public class UserService {
 
     public UserEntity getUser(String userUniqueId) {
         return userRepository.findByUserUniqueId(userUniqueId);
+    }
+
+    public UserEntity getUserByUserUniqueId(String userUniqueId) {
+        return userRepository.findUserByUserUniqueId(userUniqueId)
+                .orElseThrow(() -> new BaseException(ErrorCode.INVALID_USER));
     }
 }

@@ -3,7 +3,6 @@ package com.dongrami.todo.application;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
 import com.dongrami.todo.domain.TodoEntity;
-import com.dongrami.todo.domain.TodoNotificationEntity;
 import com.dongrami.todo.domain.TodoRememberEntity;
 import com.dongrami.todo.domain.TodoStatus;
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
@@ -17,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -28,45 +25,21 @@ public class TodoWriteService {
     private final TodoRememberRepository todoRememberRepository;
 
     public ResponseTodoDto createTodo(String userUniqueId, RequestCreateTodoDto request) {
-
-        // 1. 사용자 조회
-        UserEntity userEntity = userService.getUser(userUniqueId);
-
-        // 2-1 알림이 존재하지 않는 경우
-        if(request.getNotificationTime() == null) {
-            TodoEntity todoEntity = TodoEntity.create(
-                    request.getContent(),
-                    request.getMemo(),
-                    TodoStatus.NOT_COMPLETED,
-                    userEntity
-            );
-
-            return ResponseTodoDto.from(todoRepository.save(todoEntity));
-        }
-
-        // 2-2 알림이 존재하는 경우
-        TodoNotificationEntity todoNotificationEntity = TodoNotificationEntity.builder()
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now())
-                .notificationTime(request.getNotificationTime())
-                .excludedDates(null)
-                .userEntity(userEntity)
-                .build();
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = TodoEntity.create(
                 request.getContent(),
                 request.getMemo(),
+                request.getNotificationDateTime(),
                 TodoStatus.NOT_COMPLETED,
                 userEntity
         );
-
-        todoEntity.addTodoNotification(todoNotificationEntity);
 
         return ResponseTodoDto.from(todoRepository.save(todoEntity));
     }
 
     public void updateTodo(String userUniqueId, Long id, RequestUpdateTodoDto requestUpdateTodoDto) {
-        UserEntity userEntity = userService.getUser(userUniqueId);
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
@@ -79,7 +52,7 @@ public class TodoWriteService {
     }
 
     public void deleteTodo(String userUniqueId, Long id) {
-        UserEntity userEntity = userService.getUser(userUniqueId);
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
@@ -88,15 +61,11 @@ public class TodoWriteService {
     }
 
     public void createTodoRemember(String userUniqueId, Long todoId) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
-        // 1. 사용자 조회
-        UserEntity userEntity = userService.getUser(userUniqueId);
-
-        // 2. To-do 조회
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
-        // 3. TodoRemember 생성
         TodoRememberEntity todoRememberEntity = TodoRememberEntity.builder()
                 .userEntity(userEntity)
                 .todoEntity(todoEntity)
@@ -107,12 +76,21 @@ public class TodoWriteService {
     }
 
     public void changeTodoStatus(String userUniqueId, Long id, TodoStatus todoStatus) {
-        UserEntity userEntity = userService.getUser(userUniqueId);
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
         todoEntity.changeTodoStatus(userEntity, todoStatus);
+    }
+
+    public void changeTodoPinned(String userUniqueId, Long id, boolean isPinned) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
+
+        TodoEntity todoEntity = todoRepository.findById(id)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+
+        todoEntity.changeTodoPinned(userEntity, isPinned);
     }
 
 }
