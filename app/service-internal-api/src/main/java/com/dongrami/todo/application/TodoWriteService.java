@@ -25,7 +25,7 @@ public class TodoWriteService {
     private final TodoRememberRepository todoRememberRepository;
 
     public ResponseTodoDto createTodo(String userUniqueId, RequestCreateTodoDto request) {
-        UserEntity userEntity = userService.getUser(userUniqueId);
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = TodoEntity.create(
                 request.getContent(),
@@ -39,7 +39,7 @@ public class TodoWriteService {
     }
 
     public void updateTodo(String userUniqueId, Long id, RequestUpdateTodoDto requestUpdateTodoDto) {
-        UserEntity userEntity = userService.getUser(userUniqueId);
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
@@ -52,7 +52,7 @@ public class TodoWriteService {
     }
 
     public void deleteTodo(String userUniqueId, Long id) {
-        UserEntity userEntity = userService.getUser(userUniqueId);
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
@@ -61,7 +61,7 @@ public class TodoWriteService {
     }
 
     public void createTodoRemember(String userUniqueId, Long todoId) {
-        UserEntity userEntity = userService.getUser(userUniqueId);
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
@@ -76,7 +76,7 @@ public class TodoWriteService {
     }
 
     public void changeTodoStatus(String userUniqueId, Long id, TodoStatus todoStatus) {
-        UserEntity userEntity = userService.getUser(userUniqueId);
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
@@ -85,7 +85,7 @@ public class TodoWriteService {
     }
 
     public void changeTodoPinned(String userUniqueId, Long id, boolean isPinned) {
-        UserEntity userEntity = userService.getUser(userUniqueId);
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));

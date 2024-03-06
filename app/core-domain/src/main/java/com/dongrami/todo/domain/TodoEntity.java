@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -36,6 +37,10 @@ public class TodoEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private TodoStatus todoStatus;
 
+    @Comment("할일 날짜")
+    @Column(nullable = false)
+    private LocalDate todoDate;
+
     @Comment("할일 알림")
     @Column
     private LocalDateTime notificationDateTime;
@@ -53,10 +58,6 @@ public class TodoEntity extends BaseTimeEntity {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_todo_user"))
     private UserEntity userEntity;
 
-    @Comment("할일 삭제여부")
-    @Column
-    private boolean isDeleted;
-
     @Embedded
     private TodoEmojiEntities todoEmojiEntities;
 
@@ -64,10 +65,12 @@ public class TodoEntity extends BaseTimeEntity {
         return TodoEntity.builder()
                 .content(content)
                 .memo(memo)
-                .notificationDateTime(notificationDateTime)
                 .todoStatus(todoStatus)
+                .todoDate(LocalDate.now())
+                .notificationDateTime(notificationDateTime)
+                .isPinned(false)
+                .pinnedDateTime(null)
                 .userEntity(userEntity)
-                .isDeleted(false)
                 .todoEmojiEntities(new TodoEmojiEntities())
                 .build();
     }
@@ -88,7 +91,7 @@ public class TodoEntity extends BaseTimeEntity {
 
     public void delete(UserEntity userEntity) {
         validateUser(userEntity);
-        this.isDeleted = true;
+        this.todoStatus = TodoStatus.DELETED;
     }
 
     private void validateUser(UserEntity userEntity) {

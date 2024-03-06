@@ -1,6 +1,7 @@
 package com.dongrami.todo.repository.support;
 
 import com.dongrami.todo.domain.TodoEntity;
+import com.dongrami.todo.domain.TodoStatus;
 import com.dongrami.user.domain.UserEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
@@ -54,7 +55,7 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
                 .where(
                         todoEntity.userEntity.eq(userEntity)
                                 .and(todoEntity.createdDateTime.between(from, to))
-                                .and(todoEntity.isDeleted.eq(false))
+                                .and(todoEntity.todoStatus.ne(TodoStatus.DELETED))
                 )
                 .fetch();
     }
