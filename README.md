@@ -59,7 +59,7 @@ MYSQL_PASSWORD={password}
 - [ ] Diary 생성
 - [ ] Diary 수정
 - [ ] Diary 삭제
-- [ ] Diary 전체 조회 (페이징)
+- [X] Diary 전체 조회 (페이징)
 - [ ] Diary 상세 조회
 - [ ] Diary 공유
 - [ ] Diary 공유 해제
@@ -82,4 +82,7 @@ MYSQL_PASSWORD={password}
 - [ ] 알림 읽음 처리
 - [ ] 알림 전체 읽음 처리
  
+#### Calendar
+
+- [ ] Todo, Diary 일정 조회
 
