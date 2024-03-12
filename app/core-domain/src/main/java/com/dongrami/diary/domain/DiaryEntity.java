@@ -46,4 +46,13 @@ public class DiaryEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "diaryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TagEntity> tagEntities = new ArrayList<>();
 
+    public static DiaryEntity create(UserEntity userEntity, String title, String content, boolean isPublic) {
+        return DiaryEntity.builder()
+                .userEntity(userEntity)
+                .title(title)
+                .content(content)
+                .isPublic(isPublic)
+                .build();
+    }
+
 }
