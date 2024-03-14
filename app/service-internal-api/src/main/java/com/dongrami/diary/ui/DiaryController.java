@@ -4,6 +4,7 @@ import com.dongrami.common.ApiResponse;
 import com.dongrami.diary.application.DiaryService;
 import com.dongrami.diary.dto.DiaryDto;
 import com.dongrami.diary.dto.request.RequestCreateDiaryDto;
+import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +52,18 @@ public class DiaryController {
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(response)
+        );
+    }
+
+    @PutMapping("/diaries/{id}")
+    public ResponseEntity<?> updateDiary(
+            @PathVariable Long id,
+            @Valid @RequestBody RequestUpdateDiaryDto request
+    ) {
+        diaryService.updateDiary(id, request);
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success(null)
         );
     }
 

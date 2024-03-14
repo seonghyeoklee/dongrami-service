@@ -55,4 +55,10 @@ public class DiaryEntity extends BaseTimeEntity {
                 .build();
     }
 
+    public void update(String title, String content, boolean isPublic) {
+        this.title = title;
+        this.content = content;
+        this.isPublic = isPublic;
+    }
+
 }

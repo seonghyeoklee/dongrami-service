@@ -3,6 +3,7 @@ package com.dongrami.diary.application;
 import com.dongrami.diary.domain.DiaryEntity;
 import com.dongrami.diary.dto.DiaryDto;
 import com.dongrami.diary.dto.request.RequestCreateDiaryDto;
+import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
 import com.dongrami.diary.repository.DiaryRepository;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
@@ -45,6 +46,17 @@ public class DiaryService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
         return DiaryDto.from(diaryEntity);
+    }
+
+    public void updateDiary(Long id, RequestUpdateDiaryDto request) {
+        DiaryEntity diaryEntity = diaryRepository.findById(id)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+
+        diaryEntity.update(
+                request.getTitle(),
+                request.getContent(),
+                request.isPublic()
+        );
     }
 
 }
