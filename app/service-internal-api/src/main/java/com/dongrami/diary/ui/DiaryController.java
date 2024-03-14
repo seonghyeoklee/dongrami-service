@@ -67,4 +67,13 @@ public class DiaryController {
         );
     }
 
+    @DeleteMapping("/diaries/{id}")
+    public ResponseEntity<?> deleteDiary(@PathVariable Long id) {
+        diaryService.deleteDiary(id);
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success(null)
+        );
+    }
+
 }

@@ -59,4 +59,11 @@ public class DiaryService {
         );
     }
 
+    public void deleteDiary(Long id) {
+        DiaryEntity diaryEntity = diaryRepository.findById(id)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+
+        diaryEntity.delete();
+    }
+
 }

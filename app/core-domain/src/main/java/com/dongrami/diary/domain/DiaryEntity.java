@@ -40,6 +40,10 @@ public class DiaryEntity extends BaseTimeEntity {
     @Column
     private boolean isPublic;
 
+    @Comment("일기 삭제 여부")
+    @Column
+    private boolean isDeleted;
+
     @OneToMany(mappedBy = "diaryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DiaryFileEntity> diaryFileEntities = new ArrayList<>();
 
@@ -59,6 +63,10 @@ public class DiaryEntity extends BaseTimeEntity {
         this.title = title;
         this.content = content;
         this.isPublic = isPublic;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 
 }
