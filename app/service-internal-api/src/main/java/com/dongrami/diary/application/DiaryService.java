@@ -4,6 +4,8 @@ import com.dongrami.diary.domain.DiaryEntity;
 import com.dongrami.diary.dto.DiaryDto;
 import com.dongrami.diary.dto.request.RequestCreateDiaryDto;
 import com.dongrami.diary.repository.DiaryRepository;
+import com.dongrami.exception.BaseException;
+import com.dongrami.exception.ErrorCode;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,13 @@ public class DiaryService {
         );
 
         diaryRepository.save(diaryEntity);
+    }
+
+    public DiaryDto getDiaryById(Long id) {
+        DiaryEntity diaryEntity = diaryRepository.findById(id)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+
+        return DiaryDto.from(diaryEntity);
     }
 
 }

@@ -45,4 +45,13 @@ public class DiaryController {
         );
     }
 
+    @GetMapping("/diaries/{id}")
+    public ResponseEntity<?> getDiaryById(@PathVariable Long id) {
+        DiaryDto response = diaryService.getDiaryById(id);
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success(response)
+        );
+    }
+
 }

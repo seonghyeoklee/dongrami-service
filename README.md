@@ -56,11 +56,11 @@ MYSQL_PASSWORD={password}
 
 #### Diary
 
-- [ ] Diary 생성
+- [X] Diary 생성
 - [ ] Diary 수정
 - [ ] Diary 삭제
 - [X] Diary 전체 조회 (페이징)
-- [ ] Diary 상세 조회
+- [X] Diary 상세 조회
 - [ ] Diary 공유
 - [ ] Diary 공유 해제
 - [ ] Diary 공유 목록 조회
