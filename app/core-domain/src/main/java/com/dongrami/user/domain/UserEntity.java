@@ -72,6 +72,9 @@ public class UserEntity extends BaseTimeEntity {
     @Embedded
     private PartnerCode partnerCode;
 
+    @Embedded
+    private UserPersonalColor userPersonalColor;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_group_id", foreignKey = @ForeignKey(name = "fk_user_user_group"))
     private UserGroupEntity userGroupEntity;

@@ -2,6 +2,7 @@ package com.dongrami.todo.dto.response;
 
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoStatus;
+import com.dongrami.user.dto.response.ResponseUserInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,10 @@ public class ResponseTodoDto {
     private String content;
     private String memo;
     private TodoStatus todoStatus;
+    private LocalDateTime notificationDateTime;
+    private boolean isPinned;
+    private LocalDateTime pinnedDateTime;
+    private ResponseUserInfoDto userInfo;
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;
 
@@ -25,6 +30,9 @@ public class ResponseTodoDto {
                 .content(todoEntity.getContent())
                 .memo(todoEntity.getMemo())
                 .todoStatus(todoEntity.getTodoStatus())
+                .notificationDateTime(todoEntity.getNotificationDateTime())
+                .isPinned(todoEntity.isPinned())
+                .pinnedDateTime(todoEntity.getPinnedDateTime())
                 .createdDateTime(todoEntity.getCreatedDateTime())
                 .updatedDateTime(todoEntity.getUpdatedDateTime())
                 .build();
