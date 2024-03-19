@@ -91,6 +91,11 @@ public class TodoEntity extends BaseTimeEntity {
 
     public void delete(UserEntity userEntity) {
         validateUser(userEntity);
+
+        if (this.todoStatus.isDeleted()) {
+            throw new BaseException(ErrorCode.HANDLE_ALREADY_DELETED);
+        }
+
         this.todoStatus = TodoStatus.DELETED;
     }
 
@@ -100,9 +105,14 @@ public class TodoEntity extends BaseTimeEntity {
         }
     }
 
-    public void changeTodoStatus(UserEntity userEntity, TodoStatus todoStatus) {
+    public void changeTodoStatus(UserEntity userEntity) {
         validateUser(userEntity);
-        this.todoStatus = todoStatus;
+
+        if (this.todoStatus.isCompleted()) {
+            this.todoStatus = TodoStatus.NOT_COMPLETED;
+        } else {
+            this.todoStatus = TodoStatus.COMPLETED;
+        }
     }
 
     public void changeTodoPinned(UserEntity userEntity, boolean isPinned) {

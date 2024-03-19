@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.dongrami.todo.domain.QTodoEntity.todoEntity;
@@ -42,12 +42,12 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
     }
 
     @Override
-    public List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(UserEntity userEntity, LocalDateTime from, LocalDateTime to) {
+    public List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(UserEntity userEntity, LocalDate currentDate) {
         return queryFactory
                 .selectFrom(todoEntity)
                 .where(
                         todoEntity.userEntity.eq(userEntity)
-                                .and(todoEntity.createdDateTime.between(from, to))
+                                .and(todoEntity.todoDate.eq(currentDate))
                                 .and(todoEntity.todoStatus.ne(TodoStatus.DELETED))
                 )
                 .fetch();
@@ -58,6 +58,20 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
 
         if (todoSearchDto.getCurrentDate() != null) {
             builder.and(todoEntity.todoDate.eq(todoSearchDto.getCurrentDate()));
+        }
+
+        if (todoSearchDto.getIsDeleted()) {
+            builder.and(todoEntity.todoStatus.eq(TodoStatus.DELETED));
+        } else {
+            builder.and(todoEntity.todoStatus.ne(TodoStatus.DELETED));
+        }
+
+        if (todoSearchDto.getIsPinned() != null) {
+            if (todoSearchDto.getIsPinned()) {
+                builder.and(todoEntity.isPinned.isTrue());
+            } else {
+                builder.and(todoEntity.isPinned.isFalse());
+            }
         }
 
         return builder;

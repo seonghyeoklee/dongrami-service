@@ -20,7 +20,7 @@ public class ResponseTodoDto {
     private LocalDateTime notificationDateTime;
     private boolean isPinned;
     private LocalDateTime pinnedDateTime;
-    private ResponseUserInfoDto userInfo;
+    private ResponseUserInfoDto user;
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;
 
@@ -33,6 +33,7 @@ public class ResponseTodoDto {
                 .notificationDateTime(todoEntity.getNotificationDateTime())
                 .isPinned(todoEntity.isPinned())
                 .pinnedDateTime(todoEntity.getPinnedDateTime())
+                .user(ResponseUserInfoDto.from(todoEntity.getUserEntity()))
                 .createdDateTime(todoEntity.getCreatedDateTime())
                 .updatedDateTime(todoEntity.getUpdatedDateTime())
                 .build();

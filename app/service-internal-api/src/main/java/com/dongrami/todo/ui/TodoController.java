@@ -3,7 +3,6 @@ package com.dongrami.todo.ui;
 import com.dongrami.common.ApiResponse;
 import com.dongrami.todo.application.TodoReadService;
 import com.dongrami.todo.application.TodoWriteService;
-import com.dongrami.todo.domain.TodoStatus;
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
 import com.dongrami.todo.dto.request.RequestCreateTodoRememberDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
@@ -13,8 +12,7 @@ import com.dongrami.todo.repository.support.TodoSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -32,10 +30,7 @@ public class TodoController implements TodoControllerInterface {
     private final TodoReadService todoReadService;
 
     @GetMapping("/todos")
-    public ResponseEntity<?> getTodoPage(
-            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
-            TodoSearchDto todoSearchDto
-    ) {
+    public ResponseEntity<?> getTodoPage(Pageable pageable, TodoSearchDto todoSearchDto) {
         Page<ResponseTodoDto> responses = todoReadService.getTodoPageBySearch(pageable, todoSearchDto);
 
         return ResponseEntity.ok().body(
@@ -44,8 +39,8 @@ public class TodoController implements TodoControllerInterface {
     }
 
     @GetMapping("/todos/{id}")
-    public ResponseEntity<?> getTodoById(@PathVariable Long id) {
-        ResponseTodoDto response = todoReadService.getTodoById(id);
+    public ResponseEntity<?> getTodoById(@AuthenticationPrincipal User principal, @PathVariable Long id) {
+        ResponseTodoDto response = todoReadService.getTodoById(principal.getUsername(), id);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(response)
@@ -75,7 +70,7 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
-    @DeleteMapping("/todos/{id}")
+    @PatchMapping("/todos/{id}")
     public ResponseEntity<?> deleteTodo(@AuthenticationPrincipal User principal, @PathVariable Long id) {
         todoWriteService.deleteTodo(principal.getUsername(), id);
 
@@ -85,8 +80,8 @@ public class TodoController implements TodoControllerInterface {
     }
 
     @GetMapping("/todos/achievement-rate")
-    public ResponseEntity<?> getTodoAchievementRate(@AuthenticationPrincipal User principal) {
-        double achievementRate = todoReadService.getTodoAchievementRate(principal.getUsername(), LocalDate.now());
+    public ResponseEntity<?> getTodoAchievementRate(@AuthenticationPrincipal User principal, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate) {
+        int achievementRate = todoReadService.getTodoAchievementRate(principal.getUsername(), currentDate);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(ResponseTodoAchievementRateDto.from(achievementRate))
@@ -113,18 +108,17 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
-    @PutMapping("/todos/{id}/status")
+    @PatchMapping("/todos/{id}/completed")
     public ResponseEntity<?> changeTodoStatus(@AuthenticationPrincipal User principal,
-                                              @PathVariable Long id,
-                                              @RequestParam TodoStatus todoStatus) {
-        todoWriteService.changeTodoStatus(principal.getUsername(), id, todoStatus);
+                                              @PathVariable Long id) {
+        todoWriteService.changeTodoStatus(principal.getUsername(), id);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()
         );
     }
 
-    @PutMapping("/todos/{id}/pinned")
+    @PatchMapping("/todos/{id}/pinned")
     public ResponseEntity<?> changeTodoPinned(@AuthenticationPrincipal User principal,
                                               @PathVariable Long id,
                                               @RequestParam boolean isPinned) {

@@ -13,4 +13,10 @@ public class TodoSearchDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentDate;
 
+    @Schema(description = "삭제 여부", example = "false")
+    private Boolean isDeleted = false;
+
+    @Schema(description = "핀셋 여부", example = "false")
+    private Boolean isPinned;
+
 }

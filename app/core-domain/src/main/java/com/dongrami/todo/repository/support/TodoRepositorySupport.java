@@ -5,13 +5,13 @@ import com.dongrami.user.domain.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TodoRepositorySupport {
 
     Page<TodoEntity> findBySearch(Pageable pageable, TodoSearchDto todoSearchDto);
 
-    List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(UserEntity userEntity, LocalDateTime from, LocalDateTime to);
+    List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(UserEntity userEntity, LocalDate currentDate);
 
 }

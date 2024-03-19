@@ -25,6 +25,7 @@ public enum ErrorCode {
     INVALID_USER(400, "C015", "Invalid User"),
 
     NO_CONTENT(200, "C016", "No Content"),
+    HANDLE_ALREADY_DELETED(200, "C017", "Already Deleted"),
     ;
 
     private final int status;

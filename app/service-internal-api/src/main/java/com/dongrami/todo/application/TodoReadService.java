@@ -27,9 +27,15 @@ public class TodoReadService {
     private final TodoRepository todoRepository;
     private final TodoRememberRepository todoRememberRepository;
 
-    public ResponseTodoDto getTodoById(Long id) {
+    public ResponseTodoDto getTodoById(String userUniqueId, Long id) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
+
         TodoEntity todoEntity = todoRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+
+        if (!todoEntity.isOwner(userEntity)) {
+            throw new BaseException(ErrorCode.INVALID_AUTHORIZATION);
+        }
 
         return ResponseTodoDto.from(todoEntity);
     }
@@ -41,13 +47,13 @@ public class TodoReadService {
                 .map(ResponseTodoDto::from);
     }
 
-    public double getTodoAchievementRate(String userUniqueId, LocalDate currentDate) {
+    public int getTodoAchievementRate(String userUniqueId, LocalDate currentDate) {
 
         // 1. 사용자 조회
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         // 2. 사용자의 해당 일의 모든 할일 조회
-        List<TodoEntity> todoEntities = todoRepository.findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(userEntity, currentDate.atStartOfDay(), currentDate.plusDays(1).atStartOfDay());
+        List<TodoEntity> todoEntities = todoRepository.findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(userEntity, currentDate);
 
         // 3. 사용자의 모든 할일 중 완료된 할일 조회
         long completedTodoCount = todoEntities.stream()
@@ -56,7 +62,7 @@ public class TodoReadService {
 
         // 4. 완료된 할일의 개수 / 모든 할일의 개수 * 100
         if(!todoEntities.isEmpty()) {
-            return (double) completedTodoCount / todoEntities.size() * 100;
+            return (int) Math.ceil((double) completedTodoCount / todoEntities.size() * 100);
         }
 
         return 0;
