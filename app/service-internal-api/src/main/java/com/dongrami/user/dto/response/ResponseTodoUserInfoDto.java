@@ -1,23 +1,26 @@
 package com.dongrami.user.dto.response;
 
 import com.dongrami.user.domain.UserEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ResponseUserInfoDto {
+public class ResponseTodoUserInfoDto {
     private Long id;
     private String email;
     private String username;
     private String userPersonalColor;
 
-    public static ResponseUserInfoDto from(UserEntity entity) {
-        return ResponseUserInfoDto.builder()
+    @Builder
+    public ResponseTodoUserInfoDto(Long id, String email, String username, String userPersonalColor) {
+        this.id = id;
+        this.email = email;
+        this.username = username;
+        this.userPersonalColor = userPersonalColor;
+    }
+
+    public static ResponseTodoUserInfoDto from(UserEntity entity) {
+        return ResponseTodoUserInfoDto.builder()
                 .id(entity.getId())
                 .email(entity.getEmail())
                 .username(entity.getUsername())

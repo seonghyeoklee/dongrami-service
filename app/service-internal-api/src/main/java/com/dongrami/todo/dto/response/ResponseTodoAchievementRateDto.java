@@ -10,7 +10,7 @@ import lombok.Data;
 public class ResponseTodoAchievementRateDto {
     private String achievementRate;
 
-    public static ResponseTodoAchievementRateDto from(double achievementRate) {
+    public static ResponseTodoAchievementRateDto from(int achievementRate) {
         return ResponseTodoAchievementRateDto.builder()
                 .achievementRate(String.valueOf(achievementRate))
                 .build();

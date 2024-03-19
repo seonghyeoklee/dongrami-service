@@ -1,6 +1,5 @@
 package com.dongrami.todo.ui;
 
-import com.dongrami.todo.domain.TodoStatus;
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
 import com.dongrami.todo.dto.request.RequestCreateTodoRememberDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 
 @Tag(name = "Todo API", description = "Todo API")
 public interface TodoControllerInterface {
@@ -46,7 +46,7 @@ public interface TodoControllerInterface {
                             content = @Content(schema = @Schema(implementation = ResponseTodoDto.class))),
             }
     )
-    ResponseEntity<?> getTodoById(@PathVariable Long id);
+    ResponseEntity<?> getTodoById(@Parameter(hidden = true) User principal, @PathVariable Long id);
 
     @Operation(
             summary = "Todo 생성",
@@ -79,7 +79,7 @@ public interface TodoControllerInterface {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> getTodoAchievementRate(@Parameter(hidden = true) User principal);
+    ResponseEntity<?> getTodoAchievementRate(@Parameter(hidden = true) User principal, @RequestParam LocalDate currentDate);
 
     @Operation(
             summary = "저장된 Todo 조회",
@@ -103,7 +103,7 @@ public interface TodoControllerInterface {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> changeTodoStatus(@Parameter(hidden = true) User principal, @PathVariable Long id, @RequestParam TodoStatus todoStatus);
+    ResponseEntity<?> changeTodoStatus(@Parameter(hidden = true) User principal, @PathVariable Long id);
 
     @Operation(
             summary = "Todo 핀셋",

@@ -77,13 +77,13 @@ public class TodoWriteService {
         todoRememberRepository.save(todoRememberEntity);
     }
 
-    public void changeTodoStatus(String userUniqueId, Long todoId, TodoStatus todoStatus) {
+    public void changeTodoStatus(String userUniqueId, Long todoId) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
 
-        todoEntity.changeTodoStatus(userEntity, todoStatus);
+        todoEntity.changeTodoStatus(userEntity);
     }
 
     public void changeTodoPinned(String userUniqueId, Long todoId, boolean isPinned) {

@@ -11,17 +11,17 @@ import java.time.LocalDateTime;
 @Data
 public class RequestUpdateTodoDto {
 
-    @NotBlank(message = "제목을 입력해주세요.")
-    private String title;
-
     @NotBlank(message = "내용을 입력해주세요.")
     private String content;
+
+    @NotBlank(message = "메모를 입력해주세요.")
+    private String memo;
 
     @NotNull(message = "상태를 입력해주세요.")
     private TodoStatus todoStatus;
 
     @NotNull(message = "알람 일시를 입력해주세요.")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime alarmDateTime;
+    private LocalDateTime notificationDateTime;
 
 }

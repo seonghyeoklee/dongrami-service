@@ -27,4 +27,7 @@ public enum TodoStatus {
         return this == COMPLETED;
     }
 
+    public boolean isDeleted() {
+        return this == DELETED;
+    }
 }
