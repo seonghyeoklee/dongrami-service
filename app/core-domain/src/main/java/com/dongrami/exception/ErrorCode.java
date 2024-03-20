@@ -26,7 +26,8 @@ public enum ErrorCode {
 
     NO_CONTENT(200, "C016", "No Content"),
     HANDLE_ALREADY_DELETED(200, "C017", "Already Deleted"),
-    ;
+    HANDLE_ALREADY_EMOJI(200, "C018", "Already add emoji"),
+    EMOJI_NAME_ALREADY_EXIST(200, "C019", "Emoji name already exist"),;
 
     private final int status;
     private final String code;

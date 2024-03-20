@@ -38,9 +38,9 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
-    @GetMapping("/todos/{id}")
-    public ResponseEntity<?> getTodoById(@AuthenticationPrincipal User principal, @PathVariable Long id) {
-        ResponseTodoDto response = todoReadService.getTodoById(principal.getUsername(), id);
+    @GetMapping("/todos/{todoId}")
+    public ResponseEntity<?> getTodoById(@AuthenticationPrincipal User principal, @PathVariable Long todoId) {
+        ResponseTodoDto response = todoReadService.getTodoById(principal.getUsername(), todoId);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(response)
@@ -58,12 +58,12 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
-    @PutMapping("/todos/{id}")
+    @PutMapping("/todos/{todoId}")
     public ResponseEntity<?> updateTodo(@AuthenticationPrincipal User principal,
-                                        @PathVariable Long id,
+                                        @PathVariable Long todoId,
                                         @Valid @RequestBody RequestUpdateTodoDto requestUpdateTodoDto
     ) {
-        todoWriteService.updateTodo(principal.getUsername(), id, requestUpdateTodoDto);
+        todoWriteService.updateTodo(principal.getUsername(), todoId, requestUpdateTodoDto);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()
@@ -108,31 +108,43 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
-    @PatchMapping("/todos/{id}/completed")
+    @PatchMapping("/todos/{todoId}/completed")
     public ResponseEntity<?> changeTodoStatus(@AuthenticationPrincipal User principal,
-                                              @PathVariable Long id) {
-        todoWriteService.changeTodoStatus(principal.getUsername(), id);
+                                              @PathVariable Long todoId) {
+        todoWriteService.changeTodoStatus(principal.getUsername(), todoId);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()
         );
     }
 
-    @PatchMapping("/todos/{id}/pinned")
+    @PatchMapping("/todos/{todoId}/pinned")
     public ResponseEntity<?> changeTodoPinned(@AuthenticationPrincipal User principal,
-                                              @PathVariable Long id,
+                                              @PathVariable Long todoId,
                                               @RequestParam boolean isPinned) {
-        todoWriteService.changeTodoPinned(principal.getUsername(), id, isPinned);
+        todoWriteService.changeTodoPinned(principal.getUsername(), todoId, isPinned);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()
         );
     }
 
-    @PostMapping("/todos/{id}/tomorrow")
+    @PostMapping("/todos/{todoId}/tomorrow")
     public ResponseEntity<?> copyTodoToNextDay(@AuthenticationPrincipal User principal,
-                                               @PathVariable Long id) {
-        todoWriteService.copyTodoToNextDay(principal.getUsername(), id, LocalDate.now());
+                                               @PathVariable Long todoId) {
+        todoWriteService.copyTodoToNextDay(principal.getUsername(), todoId, LocalDate.now());
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success()
+        );
+    }
+
+    @PostMapping("/todos/{todoId}/emoji/{emojiId}")
+    public ResponseEntity<?> createTodoEmoji(@AuthenticationPrincipal User principal,
+                                             @PathVariable Long todoId,
+                                             @PathVariable Long emojiId
+    ) {
+        todoWriteService.createTodoEmoji(principal.getUsername(), todoId, emojiId);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()

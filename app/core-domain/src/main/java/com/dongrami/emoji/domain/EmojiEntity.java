@@ -24,11 +24,16 @@ public class EmojiEntity extends BaseTimeEntity {
     private String name;
 
     @Comment("이모지 아이콘")
-    @Column(length = 64, nullable = false, unique = true)
+    @Column(length = 64, nullable = false)
     private String icon;
 
     @Comment("삭제 여부")
     @Column
     private boolean isDeleted;
 
+    public void update(String name, String icon, boolean isDeleted) {
+        this.name = name;
+        this.icon = icon;
+        this.isDeleted = isDeleted;
+    }
 }
