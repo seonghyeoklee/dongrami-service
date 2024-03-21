@@ -3,6 +3,7 @@ package com.dongrami.user.ui;
 import com.dongrami.common.ApiResponse;
 import com.dongrami.user.application.UserGroupService;
 import com.dongrami.user.dto.request.RequestCreateUserGroupDto;
+import com.dongrami.user.dto.request.RequestJoinUserGroupDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,6 +41,16 @@ public class UserGroupController {
     @DeleteMapping("/user-groups")
     public ResponseEntity<?> deleteUserGroup(@AuthenticationPrincipal User principal) {
         userGroupService.deleteUserGroup(principal.getUsername());
+        return ResponseEntity.ok(
+                ApiResponse.success()
+        );
+    }
+
+    @PostMapping("/user-groups/join")
+    public ResponseEntity<?> joinUserGroup(@AuthenticationPrincipal User principal,
+                                           @Valid @RequestBody RequestJoinUserGroupDto request
+    ) {
+        userGroupService.joinUserGroup(principal.getUsername(), request.getGroupCode());
         return ResponseEntity.ok(
                 ApiResponse.success()
         );

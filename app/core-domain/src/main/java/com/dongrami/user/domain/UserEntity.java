@@ -129,4 +129,8 @@ public class UserEntity extends BaseTimeEntity {
         this.userPersonalColor = UserPersonalColor.builder().color("#f0f8ff").build();
     }
 
+    public boolean hasUserGroup() {
+        return userGroupEntity != null;
+    }
+
 }

@@ -33,6 +33,8 @@ public enum ErrorCode {
     USER_GROUP_ALREADY_EXIST(400, "UG001", "사용자 그룹은 1개만 생성 가능하고, 이미 사용자 그룹이 존재합니다."),
     USER_GROUP_NOT_EXIST(400, "UG002", "사용자 그룹이 존재하지 않습니다."),
     USER_GROUP_OWNER_CANNOT_DELETE(400, "UG003", "사용자 그룹의 소유자가 아니면 삭제할 수 없습니다."),
+    USER_GROUP_ALREADY_JOINED(400, "UG004", "이미 사용자 그룹에 가입되어 있습니다."),
+    USER_GROUP_NOT_EXIST_BY_GROUP_CODE(400, "UG005", "존재하지 않는 사용자 그룹 코드입니다."),
     ;
 
     private final int status;

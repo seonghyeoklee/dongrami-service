@@ -67,4 +67,17 @@ public class UserGroupService {
         userGroupRepository.delete(userGroupEntity);
     }
 
+    public void joinUserGroup(String username, String groupCode) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
+        if (userEntity.hasUserGroup()) {
+            throw new BaseException(ErrorCode.USER_GROUP_ALREADY_JOINED);
+        }
+
+        UserGroupEntity userGroupEntity = userGroupRepository.findByGroupCode(groupCode)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_GROUP_NOT_EXIST_BY_GROUP_CODE));
+
+        userGroupEntity.addUserEntity(userEntity);
+    }
+
 }

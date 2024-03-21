@@ -50,7 +50,7 @@ public class UserGroupEntity extends BaseTimeEntity {
         this.addUserEntity(userEntity);
     }
 
-    private void addUserEntity(UserEntity userEntity) {
+    public void addUserEntity(UserEntity userEntity) {
         userEntities.add(userEntity);
         userEntity.setUserGroupEntity(this);
     }
