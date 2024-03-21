@@ -7,6 +7,7 @@ import com.dongrami.user.domain.UserEntity;
 import com.dongrami.user.domain.UserGroupEntity;
 import com.dongrami.user.dto.UserGroupDto;
 import com.dongrami.user.dto.request.RequestCreateUserGroupDto;
+import com.dongrami.user.dto.request.RequestUpdateUserGroupDto;
 import com.dongrami.user.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -89,6 +90,21 @@ public class UserGroupService {
         }
 
         userGroupEntity.removeUserEntity(userEntity);
+    }
+
+    public void updateUserGroup(String username, RequestUpdateUserGroupDto request) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
+        UserGroupEntity userGroupEntity = userEntity.getUserGroupEntity();
+        if (userGroupEntity == null) {
+            throw new BaseException(ErrorCode.USER_GROUP_NOT_EXIST);
+        }
+
+        if (!userGroupEntity.isOwner(userEntity)) {
+            throw new BaseException(ErrorCode.USER_GROUP_OWNER_CANNOT_UPDATE);
+        }
+
+        userGroupEntity.updateGroupInfo(request.getGroupName(), request.getGroupDescription());
     }
 
 }

@@ -3,6 +3,7 @@ package com.dongrami.user.ui;
 import com.dongrami.user.dto.UserGroupDto;
 import com.dongrami.user.dto.request.RequestCreateUserGroupDto;
 import com.dongrami.user.dto.request.RequestJoinUserGroupDto;
+import com.dongrami.user.dto.request.RequestUpdateUserGroupDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -60,5 +61,14 @@ public interface UserGroupControllerInterface {
             }
     )
     ResponseEntity<?> leaveUserGroup(@AuthenticationPrincipal User principal);
+
+    @Operation(
+            summary = "사용자 그룹 정보 수정",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> updateUserGroup(@AuthenticationPrincipal User principal,
+                                      @Valid @RequestBody RequestUpdateUserGroupDto request);
 
 }

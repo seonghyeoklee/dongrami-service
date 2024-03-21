@@ -68,4 +68,8 @@ public class UserGroupEntity extends BaseTimeEntity {
         userEntity.setUserGroupEntity(null);
     }
 
+    public void updateGroupInfo(String groupName, String groupDescription) {
+        this.groupName = groupName;
+        this.groupDescription = groupDescription;
+    }
 }

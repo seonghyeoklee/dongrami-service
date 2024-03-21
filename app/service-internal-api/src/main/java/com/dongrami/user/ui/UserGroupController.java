@@ -4,6 +4,7 @@ import com.dongrami.common.ApiResponse;
 import com.dongrami.user.application.UserGroupService;
 import com.dongrami.user.dto.request.RequestCreateUserGroupDto;
 import com.dongrami.user.dto.request.RequestJoinUserGroupDto;
+import com.dongrami.user.dto.request.RequestUpdateUserGroupDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -59,6 +60,16 @@ public class UserGroupController implements UserGroupControllerInterface {
     @PostMapping("/user-groups/leave")
     public ResponseEntity<?> leaveUserGroup(@AuthenticationPrincipal User principal) {
         userGroupService.leaveUserGroup(principal.getUsername());
+        return ResponseEntity.ok(
+                ApiResponse.success()
+        );
+    }
+
+    @PutMapping("/user-groups")
+    public ResponseEntity<?> updateUserGroup(@AuthenticationPrincipal User principal,
+                                             @Valid @RequestBody RequestUpdateUserGroupDto request
+    ) {
+        userGroupService.updateUserGroup(principal.getUsername(), request);
         return ResponseEntity.ok(
                 ApiResponse.success()
         );
