@@ -80,4 +80,15 @@ public class UserGroupService {
         userGroupEntity.addUserEntity(userEntity);
     }
 
+    public void leaveUserGroup(String username) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
+        UserGroupEntity userGroupEntity = userEntity.getUserGroupEntity();
+        if (userGroupEntity == null) {
+            throw new BaseException(ErrorCode.USER_GROUP_NOT_EXIST);
+        }
+
+        userGroupEntity.removeUserEntity(userEntity);
+    }
+
 }

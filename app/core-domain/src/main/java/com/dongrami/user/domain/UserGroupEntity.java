@@ -62,4 +62,10 @@ public class UserGroupEntity extends BaseTimeEntity {
     public boolean isOwner(UserEntity userEntity) {
         return ownerUserEntity.equals(userEntity);
     }
+
+    public void removeUserEntity(UserEntity userEntity) {
+        userEntities.remove(userEntity);
+        userEntity.setUserGroupEntity(null);
+    }
+
 }

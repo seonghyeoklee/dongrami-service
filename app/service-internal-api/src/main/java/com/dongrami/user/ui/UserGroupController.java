@@ -15,7 +15,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class UserGroupController {
+public class UserGroupController implements UserGroupControllerInterface {
     private final UserGroupService userGroupService;
 
     @PostMapping("/user-groups")
@@ -51,6 +51,14 @@ public class UserGroupController {
                                            @Valid @RequestBody RequestJoinUserGroupDto request
     ) {
         userGroupService.joinUserGroup(principal.getUsername(), request.getGroupCode());
+        return ResponseEntity.ok(
+                ApiResponse.success()
+        );
+    }
+
+    @PostMapping("/user-groups/leave")
+    public ResponseEntity<?> leaveUserGroup(@AuthenticationPrincipal User principal) {
+        userGroupService.leaveUserGroup(principal.getUsername());
         return ResponseEntity.ok(
                 ApiResponse.success()
         );
