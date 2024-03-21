@@ -1,7 +1,10 @@
 package com.dongrami.todo.application;
 
+import com.dongrami.emoji.domain.EmojiEntity;
+import com.dongrami.emoji.repository.EmojiRepository;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
+import com.dongrami.todo.domain.TodoEmojiEntity;
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoRememberEntity;
 import com.dongrami.todo.domain.TodoStatus;
@@ -25,6 +28,7 @@ public class TodoWriteService {
     private final UserService userService;
     private final TodoRepository todoRepository;
     private final TodoRememberRepository todoRememberRepository;
+    private final EmojiRepository emojiRepository;
 
     public ResponseTodoDto createTodo(String userUniqueId, RequestCreateTodoDto request) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
@@ -114,6 +118,24 @@ public class TodoWriteService {
         );
 
         todoRepository.save(copyTodoEntity);
+    }
+
+    public void createTodoEmoji(String username, Long todoId, Long emojiId) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
+        TodoEntity todoEntity = todoRepository.findById(todoId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+
+        EmojiEntity emojiEntity = emojiRepository.findById(emojiId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+
+        TodoEmojiEntity todoEmojiEntity = TodoEmojiEntity.builder()
+                .emojiEntity(emojiEntity)
+                .todoEntity(todoEntity)
+                .userEntity(userEntity)
+                .build();
+
+        todoEntity.addTodoEmoji(todoEmojiEntity);
     }
 
 }

@@ -53,6 +53,7 @@ MYSQL_PASSWORD={password}
 - [X] Todo 내일하기
   - default : 조회된 Todo 내용 다음날로 복사
 - [X] Todo 기억해두기
+- [X] Todo 이모지 추가하기
 
 #### Diary
 
@@ -86,3 +87,8 @@ MYSQL_PASSWORD={password}
 
 - [ ] Todo, Diary 일정 조회
 
+#### Emoji
+
+- [X] Diary 생성
+- [X] Diary 수정
+- [X] Diary 조회

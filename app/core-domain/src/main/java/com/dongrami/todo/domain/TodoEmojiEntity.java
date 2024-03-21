@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"emojiEntity", "userEntity", "todoEntity"}, callSuper = false)
 public class TodoEmojiEntity extends BaseTimeEntity {
 
     @Comment("PK")

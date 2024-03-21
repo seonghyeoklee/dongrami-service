@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class TodoEntity extends BaseTimeEntity {
 
     @Comment("PK")
@@ -119,6 +120,10 @@ public class TodoEntity extends BaseTimeEntity {
         validateUser(userEntity);
         this.isPinned = isPinned;
         this.pinnedDateTime = isPinned ? LocalDateTime.now() : null;
+    }
+
+    public void addTodoEmoji(TodoEmojiEntity todoEmojiEntity) {
+        todoEmojiEntities.add(todoEmojiEntity);
     }
 
 }
