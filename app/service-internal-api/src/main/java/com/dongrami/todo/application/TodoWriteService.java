@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 @Transactional
@@ -109,15 +111,30 @@ public class TodoWriteService {
             throw new BaseException(ErrorCode.HANDLE_ACCESS_DENIED);
         }
 
-        TodoEntity copyTodoEntity = TodoEntity.create(
-                todoEntity.getContent(),
-                todoEntity.getMemo(),
-                currentDate.plusDays(1).atStartOfDay(),
-                TodoStatus.NOT_COMPLETED,
-                userEntity
-        );
+        LocalDateTime notificationDateTime = getNotificationDateTime(currentDate, todoEntity.getNotificationDateTime());
+
+        TodoEntity copyTodoEntity = TodoEntity.builder()
+                .content(todoEntity.getContent())
+                .memo(todoEntity.getMemo())
+                .todoStatus(TodoStatus.NOT_COMPLETED)
+                .todoDate(currentDate.plusDays(1))
+                .notificationDateTime(notificationDateTime)
+                .isPinned(todoEntity.isPinned())
+                .pinnedDateTime(LocalDateTime.now())
+                .userEntity(userEntity)
+                .build();
 
         todoRepository.save(copyTodoEntity);
+    }
+
+    private LocalDateTime getNotificationDateTime(LocalDate currentDate, LocalDateTime notificationDateTime) {
+        if (notificationDateTime != null) {
+            LocalDate localDate = currentDate.plusDays(1);
+            LocalTime localTime = notificationDateTime.toLocalTime();
+            return LocalDateTime.of(localDate, localTime);
+        }
+
+        return null;
     }
 
     public void createTodoEmoji(String username, Long todoId, Long emojiId) {
