@@ -11,7 +11,6 @@ import java.util.List;
 @Entity
 @Table(name = "user_group")
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class UserGroupEntity extends BaseTimeEntity {
@@ -30,10 +29,24 @@ public class UserGroupEntity extends BaseTimeEntity {
     private String groupDescription;
 
     @Comment("그룹 코드")
-    @Column(length = 128, nullable = false)
+    @Column(length = 128, nullable = false, unique = true)
     private String groupCode;
 
     @OneToMany(mappedBy = "userGroupEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserEntity> userEntities = new ArrayList<>();
+
+    @Builder
+    public UserGroupEntity(Long id, String groupName, String groupDescription, String groupCode, UserEntity userEntity) {
+        this.id = id;
+        this.groupName = groupName;
+        this.groupDescription = groupDescription;
+        this.groupCode = groupCode;
+        this.addUserEntity(userEntity);
+    }
+
+    private void addUserEntity(UserEntity userEntity) {
+        userEntities.add(userEntity);
+        userEntity.setUserGroupEntity(this);
+    }
 
 }

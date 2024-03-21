@@ -27,7 +27,11 @@ public enum ErrorCode {
     NO_CONTENT(200, "C016", "No Content"),
     HANDLE_ALREADY_DELETED(200, "C017", "Already Deleted"),
     HANDLE_ALREADY_EMOJI(200, "C018", "Already add emoji"),
-    EMOJI_NAME_ALREADY_EXIST(200, "C019", "Emoji name already exist"),;
+    EMOJI_NAME_ALREADY_EXIST(200, "C019", "Emoji name already exist"),
+
+    // User-Group
+    USER_GROUP_ALREADY_EXIST(400, "UG001", "사용자 그룹은 1개만 생성 가능하고, 이미 사용자 그룹이 존재합니다."),
+    ;
 
     private final int status;
     private final String code;
