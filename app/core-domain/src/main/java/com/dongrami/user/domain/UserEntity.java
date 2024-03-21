@@ -75,6 +75,7 @@ public class UserEntity extends BaseTimeEntity {
     @Embedded
     private UserPersonalColor userPersonalColor;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_group_id", foreignKey = @ForeignKey(name = "fk_user_user_group"))
     private UserGroupEntity userGroupEntity;
@@ -125,6 +126,11 @@ public class UserEntity extends BaseTimeEntity {
         this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
         this.providerType = providerType;
         this.roleType = roleType;
+        this.userPersonalColor = UserPersonalColor.builder().color("#f0f8ff").build();
+    }
+
+    public boolean hasUserGroup() {
+        return userGroupEntity != null;
     }
 
 }

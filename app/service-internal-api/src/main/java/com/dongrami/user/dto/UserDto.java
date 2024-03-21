@@ -24,6 +24,7 @@ public class UserDto {
     private RoleType roleType;
     private boolean isBlocked;
     private String blockReason;
+    private String color;
 
     public static UserDto from(UserEntity userEntity) {
         return UserDto.builder()
@@ -38,6 +39,7 @@ public class UserDto {
                 .roleType(userEntity.getRoleType())
                 .isBlocked(userEntity.isBlocked())
                 .blockReason(userEntity.getBlockReason())
+                .color(userEntity.getUserPersonalColor().getColor())
                 .build();
     }
 
