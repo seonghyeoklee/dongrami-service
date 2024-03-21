@@ -5,6 +5,7 @@ import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
 import com.dongrami.user.domain.UserEntity;
 import com.dongrami.user.domain.UserGroupEntity;
+import com.dongrami.user.dto.UserGroupDto;
 import com.dongrami.user.dto.request.RequestCreateUserGroupDto;
 import com.dongrami.user.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,14 @@ public class UserGroupService {
         if (userGroupEntity != null) {
             throw new BaseException(ErrorCode.USER_GROUP_ALREADY_EXIST);
         }
+    }
+
+    public UserGroupDto getUserGroup(String username) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
+        return UserGroupDto.from(
+                userEntity.getUserGroupEntity()
+        );
     }
 
 }
