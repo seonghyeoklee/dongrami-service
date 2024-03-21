@@ -37,4 +37,12 @@ public class UserGroupController {
         );
     }
 
+    @DeleteMapping("/user-groups")
+    public ResponseEntity<?> deleteUserGroup(@AuthenticationPrincipal User principal) {
+        userGroupService.deleteUserGroup(principal.getUsername());
+        return ResponseEntity.ok(
+                ApiResponse.success()
+        );
+    }
+
 }

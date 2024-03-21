@@ -50,4 +50,21 @@ public class UserGroupService {
         );
     }
 
+    public void deleteUserGroup(String username) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
+        UserGroupEntity userGroupEntity = userEntity.getUserGroupEntity();
+        if (userGroupEntity == null) {
+            throw new BaseException(ErrorCode.USER_GROUP_NOT_EXIST);
+        }
+
+        if (!userGroupEntity.isOwner(userEntity)) {
+            throw new BaseException(ErrorCode.USER_GROUP_OWNER_CANNOT_DELETE);
+        }
+
+        userGroupEntity.removeAllUser();
+
+        userGroupRepository.delete(userGroupEntity);
+    }
+
 }

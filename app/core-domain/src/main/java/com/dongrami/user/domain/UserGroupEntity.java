@@ -32,7 +32,12 @@ public class UserGroupEntity extends BaseTimeEntity {
     @Column(length = 128, nullable = false, unique = true)
     private String groupCode;
 
-    @OneToMany(mappedBy = "userGroupEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Comment("그룹 생성자")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_user_id")
+    private UserEntity ownerUserEntity;
+
+    @OneToMany(mappedBy = "userGroupEntity", cascade = CascadeType.PERSIST)
     private List<UserEntity> userEntities = new ArrayList<>();
 
     @Builder
@@ -41,6 +46,7 @@ public class UserGroupEntity extends BaseTimeEntity {
         this.groupName = groupName;
         this.groupDescription = groupDescription;
         this.groupCode = groupCode;
+        this.ownerUserEntity = userEntity;
         this.addUserEntity(userEntity);
     }
 
@@ -49,4 +55,11 @@ public class UserGroupEntity extends BaseTimeEntity {
         userEntity.setUserGroupEntity(this);
     }
 
+    public void removeAllUser() {
+        userEntities.forEach(userEntity -> userEntity.setUserGroupEntity(null));
+    }
+
+    public boolean isOwner(UserEntity userEntity) {
+        return ownerUserEntity.equals(userEntity);
+    }
 }
