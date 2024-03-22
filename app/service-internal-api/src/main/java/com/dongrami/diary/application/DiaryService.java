@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -22,10 +24,11 @@ public class DiaryService {
     private final UserService userService;
     private final DiaryRepository diaryRepository;
 
-    public Page<DiaryDto> getDiaryPage(Pageable pageable) {
-        Page<DiaryEntity> diaryEntityPage = diaryRepository.findBySearch(pageable);
+    public Page<DiaryDto> getDiaryPage(String username, Pageable pageable, LocalDate currentDate) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
 
-        return diaryEntityPage.map(DiaryDto::from);
+        return diaryRepository.findDiaryPageByCurrentDate(userEntity.getId(), pageable, currentDate)
+                .map(DiaryDto::from);
     }
 
     public void createDiary(String userUniqueId, RequestCreateDiaryDto request) {
@@ -41,16 +44,24 @@ public class DiaryService {
         diaryRepository.save(diaryEntity);
     }
 
-    public DiaryDto getDiaryById(Long id) {
-        DiaryEntity diaryEntity = diaryRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+    public DiaryDto getDiaryById(String username, Long diaryId) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+        
+        DiaryEntity diaryEntity = diaryRepository.findByUserIdAndDiaryId(userEntity.getId(), diaryId)
+                .orElseThrow(() -> new BaseException(ErrorCode.DIARY_NOT_EXIST));
 
         return DiaryDto.from(diaryEntity);
     }
 
-    public void updateDiary(Long id, RequestUpdateDiaryDto request) {
+    public void updateDiary(String username, Long id, RequestUpdateDiaryDto request) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
         DiaryEntity diaryEntity = diaryRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.DIARY_NOT_EXIST));
+
+        if (!diaryEntity.isOwner(userEntity)) {
+            throw new BaseException(ErrorCode.DIARY_NOT_OWNER_CANNOT_UPDATE);
+        }
 
         diaryEntity.update(
                 request.getTitle(),
@@ -59,9 +70,15 @@ public class DiaryService {
         );
     }
 
-    public void deleteDiary(Long id) {
+    public void deleteDiary(String username, Long id) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
         DiaryEntity diaryEntity = diaryRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.DIARY_NOT_EXIST));
+
+        if (!diaryEntity.isOwner(userEntity)) {
+            throw new BaseException(ErrorCode.DIARY_NOT_OWNER_CANNOT_DELETE);
+        }
 
         diaryEntity.delete();
     }
