@@ -18,7 +18,7 @@ public class ResponseTodoDto {
     private String memo;
     private TodoStatus todoStatus;
     private LocalDateTime notificationDateTime;
-    private boolean isPinned;
+    private Boolean isPinned;
     private LocalDateTime pinnedDateTime;
     private ResponseUserInfoDto user;
     private LocalDateTime createdDateTime;

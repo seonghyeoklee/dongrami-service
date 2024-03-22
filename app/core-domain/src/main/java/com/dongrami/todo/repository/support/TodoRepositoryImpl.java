@@ -2,7 +2,6 @@ package com.dongrami.todo.repository.support;
 
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoStatus;
-import com.dongrami.user.domain.UserEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -22,56 +21,47 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<TodoEntity> findBySearch(Pageable pageable, TodoSearchDto todoSearchDto) {
+    public Page<TodoEntity> findTodoPageByCurrentDate(Pageable pageable, LocalDate currentDate, List<Long> userIds) {
         int totalCount = queryFactory
                 .select(todoEntity)
                 .from(todoEntity)
-                .where(searchByBuilder(todoSearchDto))
+                .where(searchByBuilder(currentDate, userIds))
                 .fetch().size();
 
         JPAQuery<TodoEntity> query = queryFactory
                 .select(todoEntity)
                 .from(todoEntity)
-                .where(searchByBuilder(todoSearchDto))
+                .where(searchByBuilder(currentDate, userIds))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(todoEntity.pinnedDateTime.desc())
-                .orderBy(todoEntity.id.desc());
+                .orderBy(todoEntity.id.asc());
 
         return new PageImpl<>(query.fetch(), pageable, totalCount);
     }
 
     @Override
-    public List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(UserEntity userEntity, LocalDate currentDate) {
+    public List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(LocalDate currentDate, List<Long> userIds) {
         return queryFactory
                 .selectFrom(todoEntity)
                 .where(
-                        todoEntity.userEntity.eq(userEntity)
+                        todoEntity.userEntity.id.in(userIds)
                                 .and(todoEntity.todoDate.eq(currentDate))
                                 .and(todoEntity.todoStatus.ne(TodoStatus.DELETED))
                 )
                 .fetch();
     }
 
-    private BooleanBuilder searchByBuilder(TodoSearchDto todoSearchDto) {
+    private BooleanBuilder searchByBuilder(LocalDate currentDate, List<Long> userIds) {
         BooleanBuilder builder = new BooleanBuilder();
+        builder.and(todoEntity.todoStatus.ne(TodoStatus.DELETED));
 
-        if (todoSearchDto.getCurrentDate() != null) {
-            builder.and(todoEntity.todoDate.eq(todoSearchDto.getCurrentDate()));
+        if (currentDate != null) {
+            builder.and(todoEntity.todoDate.eq(currentDate));
         }
 
-        if (todoSearchDto.getIsDeleted()) {
-            builder.and(todoEntity.todoStatus.eq(TodoStatus.DELETED));
-        } else {
-            builder.and(todoEntity.todoStatus.ne(TodoStatus.DELETED));
-        }
-
-        if (todoSearchDto.getIsPinned() != null) {
-            if (todoSearchDto.getIsPinned()) {
-                builder.and(todoEntity.isPinned.isTrue());
-            } else {
-                builder.and(todoEntity.isPinned.isFalse());
-            }
+        if (userIds != null && !userIds.isEmpty()) {
+            builder.and(todoEntity.userEntity.id.in(userIds));
         }
 
         return builder;

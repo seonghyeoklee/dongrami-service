@@ -5,12 +5,12 @@ import com.dongrami.user.dto.request.RequestCreateUserGroupDto;
 import com.dongrami.user.dto.request.RequestJoinUserGroupDto;
 import com.dongrami.user.dto.request.RequestUpdateUserGroupDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -26,7 +26,7 @@ public interface UserGroupControllerInterface {
                             content = @Content(schema = @Schema(implementation = UserGroupDto.class))),
             }
     )
-    ResponseEntity<?> getUserGroup(@AuthenticationPrincipal User principal);
+    ResponseEntity<?> getUserGroup(@Parameter(hidden = true) User principal);
 
     @Operation(
             summary = "사용자 그룹 생성",
@@ -34,7 +34,7 @@ public interface UserGroupControllerInterface {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> createUserGroup(@AuthenticationPrincipal User principal,
+    ResponseEntity<?> createUserGroup(@Parameter(hidden = true) User principal,
                                       @Valid @RequestBody RequestCreateUserGroupDto request);
 
     @Operation(
@@ -43,7 +43,7 @@ public interface UserGroupControllerInterface {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> deleteUserGroup(@AuthenticationPrincipal User principal);
+    ResponseEntity<?> deleteUserGroup(@Parameter(hidden = true) User principal);
 
     @Operation(
             summary = "사용자 그룹 참여하기",
@@ -51,7 +51,7 @@ public interface UserGroupControllerInterface {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> joinUserGroup(@AuthenticationPrincipal User principal,
+    ResponseEntity<?> joinUserGroup(@Parameter(hidden = true) User principal,
                                     @Valid @RequestBody RequestJoinUserGroupDto request);
 
     @Operation(
@@ -60,7 +60,7 @@ public interface UserGroupControllerInterface {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> leaveUserGroup(@AuthenticationPrincipal User principal);
+    ResponseEntity<?> leaveUserGroup(@Parameter(hidden = true) User principal);
 
     @Operation(
             summary = "사용자 그룹 정보 수정",
@@ -68,7 +68,7 @@ public interface UserGroupControllerInterface {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> updateUserGroup(@AuthenticationPrincipal User principal,
+    ResponseEntity<?> updateUserGroup(@Parameter(hidden = true) User principal,
                                       @Valid @RequestBody RequestUpdateUserGroupDto request);
 
 }

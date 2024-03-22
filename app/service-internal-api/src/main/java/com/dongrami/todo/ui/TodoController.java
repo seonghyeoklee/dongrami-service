@@ -8,7 +8,6 @@ import com.dongrami.todo.dto.request.RequestCreateTodoRememberDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
 import com.dongrami.todo.dto.response.ResponseTodoAchievementRateDto;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
-import com.dongrami.todo.repository.support.TodoSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,8 +29,10 @@ public class TodoController implements TodoControllerInterface {
     private final TodoReadService todoReadService;
 
     @GetMapping("/todos")
-    public ResponseEntity<?> getTodoPage(Pageable pageable, TodoSearchDto todoSearchDto) {
-        Page<ResponseTodoDto> responses = todoReadService.getTodoPageBySearch(pageable, todoSearchDto);
+    public ResponseEntity<?> getTodoPage(@AuthenticationPrincipal User principal,
+                                         Pageable pageable,
+                                         @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate) {
+        Page<ResponseTodoDto> responses = todoReadService.getTodoPageByCurrentDate(principal.getUsername(), pageable, currentDate);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(responses)
@@ -49,9 +50,8 @@ public class TodoController implements TodoControllerInterface {
 
     @PostMapping("/todos")
     public ResponseEntity<?> createTodo(@AuthenticationPrincipal User principal,
-                                        @Valid @RequestBody RequestCreateTodoDto requestCreateTodoDto
-    ) {
-        ResponseTodoDto response = todoWriteService.createTodo(principal.getUsername(), requestCreateTodoDto);
+                                        @Valid @RequestBody RequestCreateTodoDto request) {
+        ResponseTodoDto response = todoWriteService.createTodo(principal.getUsername(), request);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(response)
@@ -61,9 +61,8 @@ public class TodoController implements TodoControllerInterface {
     @PutMapping("/todos/{todoId}")
     public ResponseEntity<?> updateTodo(@AuthenticationPrincipal User principal,
                                         @PathVariable Long todoId,
-                                        @Valid @RequestBody RequestUpdateTodoDto requestUpdateTodoDto
-    ) {
-        todoWriteService.updateTodo(principal.getUsername(), todoId, requestUpdateTodoDto);
+                                        @Valid @RequestBody RequestUpdateTodoDto request) {
+        todoWriteService.updateTodo(principal.getUsername(), todoId, request);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()
@@ -80,7 +79,8 @@ public class TodoController implements TodoControllerInterface {
     }
 
     @GetMapping("/todos/achievement-rate")
-    public ResponseEntity<?> getTodoAchievementRate(@AuthenticationPrincipal User principal, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate) {
+    public ResponseEntity<?> getTodoAchievementRate(@AuthenticationPrincipal User principal,
+                                                    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate) {
         int achievementRate = todoReadService.getTodoAchievementRate(principal.getUsername(), currentDate);
 
         return ResponseEntity.ok().body(

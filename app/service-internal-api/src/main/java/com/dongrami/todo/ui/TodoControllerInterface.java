@@ -4,7 +4,6 @@ import com.dongrami.todo.dto.request.RequestCreateTodoDto;
 import com.dongrami.todo.dto.request.RequestCreateTodoRememberDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
-import com.dongrami.todo.repository.support.TodoSearchDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 import java.time.LocalDate;
 
-@Tag(name = "Todo API", description = "Todo API")
+@Tag(name = "Todo API", description = "할 일을 관리하는 API")
 public interface TodoControllerInterface {
 
     @Operation(
@@ -37,7 +37,7 @@ public interface TodoControllerInterface {
                             content = @Content(schema = @Schema(implementation = ResponseTodoDto.class))),
             }
     )
-    ResponseEntity<?> getTodoPage(@Parameter(hidden = true) Pageable pageable, @ParameterObject TodoSearchDto todoSearchDto);
+    ResponseEntity<?> getTodoPage(@Parameter(hidden = true) User principal, @Parameter(hidden = true) Pageable pageable, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate);
 
     @Operation(
             summary = "Todo 조회",
@@ -120,5 +120,15 @@ public interface TodoControllerInterface {
             }
     )
     ResponseEntity<?> copyTodoToNextDay(@Parameter(hidden = true) User principal, @PathVariable Long id);
+
+    @Operation(
+            summary = "Todo 이모지 반응 추가하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> createTodoEmoji(@Parameter(hidden = true) User principal,
+                                      @PathVariable Long todoId,
+                                      @PathVariable Long emojiId);
 
 }

@@ -15,6 +15,7 @@ import com.dongrami.todo.repository.TodoRememberRepository;
 import com.dongrami.todo.repository.TodoRepository;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
+import com.dongrami.user.domain.UserGroupEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -46,16 +48,23 @@ public class TodoWriteService {
         return ResponseTodoDto.from(todoRepository.save(todoEntity));
     }
 
-    public void updateTodo(String userUniqueId, Long todoId, RequestUpdateTodoDto requestUpdateTodoDto) {
+    public void updateTodo(String userUniqueId, Long todoId, RequestUpdateTodoDto request) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
+
+        if (todoEntity.isDeleted()) {
+            throw new BaseException(ErrorCode.TODO_ALREADY_DELETED_CANNOT_UPDATE);
+        }
+
+        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
+            throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
+        }
 
         todoEntity.update(
-                userEntity,
-                requestUpdateTodoDto.getContent(),
-                requestUpdateTodoDto.getTodoStatus()
+                request.getContent(),
+                request.getTodoStatus()
         );
     }
 
@@ -63,16 +72,20 @@ public class TodoWriteService {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
-        todoEntity.delete(userEntity);
+        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
+            throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
+        }
+
+        todoEntity.delete();
     }
 
     public void createTodoRemember(String userUniqueId, Long todoId) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         TodoRememberEntity todoRememberEntity = TodoRememberEntity.builder()
                 .userEntity(userEntity)
@@ -87,28 +100,36 @@ public class TodoWriteService {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
-        todoEntity.changeTodoStatus(userEntity);
+        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
+            throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
+        }
+
+        todoEntity.changeTodoStatus();
     }
 
     public void changeTodoPinned(String userUniqueId, Long todoId, boolean isPinned) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
-        todoEntity.changeTodoPinned(userEntity, isPinned);
+        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
+            throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
+        }
+
+        todoEntity.changeTodoPinned(isPinned);
     }
 
     public void copyTodoToNextDay(String userUniqueId, Long todoId, LocalDate currentDate) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
-        if (!todoEntity.isOwner(userEntity)) {
-            throw new BaseException(ErrorCode.HANDLE_ACCESS_DENIED);
+        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
+            throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
 
         LocalDateTime notificationDateTime = getNotificationDateTime(currentDate, todoEntity.getNotificationDateTime());
@@ -141,7 +162,7 @@ public class TodoWriteService {
         UserEntity userEntity = userService.getUserByUserUniqueId(username);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         EmojiEntity emojiEntity = emojiRepository.findById(emojiId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
@@ -153,6 +174,18 @@ public class TodoWriteService {
                 .build();
 
         todoEntity.addTodoEmoji(todoEmojiEntity);
+    }
+
+    private List<Long> getUserIds(UserEntity userEntity) {
+        UserGroupEntity userGroupEntity = userEntity.getUserGroupEntity();
+        if (userGroupEntity == null) {
+            return List.of(userEntity.getId());
+        }
+
+        List<UserEntity> userEntities = userGroupEntity.getUserEntities();
+        return userEntities.stream()
+                .map(UserEntity::getId)
+                .toList();
     }
 
 }

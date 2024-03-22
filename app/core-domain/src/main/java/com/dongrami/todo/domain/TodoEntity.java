@@ -10,6 +10,7 @@ import org.hibernate.annotations.Comment;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "todo")
@@ -76,8 +77,7 @@ public class TodoEntity extends BaseTimeEntity {
                 .build();
     }
 
-    public void update(UserEntity userEntity, String content, TodoStatus todoStatus) {
-        validateUser(userEntity);
+    public void update(String content, TodoStatus todoStatus) {
         this.content = content;
         this.todoStatus = todoStatus;
     }
@@ -86,29 +86,14 @@ public class TodoEntity extends BaseTimeEntity {
         return this.todoStatus.isCompleted();
     }
 
-    public boolean isOwner(UserEntity userEntity) {
-        return this.userEntity.equals(userEntity);
-    }
-
-    public void delete(UserEntity userEntity) {
-        validateUser(userEntity);
-
+    public void delete() {
         if (this.todoStatus.isDeleted()) {
-            throw new BaseException(ErrorCode.HANDLE_ALREADY_DELETED);
+            throw new BaseException(ErrorCode.TODO_ALREADY_DELETED);
         }
-
         this.todoStatus = TodoStatus.DELETED;
     }
 
-    private void validateUser(UserEntity userEntity) {
-        if (!isOwner(userEntity)) {
-            throw new BaseException(ErrorCode.HANDLE_ACCESS_DENIED);
-        }
-    }
-
-    public void changeTodoStatus(UserEntity userEntity) {
-        validateUser(userEntity);
-
+    public void changeTodoStatus() {
         if (this.todoStatus.isCompleted()) {
             this.todoStatus = TodoStatus.NOT_COMPLETED;
         } else {
@@ -116,8 +101,7 @@ public class TodoEntity extends BaseTimeEntity {
         }
     }
 
-    public void changeTodoPinned(UserEntity userEntity, boolean isPinned) {
-        validateUser(userEntity);
+    public void changeTodoPinned(boolean isPinned) {
         this.isPinned = isPinned;
         this.pinnedDateTime = isPinned ? LocalDateTime.now() : null;
     }
@@ -126,4 +110,11 @@ public class TodoEntity extends BaseTimeEntity {
         todoEmojiEntities.add(todoEmojiEntity);
     }
 
+    public boolean isContainsUserIds(List<Long> userIds) {
+        return userIds.contains(userEntity.getId());
+    }
+
+    public boolean isDeleted() {
+        return this.todoStatus.isDeleted();
+    }
 }
