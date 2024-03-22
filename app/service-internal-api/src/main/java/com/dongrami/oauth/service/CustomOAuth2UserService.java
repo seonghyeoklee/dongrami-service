@@ -5,6 +5,7 @@ import com.dongrami.oauth.exception.OAuthProviderMissMatchException;
 import com.dongrami.oauth.info.OAuth2UserInfo;
 import com.dongrami.oauth.info.OAuth2UserInfoFactory;
 import com.dongrami.oauth.info.UserPrincipal;
+import com.dongrami.user.domain.InviteCode;
 import com.dongrami.user.domain.ProviderType;
 import com.dongrami.user.domain.RoleType;
 import com.dongrami.user.domain.UserEntity;
@@ -52,13 +53,23 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             }
             updateUser(savedUser, userInfo);
         } else {
-            savedUser = createUser(userInfo, providerType);
+            String inviteCode;
+
+            while (true) {
+                inviteCode = keyGenerator.generateKey();
+                boolean isExists = userRepository.existsByInviteCode(new InviteCode(inviteCode));
+                if (!isExists) {
+                    break;
+                }
+            }
+
+            savedUser = createUser(userInfo, providerType, inviteCode);
         }
 
         return UserPrincipal.create(savedUser, user.getAttributes());
     }
 
-    private UserEntity createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
+    private UserEntity createUser(OAuth2UserInfo userInfo, ProviderType providerType, String inviteCode) {
         UserEntity userEntity = UserEntity.createUser(
                 userInfo.getId(),
                 userInfo.getName(),
@@ -67,7 +78,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 userInfo.getImageUrl(),
                 providerType,
                 RoleType.USER,
-                keyGenerator.generateKey()
+                inviteCode
         );
 
         return userRepository.saveAndFlush(userEntity);
