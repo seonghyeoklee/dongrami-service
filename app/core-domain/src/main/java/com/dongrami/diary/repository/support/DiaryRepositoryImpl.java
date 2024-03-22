@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static com.dongrami.diary.domain.QDiaryEntity.diaryEntity;
 import static com.dongrami.user.domain.QUserEntity.userEntity;
@@ -37,6 +38,34 @@ public class DiaryRepositoryImpl implements DiaryRepositorySupport {
                 .limit(pageable.getPageSize());
 
         return new PageImpl<>(query.fetch(), pageable, totalCount);
+    }
+
+    @Override
+    public Optional<DiaryEntity> findByUserIdAndDiaryId(Long userId, Long diaryId) {
+        return Optional.ofNullable(
+                queryFactory
+                        .select(diaryEntity)
+                        .from(diaryEntity)
+                        .where(
+                                (
+                                        diaryEntity.userEntity.id.in(
+                                                        JPAExpressions.select(userEntity.id)
+                                                                .from(userEntity)
+                                                                .where(userEntity.userGroupEntity.id.in(
+                                                                                JPAExpressions.select(userEntity.userGroupEntity.id)
+                                                                                        .from(userEntity)
+                                                                                        .where(userEntity.id.eq(userId))
+                                                                        )
+                                                                )
+                                                )
+                                                .and(diaryEntity.isPublic.eq(true))
+                                                .or(diaryEntity.userEntity.id.eq(userId))
+                                )
+                                        .and(diaryEntity.isDeleted.eq(false))
+                                        .and(diaryEntity.id.eq(diaryId))
+                        )
+                        .fetchOne()
+        );
     }
 
     private BooleanExpression searchByBuilder(Long userId, LocalDate currentDate) {

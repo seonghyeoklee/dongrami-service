@@ -44,30 +44,28 @@ public class DiaryController implements DiaryControllerInterface {
         );
     }
 
-    @GetMapping("/diaries/{id}")
-    public ResponseEntity<?> getDiaryById(@PathVariable Long id) {
-        DiaryDto response = diaryService.getDiaryById(id);
+    @GetMapping("/diaries/{diaryId}")
+    public ResponseEntity<?> getDiaryById(@AuthenticationPrincipal User principal,
+                                          @PathVariable Long diaryId) {
+        DiaryDto response = diaryService.getDiaryById(principal.getUsername(), diaryId);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(response)
         );
     }
 
-    @PutMapping("/diaries/{id}")
-    public ResponseEntity<?> updateDiary(
-            @PathVariable Long id,
-            @Valid @RequestBody RequestUpdateDiaryDto request
-    ) {
-        diaryService.updateDiary(id, request);
+    @PutMapping("/diaries/{diaryId}")
+    public ResponseEntity<?> updateDiary(@PathVariable Long diaryId, @Valid @RequestBody RequestUpdateDiaryDto request) {
+        diaryService.updateDiary(diaryId, request);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(null)
         );
     }
 
-    @DeleteMapping("/diaries/{id}")
-    public ResponseEntity<?> deleteDiary(@PathVariable Long id) {
-        diaryService.deleteDiary(id);
+    @DeleteMapping("/diaries/{diaryId}")
+    public ResponseEntity<?> deleteDiary(@PathVariable Long diaryId) {
+        diaryService.deleteDiary(diaryId);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(null)

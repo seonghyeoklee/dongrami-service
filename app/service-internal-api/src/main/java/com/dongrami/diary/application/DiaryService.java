@@ -44,16 +44,18 @@ public class DiaryService {
         diaryRepository.save(diaryEntity);
     }
 
-    public DiaryDto getDiaryById(Long id) {
-        DiaryEntity diaryEntity = diaryRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+    public DiaryDto getDiaryById(String username, Long diaryId) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+        
+        DiaryEntity diaryEntity = diaryRepository.findByUserIdAndDiaryId(userEntity.getId(), diaryId)
+                .orElseThrow(() -> new BaseException(ErrorCode.DIARY_NOT_EXIST));
 
         return DiaryDto.from(diaryEntity);
     }
 
     public void updateDiary(Long id, RequestUpdateDiaryDto request) {
         DiaryEntity diaryEntity = diaryRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.DIARY_NOT_EXIST));
 
         diaryEntity.update(
                 request.getTitle(),
@@ -64,7 +66,7 @@ public class DiaryService {
 
     public void deleteDiary(Long id) {
         DiaryEntity diaryEntity = diaryRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.DIARY_NOT_EXIST));
 
         diaryEntity.delete();
     }

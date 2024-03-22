@@ -18,7 +18,7 @@ public class DiaryDto {
     private String title;
     private String content;
     private UserDto user;
-    private boolean isPublic;
+    private Boolean isPublic;
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;
 

@@ -41,11 +41,14 @@ public enum ErrorCode {
     INVITE_CODE_EMPTY(400, "IC001", "파트너 초대 코드는 비어 있을 수 없습니다."),
 
     // 할 일
-    TODO_NOT_EXIST(400, "TD001", "존재하지 않는 할 일입니다."),
+    TODO_NOT_EXIST(400, "TD001", "할 일이 존재하지 않습니다."),
     TODO_ALREADY_DELETED_CANNOT_UPDATE(400, "TD002", "이미 삭제되어 정보 수정이 불가능합니다."),
     TODO_ALREADY_COMPLETED_CANNOT_UPDATE(400, "TD003", "이미 완료된 할 일은 수정이 불가능합니다."),
     TODO_ALREADY_DELETED(400, "TD004", "이미 삭제된 할 일입니다."),
     TODO_INVALID_AUTHORIZATION(400, "TD005", "해당 할 일에 권한이 없습니다."),
+
+    // 일기
+    DIARY_NOT_EXIST(400, "DR001", "일기가 존재하지 않습니다."),
 
     DELETE_USER_NOT_NULL(400, "DU001", "삭제 사용자는 null이 될 수 없습니다."),
     ;

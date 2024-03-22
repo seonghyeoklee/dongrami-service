@@ -1,17 +1,22 @@
 package com.dongrami.diary.ui;
 
-import com.dongrami.todo.dto.response.ResponseTodoDto;
+import com.dongrami.diary.dto.DiaryDto;
+import com.dongrami.diary.dto.request.RequestCreateDiaryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 @Tag(name = "Diary API", description = "일기를 관리하는 API")
@@ -26,9 +31,26 @@ public interface DiaryControllerInterface {
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공",
-                            content = @Content(schema = @Schema(implementation = ResponseTodoDto.class))),
+                            content = @Content(schema = @Schema(implementation = DiaryDto.class))),
             }
     )
     ResponseEntity<?> getDiaryPage(@Parameter(hidden = true) User principal, @Parameter(hidden = true) Pageable pageable, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate);
+
+    @Operation(
+            summary = "일기 작성하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> createDiary(@Parameter(hidden = true) User principal, @ParameterObject @Valid @RequestBody RequestCreateDiaryDto request);
+
+    @Operation(
+            summary = "일기 상세 조회하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공",
+                            content = @Content(schema = @Schema(implementation = DiaryDto.class))),
+            }
+    )
+    ResponseEntity<?> getDiaryById(@Parameter(hidden = true) User principal, @PathVariable Long diaryId);
 
 }
