@@ -70,7 +70,7 @@ public class UserEntity extends BaseTimeEntity {
     private String blockReason;
 
     @Embedded
-    private PartnerCode partnerCode;
+    private InviteCode inviteCode;
 
     @Embedded
     private UserPersonalColor userPersonalColor;
@@ -96,7 +96,8 @@ public class UserEntity extends BaseTimeEntity {
             String emailVerifiedYn,
             String profileImageUrl,
             ProviderType providerType,
-            RoleType roleType
+            RoleType roleType,
+            String inviteCode
     ) {
         return new UserEntity(
                 userId,
@@ -105,7 +106,8 @@ public class UserEntity extends BaseTimeEntity {
                 emailVerifiedYn,
                 profileImageUrl,
                 providerType,
-                roleType
+                roleType,
+                inviteCode
         );
     }
 
@@ -116,7 +118,8 @@ public class UserEntity extends BaseTimeEntity {
             String emailVerifiedYn,
             String profileImageUrl,
             ProviderType providerType,
-            RoleType roleType
+            RoleType roleType,
+            String inviteCode
     ) {
         this.userUniqueId = userUniqueId;
         this.username = username;
@@ -127,6 +130,7 @@ public class UserEntity extends BaseTimeEntity {
         this.providerType = providerType;
         this.roleType = roleType;
         this.userPersonalColor = UserPersonalColor.builder().color("#f0f8ff").build();
+        this.inviteCode = InviteCode.builder().inviteCode(inviteCode).build();
     }
 
     public boolean hasUserGroup() {
