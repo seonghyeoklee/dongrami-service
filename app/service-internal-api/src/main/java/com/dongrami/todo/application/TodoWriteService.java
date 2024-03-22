@@ -78,7 +78,7 @@ public class TodoWriteService {
             throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
 
-        todoEntity.delete();
+        todoEntity.delete(userEntity);
     }
 
     public void createTodoRemember(String userUniqueId, Long todoId) {

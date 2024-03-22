@@ -46,6 +46,8 @@ public enum ErrorCode {
     TODO_ALREADY_COMPLETED_CANNOT_UPDATE(400, "TD003", "이미 완료된 할 일은 수정이 불가능합니다."),
     TODO_ALREADY_DELETED(400, "TD004", "이미 삭제된 할 일입니다."),
     TODO_INVALID_AUTHORIZATION(400, "TD005", "해당 할 일에 권한이 없습니다."),
+
+    DELETE_USER_NOT_NULL(400, "DU001", "삭제 사용자는 null이 될 수 없습니다."),
     ;
 
     private final int status;
