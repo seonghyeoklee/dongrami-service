@@ -42,7 +42,10 @@ public enum ErrorCode {
 
     // 할 일
     TODO_NOT_EXIST(400, "TD001", "존재하지 않는 할 일입니다."),
-
+    TODO_ALREADY_DELETED_CANNOT_UPDATE(400, "TD002", "이미 삭제되어 정보 수정이 불가능합니다."),
+    TODO_ALREADY_COMPLETED_CANNOT_UPDATE(400, "TD003", "이미 완료된 할 일은 수정이 불가능합니다."),
+    TODO_ALREADY_DELETED(400, "TD004", "이미 삭제된 할 일입니다."),
+    TODO_INVALID_AUTHORIZATION(400, "TD005", "해당 할 일에 권한이 없습니다."),
     ;
 
     private final int status;

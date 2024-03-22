@@ -2,7 +2,6 @@ package com.dongrami.todo.repository.support;
 
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoStatus;
-import com.dongrami.user.domain.UserEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -42,11 +41,11 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
     }
 
     @Override
-    public List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(UserEntity userEntity, LocalDate currentDate) {
+    public List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(LocalDate currentDate, List<Long> userIds) {
         return queryFactory
                 .selectFrom(todoEntity)
                 .where(
-                        todoEntity.userEntity.eq(userEntity)
+                        todoEntity.userEntity.id.in(userIds)
                                 .and(todoEntity.todoDate.eq(currentDate))
                                 .and(todoEntity.todoStatus.ne(TodoStatus.DELETED))
                 )

@@ -34,7 +34,7 @@ public class TodoReadService {
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
-            throw new BaseException(ErrorCode.INVALID_AUTHORIZATION);
+            throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
 
         return ResponseTodoDto.from(todoEntity);
@@ -62,7 +62,7 @@ public class TodoReadService {
     public int getTodoAchievementRate(String userUniqueId, LocalDate currentDate) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
-        List<TodoEntity> todoEntities = todoRepository.findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(userEntity, currentDate);
+        List<TodoEntity> todoEntities = todoRepository.findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(currentDate, getUserIds(userEntity));
 
         long completedTodoCount = todoEntities.stream()
                 .filter(TodoEntity::isCompleted)
@@ -78,7 +78,7 @@ public class TodoReadService {
     public List<ResponseTodoDto> getTodoRemember(String username) {
         UserEntity userEntity = userService.getUserByUserUniqueId(username);
 
-        List<TodoRememberEntity> todoRememberEntities = todoRememberRepository.findByUserEntityAndIsDeletedFalse(userEntity);
+        List<TodoRememberEntity> todoRememberEntities = todoRememberRepository.findByUserIdsAndIsDeletedFalse(getUserIds(userEntity));
 
         return todoRememberEntities.stream()
                 .map(entity -> ResponseTodoDto.from(entity.getTodoEntity()))
