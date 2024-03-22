@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface TodoRepositorySupport {
 
-    Page<TodoEntity> findBySearch(Pageable pageable, TodoSearchDto todoSearchDto);
+    Page<TodoEntity> findTodoPageByCurrentDate(Pageable pageable, LocalDate currentDate, List<Long> userIds);
 
     List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(UserEntity userEntity, LocalDate currentDate);
 

@@ -7,9 +7,9 @@ import com.dongrami.todo.domain.TodoRememberEntity;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
 import com.dongrami.todo.repository.TodoRememberRepository;
 import com.dongrami.todo.repository.TodoRepository;
-import com.dongrami.todo.repository.support.TodoSearchDto;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
+import com.dongrami.user.domain.UserGroupEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,27 +40,34 @@ public class TodoReadService {
         return ResponseTodoDto.from(todoEntity);
     }
 
-    public Page<ResponseTodoDto> getTodoPageBySearch(Pageable pageable, TodoSearchDto todoSearchDto) {
-        Page<TodoEntity> todoRepositoryBySearch = todoRepository.findBySearch(pageable, todoSearchDto);
+    public Page<ResponseTodoDto> getTodoPageByCurrentDate(String username, Pageable pageable, LocalDate currentDate) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
 
-        return todoRepositoryBySearch
+        return todoRepository.findTodoPageByCurrentDate(pageable, currentDate, getUserIds(userEntity))
                 .map(ResponseTodoDto::from);
     }
 
-    public int getTodoAchievementRate(String userUniqueId, LocalDate currentDate) {
+    private List<Long> getUserIds(UserEntity userEntity) {
+        UserGroupEntity userGroupEntity = userEntity.getUserGroupEntity();
+        if (userGroupEntity == null) {
+            return List.of(userEntity.getId());
+        }
 
-        // 1. 사용자 조회
+        List<UserEntity> userEntities = userGroupEntity.getUserEntities();
+        return userEntities.stream()
+                .map(UserEntity::getId)
+                .toList();
+    }
+
+    public int getTodoAchievementRate(String userUniqueId, LocalDate currentDate) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
-        // 2. 사용자의 해당 일의 모든 할일 조회
         List<TodoEntity> todoEntities = todoRepository.findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(userEntity, currentDate);
 
-        // 3. 사용자의 모든 할일 중 완료된 할일 조회
         long completedTodoCount = todoEntities.stream()
                 .filter(TodoEntity::isCompleted)
                 .count();
 
-        // 4. 완료된 할일의 개수 / 모든 할일의 개수 * 100
         if(!todoEntities.isEmpty()) {
             return (int) Math.ceil((double) completedTodoCount / todoEntities.size() * 100);
         }
@@ -69,11 +76,8 @@ public class TodoReadService {
     }
 
     public List<ResponseTodoDto> getTodoRemember(String username) {
-
-        // 1. 사용자 조회
         UserEntity userEntity = userService.getUserByUserUniqueId(username);
 
-        // 2. 사용자의 저장된 할 일 조회
         List<TodoRememberEntity> todoRememberEntities = todoRememberRepository.findByUserEntityAndIsDeletedFalse(userEntity);
 
         return todoRememberEntities.stream()

@@ -2,6 +2,27 @@
 
 ## 프로젝트 개요
 
+```groovy
+TODO : 프로젝트 개요 작성
+```
+
+### Tech Stack
+
+#### Server
+
+Java 17, Spring Boot 2.7, JPA, QueryDsl
+
+#### Database
+
+Mysql, H2
+
+#### Monitoring
+
+Spring Actuator, Prometheus, Grafana
+
+#### Etc
+
+Locust, Gradle, Docker
 
 ### 설치 및 실행 방법
 
@@ -35,7 +56,6 @@ MYSQL_PASSWORD={password}
 
 - [X] 회원가입
 - [X] 로그인
-- [ ] 로그아웃
 - [ ] 회원정보 수정
 - [ ] 회원탈퇴
 - [ ] 비밀번호 찾기
@@ -43,7 +63,7 @@ MYSQL_PASSWORD={password}
 - [X] 사용자 그룹 (친구, 가족, 동료 등) 설정
 - [X] 사용자 그룹 참여
 - [X] 사용자 그룹 탈퇴
-- [ ] 회원 초대 코드 (고유값 고정)
+- [X] 회원 초대 코드 (고유값 고정)
 
 #### Todo
 
@@ -58,6 +78,7 @@ MYSQL_PASSWORD={password}
   - default : 조회된 Todo 내용 다음날로 복사
 - [X] Todo 기억해두기
 - [X] Todo 이모지 추가하기
+- [X] 그룹인 경우 Todo 기능에 대한 권한 체크
 
 #### Diary
 
@@ -74,7 +95,7 @@ MYSQL_PASSWORD={password}
 
 #### File
 
-- [ ] File 업로드
+- [X] File 업로드
 - [ ] File 다운로드
 - [ ] File 삭제
 - [ ] File 썸네일 생성
@@ -86,7 +107,7 @@ MYSQL_PASSWORD={password}
 - [ ] 알림 삭제
 - [ ] 알림 읽음 처리
 - [ ] 알림 전체 읽음 처리
- 
+
 #### Calendar
 
 - [ ] Todo, Diary 일정 조회
