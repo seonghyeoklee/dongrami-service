@@ -10,6 +10,7 @@ import org.hibernate.annotations.Comment;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "todo")
@@ -124,6 +125,10 @@ public class TodoEntity extends BaseTimeEntity {
 
     public void addTodoEmoji(TodoEmojiEntity todoEmojiEntity) {
         todoEmojiEntities.add(todoEmojiEntity);
+    }
+
+    public boolean isContainsUserIds(List<Long> userIds) {
+        return userIds.contains(userEntity.getId());
     }
 
 }

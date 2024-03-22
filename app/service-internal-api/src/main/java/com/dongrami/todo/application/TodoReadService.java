@@ -31,9 +31,9 @@ public class TodoReadService {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
-        if (!todoEntity.isOwner(userEntity)) {
+        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
             throw new BaseException(ErrorCode.INVALID_AUTHORIZATION);
         }
 

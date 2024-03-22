@@ -50,7 +50,7 @@ public class TodoWriteService {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         todoEntity.update(
                 userEntity,
@@ -63,7 +63,7 @@ public class TodoWriteService {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         todoEntity.delete(userEntity);
     }
@@ -72,7 +72,7 @@ public class TodoWriteService {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         TodoRememberEntity todoRememberEntity = TodoRememberEntity.builder()
                 .userEntity(userEntity)
@@ -87,7 +87,7 @@ public class TodoWriteService {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         todoEntity.changeTodoStatus(userEntity);
     }
@@ -96,7 +96,7 @@ public class TodoWriteService {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         todoEntity.changeTodoPinned(userEntity, isPinned);
     }
@@ -105,7 +105,7 @@ public class TodoWriteService {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         if (!todoEntity.isOwner(userEntity)) {
             throw new BaseException(ErrorCode.HANDLE_ACCESS_DENIED);
@@ -141,7 +141,7 @@ public class TodoWriteService {
         UserEntity userEntity = userService.getUserByUserUniqueId(username);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));
+                .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         EmojiEntity emojiEntity = emojiRepository.findById(emojiId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));

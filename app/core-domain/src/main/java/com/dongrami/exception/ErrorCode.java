@@ -39,6 +39,10 @@ public enum ErrorCode {
 
     // InviteCode
     INVITE_CODE_EMPTY(400, "IC001", "파트너 초대 코드는 비어 있을 수 없습니다."),
+
+    // 할 일
+    TODO_NOT_EXIST(400, "TD001", "존재하지 않는 할 일입니다."),
+
     ;
 
     private final int status;
