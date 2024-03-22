@@ -63,6 +63,9 @@ public class TodoEntity extends BaseTimeEntity {
     @Embedded
     private TodoEmojiEntities todoEmojiEntities;
 
+    @Embedded
+    private TodoDeleteInfo todoDeleteInfo;
+
     public static TodoEntity create(String content, String memo, LocalDateTime notificationDateTime, TodoStatus todoStatus, UserEntity userEntity) {
         return TodoEntity.builder()
                 .content(content)
@@ -86,11 +89,12 @@ public class TodoEntity extends BaseTimeEntity {
         return this.todoStatus.isCompleted();
     }
 
-    public void delete() {
+    public void delete(UserEntity deletedUserEntity) {
         if (this.todoStatus.isDeleted()) {
             throw new BaseException(ErrorCode.TODO_ALREADY_DELETED);
         }
         this.todoStatus = TodoStatus.DELETED;
+        this.todoDeleteInfo = new TodoDeleteInfo(deletedUserEntity);
     }
 
     public void changeTodoStatus() {
