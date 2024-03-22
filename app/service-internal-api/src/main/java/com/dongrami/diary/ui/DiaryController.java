@@ -8,26 +8,26 @@ import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class DiaryController {
+public class DiaryController implements DiaryControllerInterface {
     private final DiaryService diaryService;
 
     @GetMapping("/diaries")
-    public ResponseEntity<?> getDiaryPage(
-            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable
-    ) {
-        Page<DiaryDto> responses = diaryService.getDiaryPage(pageable);
+    public ResponseEntity<?> getDiaryPage(@AuthenticationPrincipal User principal,
+                                          Pageable pageable,
+                                          @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate) {
+        Page<DiaryDto> responses = diaryService.getDiaryPage(principal.getUsername(), pageable, currentDate);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(responses)
@@ -35,10 +35,8 @@ public class DiaryController {
     }
 
     @PostMapping("/diaries")
-    public ResponseEntity<?> createDiary(
-            @AuthenticationPrincipal User principal,
-            @Valid @RequestBody RequestCreateDiaryDto request
-    ) {
+    public ResponseEntity<?> createDiary(@AuthenticationPrincipal User principal,
+                                         @Valid @RequestBody RequestCreateDiaryDto request) {
         diaryService.createDiary(principal.getUsername(), request);
 
         return ResponseEntity.ok().body(

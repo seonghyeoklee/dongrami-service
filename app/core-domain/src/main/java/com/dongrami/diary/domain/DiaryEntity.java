@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +29,17 @@ public class DiaryEntity extends BaseTimeEntity {
     private String title;
 
     @Comment("일기 내용")
-    @Column(length = 1000, nullable = false)
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
     @Comment("일기 작성자")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_diary_user"))
     private UserEntity userEntity;
+
+    @Comment("일기 작성일")
+    @Column(nullable = false)
+    private LocalDate writtenDate;
 
     @Comment("일기 공개 여부")
     @Column
@@ -54,6 +59,7 @@ public class DiaryEntity extends BaseTimeEntity {
         return DiaryEntity.builder()
                 .userEntity(userEntity)
                 .title(title)
+                .writtenDate(LocalDate.now())
                 .content(content)
                 .isPublic(isPublic)
                 .build();

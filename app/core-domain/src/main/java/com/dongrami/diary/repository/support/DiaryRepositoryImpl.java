@@ -1,19 +1,19 @@
 package com.dongrami.diary.repository.support;
 
 import com.dongrami.diary.domain.DiaryEntity;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+
+import java.time.LocalDate;
 
 import static com.dongrami.diary.domain.QDiaryEntity.diaryEntity;
+import static com.dongrami.user.domain.QUserEntity.userEntity;
 
 @RequiredArgsConstructor
 public class DiaryRepositoryImpl implements DiaryRepositorySupport {
@@ -21,41 +21,44 @@ public class DiaryRepositoryImpl implements DiaryRepositorySupport {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<DiaryEntity> findBySearch(Pageable pageable) {
-
-        // 카운트 쿼리
+    public Page<DiaryEntity> findDiaryPageByCurrentDate(Long userId, Pageable pageable, LocalDate currentDate) {
         int totalCount = queryFactory
                 .select(diaryEntity)
                 .from(diaryEntity)
-                .where(searchByBuilder())
+                .where(searchByBuilder(userId, currentDate))
                 .fetch().size();
 
-        // 쿼리
         JPAQuery<DiaryEntity> query = queryFactory
                 .select(diaryEntity)
                 .from(diaryEntity)
-                .where(searchByBuilder())
+                .where(searchByBuilder(userId, currentDate))
+                .orderBy(diaryEntity.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
-
-        sort(pageable, query);
 
         return new PageImpl<>(query.fetch(), pageable, totalCount);
     }
 
-    private BooleanBuilder searchByBuilder() {
-        BooleanBuilder builder = new BooleanBuilder();
+    private BooleanExpression searchByBuilder(Long userId, LocalDate currentDate) {
+        LocalDate startDate = currentDate.withDayOfMonth(1);
+        LocalDate endDate = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
 
-        return builder;
-    }
-
-    private void sort(Pageable pageable, JPAQuery<?> query) {
-        for (Sort.Order o : pageable.getSort()) {
-            PathBuilder<DiaryEntity> pathBuilder = new PathBuilder<>(diaryEntity.getType(), diaryEntity.getMetadata());
-
-            query.orderBy(new OrderSpecifier(o.isAscending() ? Order.ASC : Order.DESC,
-                    pathBuilder.get(o.getProperty())));
-        }
+        return (
+                diaryEntity.userEntity.id.in(
+                                JPAExpressions.select(userEntity.id)
+                                        .from(userEntity)
+                                        .where(userEntity.userGroupEntity.id.in(
+                                                        JPAExpressions.select(userEntity.userGroupEntity.id)
+                                                                .from(userEntity)
+                                                                .where(userEntity.id.eq(userId))
+                                                )
+                                        )
+                        )
+                        .and(diaryEntity.isPublic.eq(true))
+                        .or(diaryEntity.userEntity.id.eq(userId))
+        )
+                .and(diaryEntity.isDeleted.eq(false))
+                .and(diaryEntity.writtenDate.between(startDate, endDate));
     }
 
 }

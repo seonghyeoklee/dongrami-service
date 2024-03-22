@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -22,10 +24,11 @@ public class DiaryService {
     private final UserService userService;
     private final DiaryRepository diaryRepository;
 
-    public Page<DiaryDto> getDiaryPage(Pageable pageable) {
-        Page<DiaryEntity> diaryEntityPage = diaryRepository.findBySearch(pageable);
+    public Page<DiaryDto> getDiaryPage(String username, Pageable pageable, LocalDate currentDate) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
 
-        return diaryEntityPage.map(DiaryDto::from);
+        return diaryRepository.findDiaryPageByCurrentDate(userEntity.getId(), pageable, currentDate)
+                .map(DiaryDto::from);
     }
 
     public void createDiary(String userUniqueId, RequestCreateDiaryDto request) {
