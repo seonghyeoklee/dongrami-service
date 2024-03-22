@@ -53,9 +53,15 @@ public class DiaryService {
         return DiaryDto.from(diaryEntity);
     }
 
-    public void updateDiary(Long id, RequestUpdateDiaryDto request) {
+    public void updateDiary(String username, Long id, RequestUpdateDiaryDto request) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
         DiaryEntity diaryEntity = diaryRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.DIARY_NOT_EXIST));
+
+        if (!diaryEntity.isOwner(userEntity)) {
+            throw new BaseException(ErrorCode.DIARY_NOT_OWNER_CANNOT_UPDATE);
+        }
 
         diaryEntity.update(
                 request.getTitle(),
@@ -64,9 +70,15 @@ public class DiaryService {
         );
     }
 
-    public void deleteDiary(Long id) {
+    public void deleteDiary(String username, Long id) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
         DiaryEntity diaryEntity = diaryRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.DIARY_NOT_EXIST));
+
+        if (!diaryEntity.isOwner(userEntity)) {
+            throw new BaseException(ErrorCode.DIARY_NOT_OWNER_CANNOT_DELETE);
+        }
 
         diaryEntity.delete();
     }

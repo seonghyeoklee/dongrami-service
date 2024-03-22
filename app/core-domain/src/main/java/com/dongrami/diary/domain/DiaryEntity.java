@@ -1,6 +1,8 @@
 package com.dongrami.diary.domain;
 
 import com.dongrami.common.BaseTimeEntity;
+import com.dongrami.exception.BaseException;
+import com.dongrami.exception.ErrorCode;
 import com.dongrami.tag.domain.TagEntity;
 import com.dongrami.user.domain.UserEntity;
 import lombok.*;
@@ -66,13 +68,22 @@ public class DiaryEntity extends BaseTimeEntity {
     }
 
     public void update(String title, String content, boolean isPublic) {
+        if (this.isDeleted) {
+            throw new BaseException(ErrorCode.DIARY_ALREADY_DELETED_CANNOT_UPDATE);
+        }
         this.title = title;
         this.content = content;
         this.isPublic = isPublic;
     }
 
     public void delete() {
+        if (this.isDeleted) {
+            throw new BaseException(ErrorCode.DIARY_ALREADY_DELETED_CANNOT_DELETE);
+        }
         this.isDeleted = true;
     }
 
+    public boolean isOwner(UserEntity userEntity) {
+        return this.userEntity.equals(userEntity);
+    }
 }

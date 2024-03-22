@@ -55,8 +55,10 @@ public class DiaryController implements DiaryControllerInterface {
     }
 
     @PutMapping("/diaries/{diaryId}")
-    public ResponseEntity<?> updateDiary(@PathVariable Long diaryId, @Valid @RequestBody RequestUpdateDiaryDto request) {
-        diaryService.updateDiary(diaryId, request);
+    public ResponseEntity<?> updateDiary(@AuthenticationPrincipal User principal,
+                                         @PathVariable Long diaryId,
+                                         @Valid @RequestBody RequestUpdateDiaryDto request) {
+        diaryService.updateDiary(principal.getUsername(), diaryId, request);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(null)
@@ -64,8 +66,9 @@ public class DiaryController implements DiaryControllerInterface {
     }
 
     @DeleteMapping("/diaries/{diaryId}")
-    public ResponseEntity<?> deleteDiary(@PathVariable Long diaryId) {
-        diaryService.deleteDiary(diaryId);
+    public ResponseEntity<?> deleteDiary(@AuthenticationPrincipal User principal,
+                                         @PathVariable Long diaryId) {
+        diaryService.deleteDiary(principal.getUsername(), diaryId);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(null)

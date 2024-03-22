@@ -2,6 +2,7 @@ package com.dongrami.diary.ui;
 
 import com.dongrami.diary.dto.DiaryDto;
 import com.dongrami.diary.dto.request.RequestCreateDiaryDto;
+import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,5 +53,24 @@ public interface DiaryControllerInterface {
             }
     )
     ResponseEntity<?> getDiaryById(@Parameter(hidden = true) User principal, @PathVariable Long diaryId);
+
+    @Operation(
+            summary = "일기 수정하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> updateDiary(@Parameter(hidden = true) User principal,
+                                  @PathVariable Long diaryId,
+                                  @ParameterObject @Valid @RequestBody RequestUpdateDiaryDto request);
+
+    @Operation(
+            summary = "일기 삭제하기",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> deleteDiary(@Parameter(hidden = true) User principal,
+                                  @PathVariable Long diaryId);
 
 }
