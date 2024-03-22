@@ -17,7 +17,7 @@ class TodoEntityTest {
 
     @BeforeEach
     void setUp() {
-        userEntity = UserEntity.createUser("dongrami", "password", "test@gmail.com", "Y", "EMPTY", ProviderType.KAKAO, RoleType.USER);
+        userEntity = UserEntity.createUser("dongrami", "password", "test@gmail.com", "Y", "EMPTY", ProviderType.KAKAO, RoleType.USER, "randomCode");
     }
 
     @DisplayName("할 일을 생성한다.")

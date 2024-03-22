@@ -36,6 +36,8 @@ public enum ErrorCode {
     USER_GROUP_ALREADY_JOINED(400, "UG004", "이미 사용자 그룹에 가입되어 있습니다."),
     USER_GROUP_NOT_EXIST_BY_GROUP_CODE(400, "UG005", "존재하지 않는 사용자 그룹 코드입니다."),
     USER_GROUP_OWNER_CANNOT_UPDATE(400, "UG006", "사용자 그룹의 소유자가 아니면 수정할 수 없습니다."),
+
+    INVITE_CODE_EMPTY(400, "IC001", "파트너 초대 코드는 비어 있을 수 없습니다."),
     ;
 
     private final int status;

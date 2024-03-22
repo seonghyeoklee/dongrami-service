@@ -1,5 +1,6 @@
 package com.dongrami.oauth.service;
 
+import com.dongrami.common.key.KeyGenerator;
 import com.dongrami.oauth.exception.OAuthProviderMissMatchException;
 import com.dongrami.oauth.info.OAuth2UserInfo;
 import com.dongrami.oauth.info.OAuth2UserInfoFactory;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-
+    private final KeyGenerator keyGenerator;
     private final UserRepository userRepository;
 
     @Override
@@ -65,7 +66,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 "Y",
                 userInfo.getImageUrl(),
                 providerType,
-                RoleType.USER
+                RoleType.USER,
+                keyGenerator.generateKey()
         );
 
         return userRepository.saveAndFlush(userEntity);
