@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Data
 public class RequestCreateDiaryDto {
@@ -28,7 +29,7 @@ public class RequestCreateDiaryDto {
     @Schema(description = "일기 공개여부", example = "true")
     private boolean isPublic;
 
-    @Schema(description = "일기 태그", example = "태그")
-    private String tag;
+    @Schema(description = "일기 태그", example = "#육아일기, #일기")
+    private List<String> tags;
 
 }

@@ -40,7 +40,7 @@ public class DiaryController implements DiaryControllerInterface {
         diaryService.createDiary(principal.getUsername(), request);
 
         return ResponseEntity.ok().body(
-                ApiResponse.success(null)
+                ApiResponse.success()
         );
     }
 
@@ -61,7 +61,7 @@ public class DiaryController implements DiaryControllerInterface {
         diaryService.updateDiary(principal.getUsername(), diaryId, request);
 
         return ResponseEntity.ok().body(
-                ApiResponse.success(null)
+                ApiResponse.success()
         );
     }
 
@@ -71,7 +71,7 @@ public class DiaryController implements DiaryControllerInterface {
         diaryService.deleteDiary(principal.getUsername(), diaryId);
 
         return ResponseEntity.ok().body(
-                ApiResponse.success(null)
+                ApiResponse.success()
         );
     }
 

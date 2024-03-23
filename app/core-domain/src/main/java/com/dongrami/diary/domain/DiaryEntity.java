@@ -3,7 +3,6 @@ package com.dongrami.diary.domain;
 import com.dongrami.common.BaseTimeEntity;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
-import com.dongrami.tag.domain.TagEntity;
 import com.dongrami.user.domain.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -54,8 +53,8 @@ public class DiaryEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "diaryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DiaryFileEntity> diaryFileEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "diaryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TagEntity> tagEntities = new ArrayList<>();
+    @Embedded
+    private DiaryTagEntities diaryTagEntities;
 
     public static DiaryEntity create(UserEntity userEntity, String title, String content, boolean isPublic) {
         return DiaryEntity.builder()
@@ -64,6 +63,7 @@ public class DiaryEntity extends BaseTimeEntity {
                 .writtenDate(LocalDate.now())
                 .content(content)
                 .isPublic(isPublic)
+                .diaryTagEntities(new DiaryTagEntities())
                 .build();
     }
 
@@ -86,4 +86,10 @@ public class DiaryEntity extends BaseTimeEntity {
     public boolean isOwner(UserEntity userEntity) {
         return this.userEntity.equals(userEntity);
     }
+
+    public void addDiaryTag(DiaryTagEntity diaryTagEntity) {
+        this.diaryTagEntities.add(diaryTagEntity);
+        diaryTagEntity.setDiaryEntity(this);
+    }
+
 }

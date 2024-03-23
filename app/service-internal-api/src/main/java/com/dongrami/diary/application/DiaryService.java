@@ -1,6 +1,7 @@
 package com.dongrami.diary.application;
 
 import com.dongrami.diary.domain.DiaryEntity;
+import com.dongrami.diary.domain.DiaryTagEntity;
 import com.dongrami.diary.dto.DiaryDto;
 import com.dongrami.diary.dto.request.RequestCreateDiaryDto;
 import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
@@ -39,6 +40,17 @@ public class DiaryService {
                 request.getTitle(),
                 request.getContent(),
                 request.isPublic()
+        );
+
+        request.getTags().forEach(
+                diaryTag ->
+                        diaryEntity.addDiaryTag(
+                                DiaryTagEntity.builder()
+                                        .name(diaryTag.trim())
+                                        .diaryEntity(diaryEntity)
+                                        .userEntity(userEntity)
+                                        .build()
+                        )
         );
 
         diaryRepository.save(diaryEntity);
