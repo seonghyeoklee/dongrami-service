@@ -7,6 +7,7 @@ import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
 import com.dongrami.diary.repository.DiaryRepository;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
+import com.dongrami.tag.dto.TagDto;
 import com.dongrami.tag.entity.TagEntity;
 import com.dongrami.tag.repository.TagRepository;
 import com.dongrami.user.application.UserService;
@@ -99,6 +100,16 @@ public class DiaryService {
         }
 
         diaryEntity.delete();
+    }
+
+    public List<TagDto> getRecommendationTags(String username, String tagName) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
+        List<TagEntity> tagEntities = tagRepository.findByTagNameAndUserEntity(tagName, userEntity);
+
+        return tagEntities.stream()
+                .map(TagDto::from)
+                .toList();
     }
 
 }
