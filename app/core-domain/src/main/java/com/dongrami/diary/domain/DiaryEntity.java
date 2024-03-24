@@ -54,6 +54,9 @@ public class DiaryEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "diaryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DiaryFileEntity> diaryFileEntities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "diaryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DiaryFeelingEntity> diaryFeelingEntities = new ArrayList<>();
+
     @Embedded
     private DiaryTagEntities diaryTagEntities;
 

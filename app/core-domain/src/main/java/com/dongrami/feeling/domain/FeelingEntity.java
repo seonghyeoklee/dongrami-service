@@ -1,10 +1,13 @@
 package com.dongrami.feeling.domain;
 
 import com.dongrami.common.BaseTimeEntity;
+import com.dongrami.diary.domain.DiaryFeelingEntity;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "feeling")
@@ -34,5 +37,8 @@ public class FeelingEntity extends BaseTimeEntity {
     @Comment("감정 순서")
     @Column
     private int feelingOrder;
+
+    @OneToMany(mappedBy = "feelingEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DiaryFeelingEntity> diaryFeelingEntities = new ArrayList<>();
 
 }
