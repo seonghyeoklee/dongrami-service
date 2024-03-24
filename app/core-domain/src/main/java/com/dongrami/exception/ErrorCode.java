@@ -55,6 +55,9 @@ public enum ErrorCode {
     DIARY_ALREADY_DELETED_CANNOT_DELETE(400, "DR003", "이미 삭제된 일기는 삭제가 불가능합니다."),
     DIARY_NOT_OWNER_CANNOT_UPDATE(400, "DR004", "일기의 소유자가 아니면 수정할 수 없습니다."),
     DIARY_NOT_OWNER_CANNOT_DELETE(400, "DR005", "일기의 소유자가 아니면 삭제할 수 없습니다."),
+
+    // 태그
+    TAG_NOT_EXIST(400, "TG001", "태그가 존재하지 않습니다."),
     ;
 
     private final int status;
