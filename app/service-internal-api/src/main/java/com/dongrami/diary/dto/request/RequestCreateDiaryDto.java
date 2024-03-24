@@ -29,7 +29,7 @@ public class RequestCreateDiaryDto {
     @Schema(description = "일기 공개여부", example = "true")
     private boolean isPublic;
 
-    @Schema(description = "일기 태그", example = "#육아일기, #일기")
-    private List<String> tags;
+    @Schema(description = "태그 ID", example = "[1, 2, 3]")
+    private List<Long> tags;
 
 }

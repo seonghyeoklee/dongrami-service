@@ -1,13 +1,14 @@
 package com.dongrami.diary.application;
 
 import com.dongrami.diary.domain.DiaryEntity;
-import com.dongrami.diary.domain.DiaryTagEntity;
 import com.dongrami.diary.dto.DiaryDto;
 import com.dongrami.diary.dto.request.RequestCreateDiaryDto;
 import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
 import com.dongrami.diary.repository.DiaryRepository;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
+import com.dongrami.tag.entity.TagEntity;
+import com.dongrami.tag.repository.TagRepository;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional
@@ -24,6 +26,7 @@ import java.time.LocalDate;
 public class DiaryService {
     private final UserService userService;
     private final DiaryRepository diaryRepository;
+    private final TagRepository tagRepository;
 
     public Page<DiaryDto> getDiaryPage(String username, Pageable pageable, LocalDate currentDate) {
         UserEntity userEntity = userService.getUserByUserUniqueId(username);
@@ -42,16 +45,12 @@ public class DiaryService {
                 request.isPublic()
         );
 
-        request.getTags().forEach(
-                diaryTag ->
-                        diaryEntity.addDiaryTag(
-                                DiaryTagEntity.builder()
-                                        .name(diaryTag.trim())
-                                        .diaryEntity(diaryEntity)
-                                        .userEntity(userEntity)
-                                        .build()
-                        )
-        );
+        List<TagEntity> tagEntities = tagRepository.findAllById(request.getTags());
+        if (request.getTags().size() != tagEntities.size()) {
+            throw new BaseException(ErrorCode.TAG_NOT_EXIST);
+        }
+
+        diaryEntity.addDiaryTags(tagEntities);
 
         diaryRepository.save(diaryEntity);
     }
@@ -74,6 +73,13 @@ public class DiaryService {
         if (!diaryEntity.isOwner(userEntity)) {
             throw new BaseException(ErrorCode.DIARY_NOT_OWNER_CANNOT_UPDATE);
         }
+
+        List<TagEntity> tagEntities = tagRepository.findAllById(request.getTags());
+        if (request.getTags().size() != tagEntities.size()) {
+            throw new BaseException(ErrorCode.TAG_NOT_EXIST);
+        }
+
+        diaryEntity.modifyDiaryTags(tagEntities);
 
         diaryEntity.update(
                 request.getTitle(),
