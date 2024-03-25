@@ -20,14 +20,14 @@ public class RequestCreateDiaryDto {
     @Schema(description = "일기 날씨", example = "맑음")
     private String weather;
 
-    @Schema(description = "일기 기분", example = "웃음")
-    private String feeling;
+    @Schema(description = "일기 기분 ID", example = "1")
+    private Long feelingId;
 
     @Schema(description = "일기 사진", example = "사진")
     private String picture;
 
     @Schema(description = "일기 공개여부", example = "true")
-    private boolean isPublic;
+    private Boolean isPublic;
 
     @Schema(description = "태그 ID", example = "[1, 2, 3]")
     private List<Long> tags;

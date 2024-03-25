@@ -61,7 +61,8 @@ public enum ErrorCode {
 
     // 감정
     FEELING_NAME_DUPLICATE(400, "FL001", "이미 존재하는 감정명입니다."),
-    FEELING_ORDER_DUPLICATE(400, "FL002", "이미 존재하는 감정 순서입니다.");
+    FEELING_ORDER_DUPLICATE(400, "FL002", "이미 존재하는 감정 순서입니다."),
+    FEELING_NOT_EXIST(400, "FL003", "감정이 존재하지 않습니다."),
     ;
 
     private final int status;

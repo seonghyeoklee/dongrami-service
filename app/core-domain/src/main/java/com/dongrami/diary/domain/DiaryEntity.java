@@ -3,6 +3,7 @@ package com.dongrami.diary.domain;
 import com.dongrami.common.BaseTimeEntity;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
+import com.dongrami.feeling.domain.FeelingEntity;
 import com.dongrami.tag.entity.TagEntity;
 import com.dongrami.user.domain.UserEntity;
 import lombok.*;
@@ -71,6 +72,7 @@ public class DiaryEntity extends BaseTimeEntity {
                 .content(content)
                 .isPublic(isPublic)
                 .diaryTagEntities(new DiaryTagEntities())
+                .diaryFeelingEntities(new ArrayList<>())
                 .build();
     }
 
@@ -110,6 +112,17 @@ public class DiaryEntity extends BaseTimeEntity {
     public void modifyDiaryTags(List<TagEntity> tagEntities) {
         this.diaryTagEntities.clear();
         addDiaryTags(tagEntities);
+    }
+
+    public void addDiaryFeeling(FeelingEntity feelingEntity) {
+        this.diaryFeelingEntities.add(
+                DiaryFeelingEntity.builder()
+                        .feelingEntity(feelingEntity)
+                        .diaryEntity(this)
+                        .userEntity(this.userEntity)
+                        .feelingIntensity(0)
+                        .build()
+        );
     }
 
 }
