@@ -5,6 +5,8 @@ import com.dongrami.diary.application.DiaryService;
 import com.dongrami.diary.dto.DiaryDto;
 import com.dongrami.diary.dto.request.RequestCreateDiaryDto;
 import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
+import com.dongrami.diary.dto.response.ResponseDiaryTagDto;
+import com.dongrami.tag.dto.TagDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -72,6 +75,23 @@ public class DiaryController implements DiaryControllerInterface {
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()
+        );
+    }
+
+    @GetMapping("/diaries/tags/search")
+    public ResponseEntity<?> getRecommendationTags(@AuthenticationPrincipal User principal,
+                                                   @RequestParam String tagName) {
+        List<TagDto> tagDtos = diaryService.getRecommendationTags(principal.getUsername(), tagName);
+
+        return ResponseEntity.ok().body(
+                ApiResponse.success(
+                        tagDtos.stream()
+                                .map(tagDto -> ResponseDiaryTagDto.builder()
+                                        .id(tagDto.getId())
+                                        .tagName(tagDto.getTagName())
+                                        .build())
+                                .toList()
+                )
         );
     }
 

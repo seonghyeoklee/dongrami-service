@@ -7,6 +7,9 @@ import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
 import com.dongrami.diary.repository.DiaryRepository;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
+import com.dongrami.feeling.domain.FeelingEntity;
+import com.dongrami.feeling.repository.FeelingRepository;
+import com.dongrami.tag.dto.TagDto;
 import com.dongrami.tag.entity.TagEntity;
 import com.dongrami.tag.repository.TagRepository;
 import com.dongrami.user.application.UserService;
@@ -26,6 +29,7 @@ import java.util.List;
 public class DiaryService {
     private final UserService userService;
     private final DiaryRepository diaryRepository;
+    private final FeelingRepository feelingRepository;
     private final TagRepository tagRepository;
 
     public Page<DiaryDto> getDiaryPage(String username, Pageable pageable, LocalDate currentDate) {
@@ -42,7 +46,7 @@ public class DiaryService {
                 userEntity,
                 request.getTitle(),
                 request.getContent(),
-                request.isPublic()
+                request.getIsPublic()
         );
 
         List<TagEntity> tagEntities = tagRepository.findAllById(request.getTags());
@@ -51,6 +55,11 @@ public class DiaryService {
         }
 
         diaryEntity.addDiaryTags(tagEntities);
+
+        FeelingEntity feelingEntity = feelingRepository.findById(request.getFeelingId())
+                .orElseThrow(() -> new BaseException(ErrorCode.FEELING_NOT_EXIST));
+
+        diaryEntity.addDiaryFeeling(feelingEntity);
 
         diaryRepository.save(diaryEntity);
     }
@@ -99,6 +108,16 @@ public class DiaryService {
         }
 
         diaryEntity.delete();
+    }
+
+    public List<TagDto> getRecommendationTags(String username, String tagName) {
+        UserEntity userEntity = userService.getUserByUserUniqueId(username);
+
+        List<TagEntity> tagEntities = tagRepository.findByTagNameAndUserEntity(tagName, userEntity);
+
+        return tagEntities.stream()
+                .map(TagDto::from)
+                .toList();
     }
 
 }

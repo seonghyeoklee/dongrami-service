@@ -3,6 +3,7 @@ package com.dongrami.diary.ui;
 import com.dongrami.diary.dto.DiaryDto;
 import com.dongrami.diary.dto.request.RequestCreateDiaryDto;
 import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
+import com.dongrami.diary.dto.response.ResponseDiaryTagDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -72,5 +74,14 @@ public interface DiaryControllerInterface {
     )
     ResponseEntity<?> deleteDiary(@Parameter(hidden = true) User principal,
                                   @PathVariable Long diaryId);
+
+    @Operation(
+            summary = "작성된 일기 태그 추천",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공",
+                            content = @Content(schema = @Schema(implementation = ResponseDiaryTagDto.class))),
+            }
+    )
+    ResponseEntity<?> getRecommendationTags(@Parameter(hidden = true) User principal, @RequestParam String tagName);
 
 }
