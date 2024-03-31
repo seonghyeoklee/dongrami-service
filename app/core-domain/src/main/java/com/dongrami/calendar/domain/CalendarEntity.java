@@ -23,11 +23,13 @@ public class CalendarEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Comment("할 일")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_id", foreignKey = @ForeignKey(name = "fk_calendar_todo"))
     private TodoEntity todoEntity;
 
+    @Setter
     @Comment("일기")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id", foreignKey = @ForeignKey(name = "fk_calendar_diary"))

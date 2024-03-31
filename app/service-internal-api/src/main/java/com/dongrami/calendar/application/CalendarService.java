@@ -22,7 +22,7 @@ public class CalendarService {
     public List<CalendarDto> getCalendarByCurrentDate(String username, LocalDate currentDate) {
         UserEntity userEntity = userService.getUserByUserUniqueId(username);
 
-        List<CalendarEntity> calendarEntities = calendarRepository.findAllByUserEntityAndAndCalendarDate(userEntity, currentDate);
+        List<CalendarEntity> calendarEntities = calendarRepository.findAllByUserEntityAndCalendarDate(userEntity, currentDate);
 
         return calendarEntities.stream()
                 .map(CalendarDto::from)

@@ -2,6 +2,7 @@ package com.dongrami.todo.application;
 
 import com.dongrami.emoji.domain.EmojiEntity;
 import com.dongrami.emoji.repository.EmojiRepository;
+import com.dongrami.event.Events;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
 import com.dongrami.todo.domain.TodoEmojiEntity;
@@ -11,6 +12,7 @@ import com.dongrami.todo.domain.TodoStatus;
 import com.dongrami.todo.dto.request.RequestCreateTodoDto;
 import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
 import com.dongrami.todo.dto.response.ResponseTodoDto;
+import com.dongrami.todo.event.TodoCalendarCreateEvent;
 import com.dongrami.todo.repository.TodoRememberRepository;
 import com.dongrami.todo.repository.TodoRepository;
 import com.dongrami.user.application.UserService;
@@ -45,7 +47,11 @@ public class TodoWriteService {
                 userEntity
         );
 
-        return ResponseTodoDto.from(todoRepository.save(todoEntity));
+        TodoEntity savedTodoEntity = todoRepository.save(todoEntity);
+
+        Events.publish(new TodoCalendarCreateEvent(savedTodoEntity.getId()));
+
+        return ResponseTodoDto.from(savedTodoEntity);
     }
 
     public void updateTodo(String userUniqueId, Long todoId, RequestUpdateTodoDto request) {
