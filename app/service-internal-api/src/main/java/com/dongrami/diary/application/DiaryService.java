@@ -4,7 +4,9 @@ import com.dongrami.diary.domain.DiaryEntity;
 import com.dongrami.diary.dto.DiaryDto;
 import com.dongrami.diary.dto.request.RequestCreateDiaryDto;
 import com.dongrami.diary.dto.request.RequestUpdateDiaryDto;
+import com.dongrami.diary.event.DiaryCalendarCreateEvent;
 import com.dongrami.diary.repository.DiaryRepository;
+import com.dongrami.event.Events;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
 import com.dongrami.feeling.domain.FeelingEntity;
@@ -61,7 +63,9 @@ public class DiaryService {
 
         diaryEntity.addDiaryFeeling(feelingEntity);
 
-        diaryRepository.save(diaryEntity);
+        DiaryEntity savedDiary = diaryRepository.save(diaryEntity);
+
+        Events.publish(new DiaryCalendarCreateEvent(savedDiary.getId()));
     }
 
     public DiaryDto getDiaryById(String username, Long diaryId) {
