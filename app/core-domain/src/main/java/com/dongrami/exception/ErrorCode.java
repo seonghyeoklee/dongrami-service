@@ -38,7 +38,7 @@ public enum ErrorCode {
     USER_GROUP_OWNER_CANNOT_UPDATE(400, "UG006", "사용자 그룹의 소유자가 아니면 수정할 수 없습니다."),
 
     // InviteCode
-    INVITE_CODE_EMPTY(400, "IC001", "파트너 초대 코드는 비어 있을 수 없습니다."),
+    INVITE_CODE_EMPTY(400, "IC001", "짝꿍 초대 코드는 비어 있을 수 없습니다."),
 
     // 할 일
     TODO_NOT_EXIST(400, "TD001", "할 일이 존재하지 않습니다."),

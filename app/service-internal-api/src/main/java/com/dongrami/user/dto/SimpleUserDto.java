@@ -22,8 +22,8 @@ public class SimpleUserDto {
                 .id(userEntity.getId())
                 .username(userEntity.getUsername())
                 .email(userEntity.getEmail())
-                .profileImageUrl(userEntity.getProfileImageUrl())
-                .color(userEntity.getUserPersonalColor().getColor())
+                .profileImageUrl(userEntity.getProfileInfo().getProfileImageUrl())
+                .color(userEntity.getProfileInfo().getUserPersonalColor().getColor())
                 .build();
     }
 

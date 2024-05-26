@@ -15,7 +15,7 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor
 public class InviteCode {
 
-    @Comment("파트너 초대 코드")
+    @Comment("짝꿍 초대 코드")
     @Column(length = 64, unique = true)
     private String inviteCode;
 

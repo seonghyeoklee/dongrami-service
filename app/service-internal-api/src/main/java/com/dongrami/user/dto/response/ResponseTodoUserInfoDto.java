@@ -24,7 +24,7 @@ public class ResponseTodoUserInfoDto {
                 .id(entity.getId())
                 .email(entity.getEmail())
                 .username(entity.getUsername())
-                .userPersonalColor(entity.getUserPersonalColor().getColor())
+                .userPersonalColor(entity.getProfileInfo().getUserPersonalColor().getColor())
                 .build();
     }
 }

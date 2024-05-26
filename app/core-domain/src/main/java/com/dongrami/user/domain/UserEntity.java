@@ -46,11 +46,6 @@ public class UserEntity extends BaseTimeEntity {
     @Column(length = 1)
     private String emailVerifiedYn;
 
-    @Comment("프로필 이미지 URL")
-    @Setter
-    @Column(length = 512)
-    private String profileImageUrl;
-
     @Comment("제공자 타입")
     @Column(length = 20)
     @Enumerated(EnumType.STRING)
@@ -61,19 +56,13 @@ public class UserEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
-    @Comment("사용자 차단 여부")
-    @Column
-    private boolean isBlocked;
+    @Comment("사용자 탈퇴 정보")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserDeactivationEntity userDeactivationEntity;
 
-    @Comment("사용자 차단 사유")
-    @Column(length = 512)
-    private String blockReason;
-
+    @Comment("프로필 정보")
     @Embedded
-    private InviteCode inviteCode;
-
-    @Embedded
-    private UserPersonalColor userPersonalColor;
+    private ProfileInfo profileInfo;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -126,11 +115,13 @@ public class UserEntity extends BaseTimeEntity {
         this.password = "NO_PASS";
         this.email = email != null ? email : "NO_EMAIL";
         this.emailVerifiedYn = emailVerifiedYn;
-        this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
         this.providerType = providerType;
         this.roleType = roleType;
-        this.userPersonalColor = UserPersonalColor.builder().color("#f0f8ff").build();
-        this.inviteCode = InviteCode.builder().inviteCode(inviteCode).build();
+        this.profileInfo = ProfileInfo.builder()
+                .inviteCode(InviteCode.builder().inviteCode(inviteCode).build())
+                .userPersonalColor(UserPersonalColor.builder().color("#f0f8ff").build())
+                .profileImageUrl(profileImageUrl != null ? profileImageUrl : "")
+                .build();
     }
 
     public boolean hasUserGroup() {

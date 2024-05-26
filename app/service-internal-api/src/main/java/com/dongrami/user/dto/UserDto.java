@@ -34,12 +34,10 @@ public class UserDto {
                 .password(userEntity.getPassword())
                 .email(userEntity.getEmail())
                 .emailVerifiedYn(userEntity.getEmailVerifiedYn())
-                .profileImageUrl(userEntity.getProfileImageUrl())
+                .profileImageUrl(userEntity.getProfileInfo().getProfileImageUrl())
                 .providerType(userEntity.getProviderType())
                 .roleType(userEntity.getRoleType())
-                .isBlocked(userEntity.isBlocked())
-                .blockReason(userEntity.getBlockReason())
-                .color(userEntity.getUserPersonalColor().getColor())
+                .color(userEntity.getProfileInfo().getUserPersonalColor().getColor())
                 .build();
     }
 
