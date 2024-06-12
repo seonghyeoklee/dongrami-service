@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id", callSuper = false)
 public class UserDeactivationEntity extends BaseTimeEntity {
 
     @Comment("PK")
@@ -22,8 +21,8 @@ public class UserDeactivationEntity extends BaseTimeEntity {
     private Long id;
 
     @Comment("사용자")
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @Comment("탈퇴일")
@@ -31,6 +30,11 @@ public class UserDeactivationEntity extends BaseTimeEntity {
     private LocalDateTime deactivationDate;
 
     @Comment("탈퇴 사유")
+    @Enumerated(EnumType.STRING)
+    private UserDeactivationReason userDeactivationReason;
+
+    @Comment("탈퇴 상세 의견")
     @Column(nullable = false)
-    private String reason;
+    private String deactivationDetailOpinion;
+
 }

@@ -18,7 +18,7 @@ public class UserDto {
     private String username;
     private String password;
     private String email;
-    private String emailVerifiedYn;
+    private boolean isEmailVerified;
     private String profileImageUrl;
     private ProviderType providerType;
     private RoleType roleType;
@@ -33,7 +33,7 @@ public class UserDto {
                 .username(userEntity.getUsername())
                 .password(userEntity.getPassword())
                 .email(userEntity.getEmail())
-                .emailVerifiedYn(userEntity.getEmailVerifiedYn())
+                .isEmailVerified(userEntity.isEmailVerified())
                 .profileImageUrl(userEntity.getProfileInfo().getProfileImageUrl())
                 .providerType(userEntity.getProviderType())
                 .roleType(userEntity.getRoleType())

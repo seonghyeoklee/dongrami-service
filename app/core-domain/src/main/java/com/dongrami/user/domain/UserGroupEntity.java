@@ -21,7 +21,7 @@ public class UserGroupEntity extends BaseTimeEntity {
     private Long id;
 
     @Comment("그룹 이름")
-    @Column(length = 128, nullable = false)
+    @Column(length = 128)
     private String groupName;
 
     @Comment("그룹에 대한 설명")
@@ -37,6 +37,7 @@ public class UserGroupEntity extends BaseTimeEntity {
     @JoinColumn(name = "owner_user_id")
     private UserEntity ownerUserEntity;
 
+    @Comment("그룹 참여자")
     @OneToMany(mappedBy = "userGroupEntity", cascade = CascadeType.PERSIST)
     private List<UserEntity> userEntities = new ArrayList<>();
 
