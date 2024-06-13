@@ -17,7 +17,6 @@ import com.dongrami.todo.repository.TodoRememberRepository;
 import com.dongrami.todo.repository.TodoRepository;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
-import com.dongrami.user.domain.UserGroupEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -183,15 +183,8 @@ public class TodoWriteService {
     }
 
     private List<Long> getUserIds(UserEntity userEntity) {
-        UserGroupEntity userGroupEntity = userEntity.getUserGroupEntity();
-        if (userGroupEntity == null) {
-            return List.of(userEntity.getId());
-        }
-
-        List<UserEntity> userEntities = userGroupEntity.getUserEntities();
-        return userEntities.stream()
-                .map(UserEntity::getId)
-                .toList();
+        UserEntity pairUserEntity = userEntity.getPairUserEntity();
+        return List.of(Objects.requireNonNullElse(pairUserEntity, userEntity).getId());
     }
 
 }

@@ -64,10 +64,10 @@ public class UserEntity extends BaseTimeEntity {
     @Embedded
     private ProfileInfo profileInfo;
 
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_group_id", foreignKey = @ForeignKey(name = "fk_user_user_group"))
-    private UserGroupEntity userGroupEntity;
+    @Comment("짝꿍")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pair_user_id")
+    private UserEntity pairUserEntity;
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TodoEntity> todoEntities = new ArrayList<>();
@@ -122,10 +122,6 @@ public class UserEntity extends BaseTimeEntity {
                 .userPersonalColor(UserPersonalColor.builder().color("#f0f8ff").build())
                 .profileImageUrl(profileImageUrl != null ? profileImageUrl : "")
                 .build();
-    }
-
-    public boolean hasUserGroup() {
-        return userGroupEntity != null;
     }
 
 }

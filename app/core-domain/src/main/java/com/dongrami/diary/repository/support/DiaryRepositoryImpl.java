@@ -48,17 +48,8 @@ public class DiaryRepositoryImpl implements DiaryRepositorySupport {
                         .from(diaryEntity)
                         .where(
                                 (
-                                        diaryEntity.userEntity.id.in(
-                                                        JPAExpressions.select(userEntity.id)
-                                                                .from(userEntity)
-                                                                .where(userEntity.userGroupEntity.id.in(
-                                                                                JPAExpressions.select(userEntity.userGroupEntity.id)
-                                                                                        .from(userEntity)
-                                                                                        .where(userEntity.id.eq(userId))
-                                                                        )
-                                                                )
-                                                )
-                                                .and(diaryEntity.isPublic.eq(true))
+                                        diaryEntity.userEntity.pairUserEntity.id.eq(userId)
+                                                .and(diaryEntity.isPublic.isTrue())
                                                 .or(diaryEntity.userEntity.id.eq(userId))
                                 )
                                         .and(diaryEntity.isDeleted.eq(false))
@@ -76,12 +67,7 @@ public class DiaryRepositoryImpl implements DiaryRepositorySupport {
                 diaryEntity.userEntity.id.in(
                                 JPAExpressions.select(userEntity.id)
                                         .from(userEntity)
-                                        .where(userEntity.userGroupEntity.id.in(
-                                                        JPAExpressions.select(userEntity.userGroupEntity.id)
-                                                                .from(userEntity)
-                                                                .where(userEntity.id.eq(userId))
-                                                )
-                                        )
+                                        .where(userEntity.pairUserEntity.id.eq(userId))
                         )
                         .and(diaryEntity.isPublic.eq(true))
                         .or(diaryEntity.userEntity.id.eq(userId))
