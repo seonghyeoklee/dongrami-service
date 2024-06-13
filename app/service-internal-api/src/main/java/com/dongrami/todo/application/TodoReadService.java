@@ -9,7 +9,6 @@ import com.dongrami.todo.repository.TodoRememberRepository;
 import com.dongrami.todo.repository.TodoRepository;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
-import com.dongrami.user.domain.UserGroupEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,15 +48,8 @@ public class TodoReadService {
     }
 
     private List<Long> getUserIds(UserEntity userEntity) {
-        UserGroupEntity userGroupEntity = userEntity.getUserGroupEntity();
-        if (userGroupEntity == null) {
-            return List.of(userEntity.getId());
-        }
-
-        List<UserEntity> userEntities = userGroupEntity.getUserEntities();
-        return userEntities.stream()
-                .map(UserEntity::getId)
-                .toList();
+        UserEntity pairUserEntity = userEntity.getPairUserEntity();
+        return List.of(Objects.requireNonNullElse(pairUserEntity, userEntity).getId());
     }
 
     public int getTodoAchievementRate(String userUniqueId, LocalDate currentDate) {

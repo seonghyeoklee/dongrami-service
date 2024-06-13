@@ -44,7 +44,7 @@ public class UserEntity extends BaseTimeEntity {
 
     @Comment("이메일 인증 여부")
     @Column(length = 1)
-    private String emailVerifiedYn;
+    private boolean isEmailVerified;
 
     @Comment("제공자 타입")
     @Column(length = 20)
@@ -64,10 +64,10 @@ public class UserEntity extends BaseTimeEntity {
     @Embedded
     private ProfileInfo profileInfo;
 
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_group_id", foreignKey = @ForeignKey(name = "fk_user_user_group"))
-    private UserGroupEntity userGroupEntity;
+    @Comment("짝꿍")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pair_user_id")
+    private UserEntity pairUserEntity;
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TodoEntity> todoEntities = new ArrayList<>();
@@ -82,7 +82,7 @@ public class UserEntity extends BaseTimeEntity {
             String userId,
             String username,
             String email,
-            String emailVerifiedYn,
+            boolean emailVerifiedYn,
             String profileImageUrl,
             ProviderType providerType,
             RoleType roleType,
@@ -104,7 +104,7 @@ public class UserEntity extends BaseTimeEntity {
             String userUniqueId,
             String username,
             String email,
-            String emailVerifiedYn,
+            boolean isEmailVerified,
             String profileImageUrl,
             ProviderType providerType,
             RoleType roleType,
@@ -114,7 +114,7 @@ public class UserEntity extends BaseTimeEntity {
         this.username = username;
         this.password = "NO_PASS";
         this.email = email != null ? email : "NO_EMAIL";
-        this.emailVerifiedYn = emailVerifiedYn;
+        this.isEmailVerified = isEmailVerified;
         this.providerType = providerType;
         this.roleType = roleType;
         this.profileInfo = ProfileInfo.builder()
@@ -122,10 +122,6 @@ public class UserEntity extends BaseTimeEntity {
                 .userPersonalColor(UserPersonalColor.builder().color("#f0f8ff").build())
                 .profileImageUrl(profileImageUrl != null ? profileImageUrl : "")
                 .build();
-    }
-
-    public boolean hasUserGroup() {
-        return userGroupEntity != null;
     }
 
 }

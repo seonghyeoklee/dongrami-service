@@ -2,7 +2,6 @@ package com.dongrami.calendar.repository.support;
 
 import com.dongrami.calendar.domain.CalendarEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -10,7 +9,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.dongrami.calendar.domain.QCalendarEntity.calendarEntity;
-import static com.dongrami.user.domain.QUserEntity.userEntity;
 
 @RequiredArgsConstructor
 public class CalendarRepositoryImpl implements CalendarRepositorySupport {
@@ -33,16 +31,7 @@ public class CalendarRepositoryImpl implements CalendarRepositorySupport {
         LocalDate endDate = currentDate.withDayOfMonth(currentDate.lengthOfMonth());
 
         return (
-                calendarEntity.userEntity.id.in(
-                                JPAExpressions.select(userEntity.id)
-                                        .from(userEntity)
-                                        .where(userEntity.userGroupEntity.id.in(
-                                                        JPAExpressions.select(userEntity.userGroupEntity.id)
-                                                                .from(userEntity)
-                                                                .where(userEntity.id.eq(userId))
-                                                )
-                                        )
-                        )
+                calendarEntity.userEntity.pairUserEntity.id.eq(userId)
                         .and(calendarEntity.diaryEntity.isPublic.isTrue())
                         .or(calendarEntity.userEntity.id.eq(userId))
         )

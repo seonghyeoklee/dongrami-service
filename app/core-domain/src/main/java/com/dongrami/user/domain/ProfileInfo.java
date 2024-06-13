@@ -19,7 +19,7 @@ public class ProfileInfo {
     private String profileImageUrl;
 
     @Comment("사용자 닉네임")
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String nickname;
 
     @Comment("사용자 지역 정보")
