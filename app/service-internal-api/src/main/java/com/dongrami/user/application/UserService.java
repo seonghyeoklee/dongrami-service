@@ -3,6 +3,7 @@ package com.dongrami.user.application;
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
 import com.dongrami.user.domain.UserEntity;
+import com.dongrami.user.dto.request.RequestUpdateProfileInfoDto;
 import com.dongrami.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,14 @@ public class UserService {
     public UserEntity getUserByUserUniqueId(String userUniqueId) {
         return userRepository.findUserByUserUniqueId(userUniqueId)
                 .orElseThrow(() -> new BaseException(ErrorCode.INVALID_USER));
+    }
+
+    public void updateProfileInfo(String userUniqueId, RequestUpdateProfileInfoDto request) {
+        UserEntity userEntity = getUserByUserUniqueId(userUniqueId);
+
+        userEntity.updateProfileInfo(
+                request.getNickname(),
+                request.getLocation()
+        );
     }
 }

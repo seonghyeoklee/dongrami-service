@@ -47,4 +47,10 @@ public class ProfileInfo {
         this.inviteCode = inviteCode;
         this.isMenstrualCycle = isMenstrualCycle;
     }
+
+    public void updateProfileInfo(String nickname, Location location) {
+        this.nickname = nickname;
+        this.location = location;
+    }
+
 }

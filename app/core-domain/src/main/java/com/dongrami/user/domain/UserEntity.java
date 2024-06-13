@@ -128,4 +128,7 @@ public class UserEntity extends BaseTimeEntity {
                 .build();
     }
 
+    public void updateProfileInfo(String nickname, Location location) {
+        this.profileInfo.updateProfileInfo(nickname, location);
+    }
 }
