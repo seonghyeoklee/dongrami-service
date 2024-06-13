@@ -6,7 +6,6 @@ import com.dongrami.todo.repository.TodoRememberRepository;
 import com.dongrami.todo.repository.TodoRepository;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
-import com.dongrami.user.domain.UserPersonalColor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +40,6 @@ class TodoReadServiceTest {
         UserEntity userEntity = UserEntity.builder()
                 .id(1L)
                 .userUniqueId("testUser")
-                .userPersonalColor(UserPersonalColor.builder().color("#000000").build())
                 .build();
 
         TodoEntity todoEntity = TodoEntity.builder()

@@ -56,6 +56,10 @@ public class UserEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
+    @Comment("전화번호")
+    @Column(length = 20)
+    private String phoneNumber;
+
     @Comment("사용자 탈퇴 정보")
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserDeactivationEntity userDeactivationEntity;
@@ -124,4 +128,7 @@ public class UserEntity extends BaseTimeEntity {
                 .build();
     }
 
+    public void updateProfileInfo(String nickname, Location location) {
+        this.profileInfo.updateProfileInfo(nickname, location);
+    }
 }
