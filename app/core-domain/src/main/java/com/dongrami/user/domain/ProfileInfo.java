@@ -34,12 +34,17 @@ public class ProfileInfo {
     @Embedded
     private InviteCode inviteCode;
 
+    @Comment("월경 기능 사용여부")
+    @Column
+    private boolean isMenstrualCycle;
+
     @Builder
-    public ProfileInfo(String profileImageUrl, String nickname, Location location, UserPersonalColor userPersonalColor, InviteCode inviteCode) {
+    public ProfileInfo(String profileImageUrl, String nickname, Location location, UserPersonalColor userPersonalColor, InviteCode inviteCode, boolean isMenstrualCycle) {
         this.profileImageUrl = profileImageUrl;
         this.nickname = nickname;
         this.location = location;
         this.userPersonalColor = userPersonalColor;
         this.inviteCode = inviteCode;
+        this.isMenstrualCycle = isMenstrualCycle;
     }
 }

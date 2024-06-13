@@ -3,6 +3,7 @@ package com.dongrami.user.ui;
 import com.dongrami.common.ApiResponse;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
+import com.dongrami.user.dto.response.ResponseProfileInfoDto;
 import com.dongrami.user.dto.response.ResponseUserInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,18 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<?> getUser(@AuthenticationPrincipal User principal) {
-
         UserEntity user = userService.getUser(principal.getUsername());
 
         return ResponseEntity.ok(
                 ApiResponse.success(ResponseUserInfoDto.from(user))
+        );
+    }
+
+    @GetMapping("/users/profile-info")
+    public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal User principal) {
+        UserEntity user = userService.getUserByUserUniqueId(principal.getUsername());
+        return ResponseEntity.ok(
+                ApiResponse.success(ResponseProfileInfoDto.from(user))
         );
     }
 
