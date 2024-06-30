@@ -36,7 +36,10 @@ public class AuthController {
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
-    @PostMapping("/auth/login")
+    /**
+     * 로그인
+     */
+    @PostMapping("/login")
     public ResponseEntity<?> login(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -83,6 +86,9 @@ public class AuthController {
         return ResponseEntity.ok(accessToken.getToken());
     }
 
+    /**
+     * 토큰 갱신
+     */
     @GetMapping("/refresh")
     public ResponseEntity<?> refreshToken (HttpServletRequest request, HttpServletResponse response) {
         // access token 확인

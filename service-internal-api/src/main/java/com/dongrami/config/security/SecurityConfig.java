@@ -9,6 +9,7 @@ import com.dongrami.oauth.handler.TokenAccessDeniedHandler;
 import com.dongrami.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.dongrami.oauth.service.CustomOAuth2UserService;
 import com.dongrami.oauth.token.AuthTokenProvider;
+import com.dongrami.user.domain.RoleType;
 import com.dongrami.user.repository.UserRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -68,9 +69,9 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers(PERMIT_URL).permitAll()
-//                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
-                .antMatchers("/api/**").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
+//                .antMatchers("/api/**").permitAll()
+//                .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
                 .authorizationEndpoint()

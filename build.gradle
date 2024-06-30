@@ -41,6 +41,7 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-test'
         implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
         implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+        implementation 'io.github.cdimascio:dotenv-java:2.2.0'
 
         annotationProcessor 'org.projectlombok:lombok'
         compileOnly 'org.projectlombok:lombok'
@@ -59,18 +60,18 @@ subprojects {
     }
 }
 
-project('app:service-internal-api') {
+project('service-internal-api') {
     bootJar { enabled = true }
     jar { enabled = false }
 
     dependencies {
-        implementation project(':app:core-domain')
-        implementation project(':app:core-util')
-        implementation project(':app:core-web')
+        implementation project(':core-domain')
+        implementation project(':core-util')
+        implementation project(':core-web')
     }
 }
 
-project('app:core-domain') {
+project('core-domain') {
     bootJar { enabled = false }
     jar { enabled = true }
 

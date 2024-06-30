@@ -20,6 +20,9 @@ import javax.validation.Valid;
 public class UserController {
     private final UserService userService;
 
+    /**
+     * 사용자 정보 조회
+     */
     @GetMapping("/users")
     public ResponseEntity<?> getUser(@AuthenticationPrincipal User principal) {
         UserEntity user = userService.getUser(principal.getUsername());
