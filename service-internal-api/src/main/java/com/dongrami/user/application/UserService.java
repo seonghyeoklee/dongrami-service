@@ -2,9 +2,11 @@ package com.dongrami.user.application;
 
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
+import com.dongrami.user.domain.InviteCode;
 import com.dongrami.user.domain.UserDeactivationEntity;
 import com.dongrami.user.domain.UserEntity;
 import com.dongrami.user.dto.request.RequestDeactivation;
+import com.dongrami.user.dto.request.RequestInviteCode;
 import com.dongrami.user.dto.request.RequestUpdateProfileInfo;
 import com.dongrami.user.dto.response.ResponseCountTodoAndDiary;
 import com.dongrami.user.repository.UserDeactivationRepository;
@@ -70,5 +72,24 @@ public class UserService {
                 .count();
 
         return new ResponseCountTodoAndDiary(todoCount, diaryCount);
+    }
+
+    public String getInviteCode(String userUniqueId) {
+        UserEntity userEntity = getUserByUserUniqueId(userUniqueId);
+
+        return userEntity.getInviteCode();
+    }
+
+    public void updateInviteCode(String userUniqueId, RequestInviteCode request) {
+        UserEntity userEntity = getUserByUserUniqueId(userUniqueId);
+
+        if (userEntity.getPairUserEntity() != null) {
+            throw new BaseException(ErrorCode.PAIR_USER_ALREADY_EXIST);
+        }
+
+        UserEntity inviteUserEntity = userRepository.findByInviteCode(InviteCode.of(request.inviteCode()))
+                .orElseThrow(() -> new BaseException(ErrorCode.INVITE_CODE_INVALID));
+
+        userEntity.updatePairUserEntity(inviteUserEntity);
     }
 }

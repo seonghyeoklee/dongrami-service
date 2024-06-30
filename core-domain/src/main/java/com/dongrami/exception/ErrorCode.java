@@ -29,8 +29,9 @@ public enum ErrorCode {
     HANDLE_ALREADY_EMOJI(200, "C018", "Already add emoji"),
     EMOJI_NAME_ALREADY_EXIST(200, "C019", "Emoji name already exist"),
 
-    // InviteCode
+    // 초대 코드
     INVITE_CODE_EMPTY(400, "IC001", "짝꿍 초대 코드는 비어 있을 수 없습니다."),
+    INVITE_CODE_INVALID(400, "IC002", "유효하지 않은 초대 코드입니다."),
 
     // 할 일
     TODO_NOT_EXIST(400, "TD001", "할 일이 존재하지 않습니다."),
@@ -58,7 +59,9 @@ public enum ErrorCode {
 
     // 일정
     CALENDAR_NOT_EXIST(400, "CD001", "일정이 존재하지 않습니다."),
-    ;
+
+    // 짝꿍
+    PAIR_USER_ALREADY_EXIST(400, "PU001", "이미 짝꿍이 존재합니다."),;
 
     private final int status;
     private final String code;

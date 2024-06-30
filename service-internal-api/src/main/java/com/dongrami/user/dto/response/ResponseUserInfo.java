@@ -24,7 +24,13 @@ public record ResponseUserInfo(
         String phoneNumber,
 
         @Schema(description = "닉네임")
-        String nickname
+        String nickname,
+
+        @Schema(description = "프로필 이미지")
+        String profileImage,
+
+        @Schema(description = "월경 기능 활성화 여부")
+        boolean isMenstrualCycle
 ) {
     public static ResponseUserInfo of(UserEntity entity) {
         return new ResponseUserInfo(
@@ -34,7 +40,9 @@ public record ResponseUserInfo(
                 entity.getUsername(),
                 entity.getProfileInfo().getUserPersonalColor().getColor(),
                 entity.getPhoneNumber(),
-                entity.getProfileInfo().getNickname()
+                entity.getProfileInfo().getNickname(),
+                entity.getProfileInfo().getProfileImageUrl(),
+                entity.getProfileInfo().isMenstrualCycle()
         );
     }
 }

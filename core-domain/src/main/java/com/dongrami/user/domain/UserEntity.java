@@ -60,10 +60,6 @@ public class UserEntity extends BaseTimeEntity {
     @Column(length = 20)
     private String phoneNumber;
 
-    @Comment("사용자 탈퇴 정보")
-    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private UserDeactivationEntity userDeactivationEntity;
-
     @Comment("프로필 정보")
     @Embedded
     private ProfileInfo profileInfo;
@@ -122,8 +118,8 @@ public class UserEntity extends BaseTimeEntity {
         this.providerType = providerType;
         this.roleType = roleType;
         this.profileInfo = ProfileInfo.builder()
-                .inviteCode(InviteCode.builder().inviteCode(inviteCode).build())
-                .userPersonalColor(UserPersonalColor.builder().color("#f0f8ff").build())
+                .inviteCode(InviteCode.of(inviteCode))
+                .userPersonalColor(UserPersonalColor.of("#f0f8ff"))
                 .profileImageUrl(profileImageUrl != null ? profileImageUrl : "")
                 .build();
     }
@@ -134,5 +130,13 @@ public class UserEntity extends BaseTimeEntity {
 
     public void updateMenstrual() {
         this.profileInfo.updateMenstrual();
+    }
+
+    public String getInviteCode() {
+        return this.profileInfo.getInviteCode().getInviteCode();
+    }
+
+    public void updatePairUserEntity(UserEntity userEntity) {
+        this.pairUserEntity = userEntity;
     }
 }

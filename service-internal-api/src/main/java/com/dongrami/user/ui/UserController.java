@@ -4,8 +4,10 @@ import com.dongrami.common.ApiResponse;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
 import com.dongrami.user.dto.request.RequestDeactivation;
+import com.dongrami.user.dto.request.RequestInviteCode;
 import com.dongrami.user.dto.request.RequestUpdateProfileInfo;
 import com.dongrami.user.dto.response.ResponseCountTodoAndDiary;
+import com.dongrami.user.dto.response.ResponseInviteCode;
 import com.dongrami.user.dto.response.ResponseProfileInfo;
 import com.dongrami.user.dto.response.ResponseUserInfo;
 import lombok.RequiredArgsConstructor;
@@ -84,5 +86,29 @@ public class UserController implements UserControllerInterface {
         ResponseCountTodoAndDiary response = userService.countTodoAndDiary(principal.getUsername());
 
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /**
+     * 짝꿍 초대코드 조회
+     */
+    @GetMapping("/users/invite")
+    public ResponseEntity<?> getInviteCode(@AuthenticationPrincipal User principal) {
+        String inviteCode = userService.getInviteCode(principal.getUsername());
+
+        return ResponseEntity.ok(
+                ApiResponse.success(new ResponseInviteCode(inviteCode))
+        );
+    }
+
+    /**
+     * 짝꿍 초대코드 입력
+     */
+    @PostMapping("/users/invite")
+    public ResponseEntity<?> updateInviteCode(@AuthenticationPrincipal User principal, @Valid @RequestBody RequestInviteCode request) {
+        userService.updateInviteCode(principal.getUsername(), request);
+
+        return ResponseEntity.ok(
+                ApiResponse.success()
+        );
     }
 }
