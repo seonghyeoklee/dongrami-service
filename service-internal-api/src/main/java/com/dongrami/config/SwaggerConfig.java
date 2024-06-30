@@ -8,30 +8,35 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Collections;
-
 @Configuration
 public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        SecurityScheme securityScheme = new SecurityScheme()
-                .type(SecurityScheme.Type.APIKEY).scheme("Authorization")
-                .in(SecurityScheme.In.HEADER).name("Authorization");
-
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList("api_key");
-
         return new OpenAPI()
-                .components(new Components().addSecuritySchemes("api_key", securityScheme))
-                .security(Collections.singletonList(securityRequirement))
-                .info(getDefaultInfo());
+                .components(getComponents())
+                .addSecurityItem(getSecurityRequirement())
+                .info(getInfo());
     }
-
-    private Info getDefaultInfo() {
+    private Info getInfo() {
         return new Info()
                 .title("Dogrami Internal API")
                 .description("internal API for dogrami service")
                 .version("1.0.0");
     }
 
+    private Components getComponents() {
+        return new Components()
+                .addSecuritySchemes("Json Web Token",
+                        new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                );
+    }
+
+    private SecurityRequirement getSecurityRequirement() {
+        return new SecurityRequirement()
+                .addList("Json Web Token");
+    }
 }

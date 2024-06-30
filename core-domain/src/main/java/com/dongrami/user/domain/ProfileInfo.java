@@ -53,4 +53,7 @@ public class ProfileInfo {
         this.location = location;
     }
 
+    public void updateMenstrual() {
+        this.isMenstrualCycle = !this.isMenstrualCycle;
+    }
 }

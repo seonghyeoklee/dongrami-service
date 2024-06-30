@@ -38,7 +38,7 @@ public class DiaryService {
         UserEntity userEntity = userService.getUserByUserUniqueId(username);
 
         return diaryRepository.findDiaryPageByCurrentDate(userEntity.getId(), pageable, currentDate)
-                .map(DiaryDto::from);
+                .map(DiaryDto::of);
     }
 
     public void createDiary(String userUniqueId, RequestCreateDiaryDto request) {
@@ -74,7 +74,7 @@ public class DiaryService {
         DiaryEntity diaryEntity = diaryRepository.findByUserIdAndDiaryId(userEntity.getId(), diaryId)
                 .orElseThrow(() -> new BaseException(ErrorCode.DIARY_NOT_EXIST));
 
-        return DiaryDto.from(diaryEntity);
+        return DiaryDto.of(diaryEntity);
     }
 
     public void updateDiary(String username, Long id, RequestUpdateDiaryDto request) {

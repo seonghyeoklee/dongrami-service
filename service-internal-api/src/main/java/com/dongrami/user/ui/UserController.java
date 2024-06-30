@@ -3,9 +3,11 @@ package com.dongrami.user.ui;
 import com.dongrami.common.ApiResponse;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
-import com.dongrami.user.dto.request.RequestUpdateProfileInfoDto;
-import com.dongrami.user.dto.response.ResponseProfileInfoDto;
-import com.dongrami.user.dto.response.ResponseUserInfoDto;
+import com.dongrami.user.dto.request.RequestDeactivation;
+import com.dongrami.user.dto.request.RequestUpdateProfileInfo;
+import com.dongrami.user.dto.response.ResponseCountTodoAndDiary;
+import com.dongrami.user.dto.response.ResponseProfileInfo;
+import com.dongrami.user.dto.response.ResponseUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +19,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class UserController {
+public class UserController implements UserControllerInterface {
     private final UserService userService;
 
     /**
@@ -28,7 +30,7 @@ public class UserController {
         UserEntity user = userService.getUser(principal.getUsername());
 
         return ResponseEntity.ok(
-                ApiResponse.success(ResponseUserInfoDto.from(user))
+                ApiResponse.success(ResponseUserInfo.of(user))
         );
     }
 
@@ -39,7 +41,7 @@ public class UserController {
     public ResponseEntity<?> getProfileInfo(@AuthenticationPrincipal User principal) {
         UserEntity user = userService.getUserByUserUniqueId(principal.getUsername());
         return ResponseEntity.ok(
-                ApiResponse.success(ResponseProfileInfoDto.from(user))
+                ApiResponse.success(ResponseProfileInfo.from(user))
         );
     }
 
@@ -48,12 +50,39 @@ public class UserController {
      */
     @PutMapping("/users/profile-info")
     public ResponseEntity<?> updateProfileInfo(@AuthenticationPrincipal User principal,
-                                               @Valid @RequestBody RequestUpdateProfileInfoDto request) {
+                                               @Valid @RequestBody RequestUpdateProfileInfo request) {
         userService.updateProfileInfo(principal.getUsername(), request);
 
-        return ResponseEntity.ok(
-                ApiResponse.success()
-        );
+        return ResponseEntity.ok(ApiResponse.success());
     }
 
+    /**
+     * 월경 기능 활성화
+     */
+    @PutMapping("/users/menstrual")
+    public ResponseEntity<?> updateMenstrual(@AuthenticationPrincipal User principal) {
+        userService.updateMenstrual(principal.getUsername());
+
+        return ResponseEntity.ok(ApiResponse.success());
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    @PostMapping("/users/deactivation")
+    public ResponseEntity<?> updateDeactivation(@AuthenticationPrincipal User principal, @Valid @RequestBody RequestDeactivation request) {
+        userService.updateDeactivation(principal.getUsername(), request);
+
+        return ResponseEntity.ok(ApiResponse.success());
+    }
+
+    /**
+     * 회원 탈퇴 시 할일, 기록 건수 조회
+     */
+    @GetMapping("/users/deactivation")
+    public ResponseEntity<?> countTodoAndDiary(@AuthenticationPrincipal User principal) {
+        ResponseCountTodoAndDiary response = userService.countTodoAndDiary(principal.getUsername());
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
 }

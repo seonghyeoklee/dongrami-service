@@ -2,7 +2,7 @@ package com.dongrami.todo.dto.response;
 
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoStatus;
-import com.dongrami.user.dto.response.ResponseUserInfoDto;
+import com.dongrami.user.dto.response.ResponseUserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class ResponseTodoDto {
     private LocalDateTime notificationDateTime;
     private Boolean isPinned;
     private LocalDateTime pinnedDateTime;
-    private ResponseUserInfoDto user;
+    private ResponseUserInfo user;
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;
 
@@ -33,7 +33,7 @@ public class ResponseTodoDto {
                 .notificationDateTime(todoEntity.getNotificationDateTime())
                 .isPinned(todoEntity.isPinned())
                 .pinnedDateTime(todoEntity.getPinnedDateTime())
-                .user(ResponseUserInfoDto.from(todoEntity.getUserEntity()))
+                .user(ResponseUserInfo.of(todoEntity.getUserEntity()))
                 .createdDateTime(todoEntity.getCreatedDateTime())
                 .updatedDateTime(todoEntity.getUpdatedDateTime())
                 .build();

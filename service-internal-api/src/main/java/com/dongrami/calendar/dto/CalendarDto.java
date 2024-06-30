@@ -25,9 +25,9 @@ public class CalendarDto {
     public static CalendarDto from(CalendarEntity entity) {
         return CalendarDto.builder()
                 .id(entity.getId())
-                .user(UserDto.from(entity.getUserEntity()))
-                .todo(TodoDto.from(entity.getTodoEntity()))
-                .diary(DiaryDto.from(entity.getDiaryEntity()))
+                .user(UserDto.of(entity.getUserEntity()))
+                .todo(TodoDto.of(entity.getTodoEntity()))
+                .diary(DiaryDto.of(entity.getDiaryEntity()))
                 .calendarDate(entity.getCalendarDate())
                 .build();
     }

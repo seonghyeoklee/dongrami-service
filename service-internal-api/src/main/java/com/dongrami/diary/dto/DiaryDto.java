@@ -22,12 +22,12 @@ public class DiaryDto {
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;
 
-    public static DiaryDto from(DiaryEntity diaryEntity) {
+    public static DiaryDto of(DiaryEntity diaryEntity) {
         return DiaryDto.builder()
                 .id(diaryEntity.getId())
                 .title(diaryEntity.getTitle())
                 .content(diaryEntity.getContent())
-                .user(UserDto.from(diaryEntity.getUserEntity()))
+                .user(UserDto.of(diaryEntity.getUserEntity()))
                 .isPublic(diaryEntity.isPublic())
                 .createdDateTime(diaryEntity.getCreatedDateTime())
                 .updatedDateTime(diaryEntity.getUpdatedDateTime())

@@ -26,7 +26,7 @@ public class TodoDto {
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;
 
-    public static TodoDto from(TodoEntity todoEntity) {
+    public static TodoDto of(TodoEntity todoEntity) {
         return TodoDto.builder()
                 .id(todoEntity.getId())
                 .content(todoEntity.getContent())

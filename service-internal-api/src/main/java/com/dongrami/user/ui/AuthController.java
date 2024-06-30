@@ -5,7 +5,9 @@ import com.dongrami.oauth.token.AuthToken;
 import com.dongrami.oauth.token.AuthTokenProvider;
 import com.dongrami.user.domain.RoleType;
 import com.dongrami.user.domain.UserRefreshTokenEntity;
-import com.dongrami.user.dto.request.AuthReqModel;
+import com.dongrami.user.dto.request.RequestLogin;
+import com.dongrami.user.dto.response.ResponseLoginSuccess;
+import com.dongrami.user.dto.response.ResponseRefreshToken;
 import com.dongrami.user.repository.UserRefreshTokenRepository;
 import com.dongrami.utils.CookieUtil;
 import com.dongrami.utils.HeaderUtil;
@@ -21,13 +23,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class AuthController {
-
+public class AuthController implements AuthControllerInterface {
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
@@ -40,19 +42,15 @@ public class AuthController {
      * 로그인
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestBody AuthReqModel authReqModel
-    ) {
+    public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody RequestLogin requestLogin) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        authReqModel.getId(),
-                        authReqModel.getPassword()
+                        requestLogin.id(),
+                        requestLogin.password()
                 )
         );
 
-        String userId = authReqModel.getId();
+        String userId = requestLogin.id();
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         Date now = new Date();
@@ -83,14 +81,14 @@ public class AuthController {
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
-        return ResponseEntity.ok(accessToken.getToken());
+        return ResponseEntity.ok(ResponseLoginSuccess.from(accessToken.getToken(), refreshToken.getToken()));
     }
 
     /**
      * 토큰 갱신
      */
     @GetMapping("/refresh")
-    public ResponseEntity<?> refreshToken (HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);
         AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
@@ -150,6 +148,6 @@ public class AuthController {
             CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
         }
 
-        return ResponseEntity.ok(newAccessToken.getToken());
+        return ResponseEntity.ok(ResponseRefreshToken.from(newAccessToken.getToken(), authRefreshToken.getToken()));
     }
 }

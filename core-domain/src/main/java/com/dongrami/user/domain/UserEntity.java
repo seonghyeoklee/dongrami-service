@@ -61,7 +61,7 @@ public class UserEntity extends BaseTimeEntity {
     private String phoneNumber;
 
     @Comment("사용자 탈퇴 정보")
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserDeactivationEntity userDeactivationEntity;
 
     @Comment("프로필 정보")
@@ -130,5 +130,9 @@ public class UserEntity extends BaseTimeEntity {
 
     public void updateProfileInfo(String nickname, Location location) {
         this.profileInfo.updateProfileInfo(nickname, location);
+    }
+
+    public void updateMenstrual() {
+        this.profileInfo.updateMenstrual();
     }
 }

@@ -23,7 +23,7 @@ public class UserDeactivationEntity extends BaseTimeEntity {
     @Comment("사용자")
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private UserEntity userEntity;
 
     @Comment("탈퇴일")
     @Column(nullable = false)

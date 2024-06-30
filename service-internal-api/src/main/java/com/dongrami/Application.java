@@ -46,10 +46,10 @@ public class Application {
         System.setProperty("GOOGLE_CLIENT_SECRET", dotenv.get("GOOGLE_CLIENT_SECRET"));
         System.setProperty("NAVER_CLIENT_ID", dotenv.get("NAVER_CLIENT_ID"));
         System.setProperty("NAVER_CLIENT_SECRET", dotenv.get("NAVER_CLIENT_SECRET"));
-        System.setProperty("NAVER_REDIRECT_URL", dotenv.get("NAVER_REDIRECT_URL"));
+        System.setProperty("NAVER_REDIRECT_URI", dotenv.get("NAVER_REDIRECT_URI"));
         System.setProperty("KAKAO_CLIENT_ID", dotenv.get("KAKAO_CLIENT_ID"));
         System.setProperty("KAKAO_CLIENT_SECRET", dotenv.get("KAKAO_CLIENT_SECRET"));
-        System.setProperty("KAKAO_REDIRECT_URL", dotenv.get("KAKAO_REDIRECT_URL"));
+        System.setProperty("KAKAO_REDIRECT_URI", dotenv.get("KAKAO_REDIRECT_URI"));
 
         SpringApplication.run(Application.class, args);
     }

@@ -20,7 +20,7 @@ public class TagDto {
         return TagDto.builder()
                 .id(tagEntity.getId())
                 .tagName(tagEntity.getTagName())
-                .user(UserDto.from(tagEntity.getUserEntity()))
+                .user(UserDto.of(tagEntity.getUserEntity()))
                 .build();
     }
 }

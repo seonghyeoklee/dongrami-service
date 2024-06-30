@@ -23,7 +23,7 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     defer-datasource-initialization: true
     show-sql: false
     open-in-view: false
@@ -45,7 +45,7 @@ spring:
       path: /h2-console
   sql:
     init:
-      mode: never
+      mode: always
   data:
     web:
       pageable:
