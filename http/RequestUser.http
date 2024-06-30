@@ -1,0 +1,14 @@
+### 프로필 정보 조회
+GET {{base_url}}/api/v1/users/profile-info
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### 프로필 정보 수정 (닉네임, 지역)
+PUT {{base_url}}/api/v1/users/profile-info
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### 프로필 월경 기능 활성화
+PUT {{base_url}}/api/v1/users/menstrual
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
