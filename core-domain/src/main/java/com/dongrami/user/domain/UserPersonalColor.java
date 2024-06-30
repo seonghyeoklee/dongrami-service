@@ -2,7 +2,6 @@ package com.dongrami.user.domain;
 
 import com.dongrami.exception.BaseException;
 import com.dongrami.exception.ErrorCode;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -19,10 +18,13 @@ public class UserPersonalColor {
     @Column(length = 64)
     private String color = "#000000";
 
-    @Builder
     public UserPersonalColor(String color) {
         validateColor(color);
         this.color = color;
+    }
+
+    public static UserPersonalColor of(String color) {
+        return new UserPersonalColor(color);
     }
 
     private void validateColor(String color) {

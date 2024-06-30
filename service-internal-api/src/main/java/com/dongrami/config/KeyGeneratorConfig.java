@@ -1,11 +1,11 @@
 package com.dongrami.config;
 
+import com.dongrami.common.key.InviteCodeGenerator;
 import com.dongrami.common.key.KeyGenerator;
 import com.dongrami.common.key.NanoIdKeyGenerator;
 import com.dongrami.common.key.UUIDKeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class KeyGeneratorConfig {
@@ -16,9 +16,12 @@ public class KeyGeneratorConfig {
     }
 
     @Bean
-    @Primary
     public KeyGenerator nanoIdKeyGenerator() {
         return new NanoIdKeyGenerator();
     }
 
+    @Bean
+    public KeyGenerator inviteCodeGenerator() {
+        return new InviteCodeGenerator();
+    }
 }

@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-    private final KeyGenerator keyGenerator;
+    private final KeyGenerator inviteCodeGenerator;
     private final UserRepository userRepository;
 
     @Override
@@ -52,7 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             }
             updateUser(savedUser, userInfo);
         } else {
-            String inviteCode = keyGenerator.generateKey();
+            String inviteCode = inviteCodeGenerator.generateKey();
             savedUser = createUser(userInfo, providerType, inviteCode);
         }
 
