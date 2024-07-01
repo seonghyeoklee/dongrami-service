@@ -62,6 +62,7 @@ public enum ErrorCode {
 
     // 짝꿍
     PAIR_USER_ALREADY_EXIST(400, "PU001", "이미 짝꿍이 존재합니다."),
+    PAIR_USER_NOT_EXIST(400, "PU002", "짝꿍이 존재하지 않습니다."),
 
     // 알림
     NOTIFICATION_SETTING_NOT_FOUND(400, "NT001", "알림이 존재하지 않습니다."),;

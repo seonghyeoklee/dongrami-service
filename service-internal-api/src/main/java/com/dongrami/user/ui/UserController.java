@@ -112,6 +112,18 @@ public class UserController implements UserControllerInterface {
     }
 
     /**
+     * 짝꿍 정보 조회
+     */
+    @GetMapping("/users/pair")
+    public ResponseEntity<?> getPair(@AuthenticationPrincipal User principal) {
+        ResponsePairUserInfo response = userService.getPairUserInfo(principal.getUsername());
+
+        return ResponseEntity.ok(
+                ApiResponse.success(response)
+        );
+    }
+
+    /**
      * 알림 설정 조회
      */
     @GetMapping("/users/notification")

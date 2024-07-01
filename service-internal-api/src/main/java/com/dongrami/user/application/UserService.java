@@ -11,6 +11,7 @@ import com.dongrami.user.dto.request.RequestInviteCode;
 import com.dongrami.user.dto.request.RequestUpdateNotification;
 import com.dongrami.user.dto.request.RequestUpdateProfileInfo;
 import com.dongrami.user.dto.response.ResponseCountTodoAndDiary;
+import com.dongrami.user.dto.response.ResponsePairUserInfo;
 import com.dongrami.user.dto.response.ResponseUserNotification;
 import com.dongrami.user.repository.UserDeactivationRepository;
 import com.dongrami.user.repository.UserRepository;
@@ -118,5 +119,20 @@ public class UserService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTIFICATION_SETTING_NOT_FOUND));
 
         userNotificationSettingEntity.updateNotificationSetting();
+    }
+
+    public ResponsePairUserInfo getPairUserInfo(String userUniqueId) {
+        UserEntity userEntity = getUserByUserUniqueId(userUniqueId);
+        UserEntity pairUserEntity = userEntity.getPairUserEntity();
+
+        if (pairUserEntity == null) {
+            throw new BaseException(ErrorCode.PAIR_USER_NOT_EXIST);
+        }
+
+        return new ResponsePairUserInfo(
+                pairUserEntity.getProfileInfo().getNickname(),
+                pairUserEntity.getProfileInfo().getProfileImageUrl(),
+                userEntity.getPairUserSettingTime()
+        );
     }
 }

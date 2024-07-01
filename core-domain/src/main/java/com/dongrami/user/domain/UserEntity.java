@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +69,10 @@ public class UserEntity extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pair_user_id")
     private UserEntity pairUserEntity;
+
+    @Comment("짝꿍 설정 시간")
+    @Column
+    private LocalDateTime pairUserSettingTime;
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TodoEntity> todoEntities = new ArrayList<>();
@@ -141,6 +146,7 @@ public class UserEntity extends BaseTimeEntity {
 
     public void updatePairUserEntity(UserEntity userEntity) {
         this.pairUserEntity = userEntity;
+        this.pairUserSettingTime = LocalDateTime.now();
     }
 
     public void addUserNotificationSettingEntities(UserNotificationSettingEntity userNotificationSettingEntity) {
