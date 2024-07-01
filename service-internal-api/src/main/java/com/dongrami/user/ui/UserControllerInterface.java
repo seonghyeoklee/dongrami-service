@@ -97,6 +97,16 @@ public interface UserControllerInterface {
     ResponseEntity<?> updateInviteCode(@Parameter(hidden = true) User principal, @Valid @RequestBody RequestInviteCode request);
 
     @Operation(
+            summary = "짝꿍 정보 조회 API",
+            description = "짝꿍 정보를 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공",
+                            content = @Content(schema = @Schema(implementation = ResponsePairUserInfo.class))),
+            }
+    )
+    ResponseEntity<?> getPairUserInfo(@Parameter(hidden = true) User principal);
+
+    @Operation(
             summary = "알림 설정 조회 API",
             description = "사용자의 알림을 조회합니다.",
             responses = {
