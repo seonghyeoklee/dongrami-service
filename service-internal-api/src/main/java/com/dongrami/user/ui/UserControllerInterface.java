@@ -1,12 +1,12 @@
 package com.dongrami.user.ui;
 
 import com.dongrami.user.dto.request.RequestDeactivation;
-import com.dongrami.user.dto.request.RequestInviteCode;
+import com.dongrami.user.dto.request.RequestUpdateNotification;
 import com.dongrami.user.dto.request.RequestUpdateProfileInfo;
 import com.dongrami.user.dto.response.ResponseCountTodoAndDiary;
-import com.dongrami.user.dto.response.ResponseInviteCode;
 import com.dongrami.user.dto.response.ResponseProfileInfo;
 import com.dongrami.user.dto.response.ResponseUserInfo;
+import com.dongrami.user.dto.response.ResponseUserNotification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -80,21 +80,21 @@ public interface UserControllerInterface {
     ResponseEntity<?> countTodoAndDiary(@Parameter(hidden = true) User principal);
 
     @Operation(
-            summary = "짝꿍 초대 코드 조회 API",
-            description = "짝꿍 초대 코드를 조회합니다.",
+            summary = "알림 설정 조회 API",
+            description = "사용자의 알림을 조회합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공",
-                            content = @Content(schema = @Schema(implementation = ResponseInviteCode.class))),
+                            content = @Content(schema = @Schema(implementation = ResponseUserNotification.class))),
             }
     )
-    ResponseEntity<?> getInviteCode(@Parameter(hidden = true) User principal);
+    ResponseEntity<?> getNotification(@Parameter(hidden = true) User principal);
 
     @Operation(
-            summary = "짝꿍 초대 코드 입력 API",
-            description = "짝꿍 초대 코드를 입력합니다.",
+            summary = "알림 설정 API",
+            description = "사용자의 알림을 설정합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> updateInviteCode(@Parameter(hidden = true) User principal, @Valid @RequestBody RequestInviteCode request);
+    ResponseEntity<?> updateNotification(@Parameter(hidden = true) User principal, @Valid @RequestBody RequestUpdateNotification request);
 }

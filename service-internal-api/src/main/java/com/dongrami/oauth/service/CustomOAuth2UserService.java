@@ -5,9 +5,7 @@ import com.dongrami.oauth.exception.OAuthProviderMissMatchException;
 import com.dongrami.oauth.info.OAuth2UserInfo;
 import com.dongrami.oauth.info.OAuth2UserInfoFactory;
 import com.dongrami.oauth.info.UserPrincipal;
-import com.dongrami.user.domain.ProviderType;
-import com.dongrami.user.domain.RoleType;
-import com.dongrami.user.domain.UserEntity;
+import com.dongrami.user.domain.*;
 import com.dongrami.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -53,6 +51,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             updateUser(savedUser, userInfo);
         } else {
             String inviteCode = inviteCodeGenerator.generateKey();
+
+            while (userRepository.findByInviteCode(InviteCode.of(inviteCode)).isPresent()) {
+                inviteCode = inviteCodeGenerator.generateKey();
+            }
+
             savedUser = createUser(userInfo, providerType, inviteCode);
         }
 
@@ -70,6 +73,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 RoleType.USER,
                 inviteCode
         );
+
+        for (NotificationType notificationType : NotificationType.values()) {
+            userEntity.addUserNotificationSettingEntities(
+                    UserNotificationSettingEntity.builder()
+                            .userEntity(userEntity)
+                            .notificationType(notificationType)
+                            .isEnabled(false)
+                            .build()
+            );
+        }
 
         return userRepository.saveAndFlush(userEntity);
     }

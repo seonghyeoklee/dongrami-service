@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +70,10 @@ public class UserEntity extends BaseTimeEntity {
     @JoinColumn(name = "pair_user_id")
     private UserEntity pairUserEntity;
 
+    @Comment("짝꿍 설정 시간")
+    @Column
+    private LocalDateTime pairUserSettingTime;
+
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TodoEntity> todoEntities = new ArrayList<>();
 
@@ -77,6 +82,9 @@ public class UserEntity extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DiaryEntity> diaryEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserNotificationSettingEntity> userNotificationSettingEntities = new ArrayList<>();
 
     public static UserEntity createUser(
             String userId,
@@ -138,5 +146,17 @@ public class UserEntity extends BaseTimeEntity {
 
     public void updatePairUserEntity(UserEntity userEntity) {
         this.pairUserEntity = userEntity;
+        this.pairUserSettingTime = LocalDateTime.now();
+    }
+
+    public void addUserNotificationSettingEntities(UserNotificationSettingEntity userNotificationSettingEntity) {
+        if (userNotificationSettingEntities != null) {
+            this.userNotificationSettingEntities.add(userNotificationSettingEntity);
+        }
+    }
+
+    public void deletePairUserEntity() {
+        this.pairUserEntity = null;
+        this.pairUserSettingTime = null;
     }
 }

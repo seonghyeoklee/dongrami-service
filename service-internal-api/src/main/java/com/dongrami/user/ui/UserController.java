@@ -4,12 +4,12 @@ import com.dongrami.common.ApiResponse;
 import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
 import com.dongrami.user.dto.request.RequestDeactivation;
-import com.dongrami.user.dto.request.RequestInviteCode;
+import com.dongrami.user.dto.request.RequestUpdateNotification;
 import com.dongrami.user.dto.request.RequestUpdateProfileInfo;
 import com.dongrami.user.dto.response.ResponseCountTodoAndDiary;
-import com.dongrami.user.dto.response.ResponseInviteCode;
 import com.dongrami.user.dto.response.ResponseProfileInfo;
 import com.dongrami.user.dto.response.ResponseUserInfo;
+import com.dongrami.user.dto.response.ResponseUserNotification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -89,23 +90,23 @@ public class UserController implements UserControllerInterface {
     }
 
     /**
-     * 짝꿍 초대코드 조회
+     * 알림 설정 조회
      */
-    @GetMapping("/users/invite")
-    public ResponseEntity<?> getInviteCode(@AuthenticationPrincipal User principal) {
-        String inviteCode = userService.getInviteCode(principal.getUsername());
+    @GetMapping("/users/notification")
+    public ResponseEntity<?> getNotification(@AuthenticationPrincipal User principal) {
+        List<ResponseUserNotification> responses = userService.getNotification(principal.getUsername());
 
         return ResponseEntity.ok(
-                ApiResponse.success(new ResponseInviteCode(inviteCode))
+                ApiResponse.success(responses)
         );
     }
 
     /**
-     * 짝꿍 초대코드 입력
+     * 알림 설정
      */
-    @PostMapping("/users/invite")
-    public ResponseEntity<?> updateInviteCode(@AuthenticationPrincipal User principal, @Valid @RequestBody RequestInviteCode request) {
-        userService.updateInviteCode(principal.getUsername(), request);
+    @PutMapping("/users/notification")
+    public ResponseEntity<?> updateNotification(@AuthenticationPrincipal User principal, @Valid @RequestBody RequestUpdateNotification request) {
+        userService.updateNotification(principal.getUsername(), request);
 
         return ResponseEntity.ok(
                 ApiResponse.success()
