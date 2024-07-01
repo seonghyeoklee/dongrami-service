@@ -10,7 +10,6 @@ import org.hibernate.annotations.Comment;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "todo")
@@ -57,8 +56,8 @@ public class TodoEntity extends BaseTimeEntity {
 
     @Comment("할일 작성자")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_todo_user"))
-    private UserEntity userEntity;
+    @JoinColumn(name = "author_user_id", foreignKey = @ForeignKey(name = "fk_todo_user"))
+    private UserEntity authorUserEntity;
 
     @Embedded
     private TodoEmojiEntities todoEmojiEntities;
@@ -66,7 +65,7 @@ public class TodoEntity extends BaseTimeEntity {
     @Embedded
     private TodoDeleteInfo todoDeleteInfo;
 
-    public static TodoEntity create(String content, String memo, LocalDateTime notificationDateTime, TodoStatus todoStatus, UserEntity userEntity) {
+    public static TodoEntity create(String content, String memo, LocalDateTime notificationDateTime, TodoStatus todoStatus, UserEntity authorUserEntity) {
         return TodoEntity.builder()
                 .content(content)
                 .memo(memo)
@@ -75,7 +74,7 @@ public class TodoEntity extends BaseTimeEntity {
                 .notificationDateTime(notificationDateTime)
                 .isPinned(false)
                 .pinnedDateTime(null)
-                .userEntity(userEntity)
+                .authorUserEntity(authorUserEntity)
                 .todoEmojiEntities(new TodoEmojiEntities())
                 .build();
     }
@@ -112,10 +111,6 @@ public class TodoEntity extends BaseTimeEntity {
 
     public void addTodoEmoji(TodoEmojiEntity todoEmojiEntity) {
         todoEmojiEntities.add(todoEmojiEntity);
-    }
-
-    public boolean isContainsUserIds(List<Long> userIds) {
-        return userIds.contains(userEntity.getId());
     }
 
     public boolean isDeleted() {

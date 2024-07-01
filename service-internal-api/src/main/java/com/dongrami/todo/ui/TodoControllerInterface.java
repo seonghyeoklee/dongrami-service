@@ -1,9 +1,9 @@
 package com.dongrami.todo.ui;
 
-import com.dongrami.todo.dto.request.RequestCreateTodoDto;
-import com.dongrami.todo.dto.request.RequestCreateTodoRememberDto;
-import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
-import com.dongrami.todo.dto.response.ResponseTodoDto;
+import com.dongrami.todo.dto.request.RequestCreateTodo;
+import com.dongrami.todo.dto.request.RequestCreateTodoRemember;
+import com.dongrami.todo.dto.request.RequestUpdateTodo;
+import com.dongrami.todo.dto.response.ResponseTodoDetail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,7 +34,7 @@ public interface TodoControllerInterface {
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공",
-                            content = @Content(schema = @Schema(implementation = ResponseTodoDto.class))),
+                            content = @Content(schema = @Schema(implementation = ResponseTodoDetail.class))),
             }
     )
     ResponseEntity<?> getTodoPage(@Parameter(hidden = true) User principal, @Parameter(hidden = true) Pageable pageable, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate);
@@ -43,7 +43,7 @@ public interface TodoControllerInterface {
             summary = "Todo 조회",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공",
-                            content = @Content(schema = @Schema(implementation = ResponseTodoDto.class))),
+                            content = @Content(schema = @Schema(implementation = ResponseTodoDetail.class))),
             }
     )
     ResponseEntity<?> getTodoById(@Parameter(hidden = true) User principal, @PathVariable Long id);
@@ -52,10 +52,10 @@ public interface TodoControllerInterface {
             summary = "Todo 생성",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공",
-                            content = @Content(schema = @Schema(implementation = ResponseTodoDto.class))),
+                            content = @Content(schema = @Schema(implementation = ResponseTodoDetail.class))),
             }
     )
-    ResponseEntity<?> createTodo(@Parameter(hidden = true) User principal, @ParameterObject @Valid @RequestBody RequestCreateTodoDto requestCreateTodoDto);
+    ResponseEntity<?> createTodo(@Parameter(hidden = true) User principal, @ParameterObject @Valid @RequestBody RequestCreateTodo request);
 
     @Operation(
             summary = "Todo 수정",
@@ -63,7 +63,7 @@ public interface TodoControllerInterface {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> updateTodo(@Parameter(hidden = true) User principal, @PathVariable Long id, @ParameterObject @Valid @RequestBody RequestUpdateTodoDto requestUpdateTodoDto);
+    ResponseEntity<?> updateTodo(@Parameter(hidden = true) User principal, @PathVariable Long id, @ParameterObject @Valid @RequestBody RequestUpdateTodo request);
 
     @Operation(
             summary = "Todo 삭제",
@@ -95,7 +95,7 @@ public interface TodoControllerInterface {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> createTodoRemember(@Parameter(hidden = true) User principal, @ParameterObject @Valid @RequestBody RequestCreateTodoRememberDto request);
+    ResponseEntity<?> createTodoRemember(@Parameter(hidden = true) User principal, @ParameterObject @Valid @RequestBody RequestCreateTodoRemember request);
 
     @Operation(
             summary = "Todo 상태 변경하기",
@@ -127,8 +127,6 @@ public interface TodoControllerInterface {
                     @ApiResponse(responseCode = "200", description = "성공"),
             }
     )
-    ResponseEntity<?> createTodoEmoji(@Parameter(hidden = true) User principal,
-                                      @PathVariable Long todoId,
-                                      @PathVariable Long emojiId);
+    ResponseEntity<?> createTodoEmoji(@Parameter(hidden = true) User principal, @PathVariable Long todoId, @PathVariable Long emojiId);
 
 }

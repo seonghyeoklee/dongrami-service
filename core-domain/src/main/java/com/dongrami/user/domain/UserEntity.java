@@ -66,6 +66,7 @@ public class UserEntity extends BaseTimeEntity {
     private ProfileInfo profileInfo;
 
     @Comment("짝꿍")
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pair_user_id")
     private UserEntity pairUserEntity;
@@ -74,7 +75,7 @@ public class UserEntity extends BaseTimeEntity {
     @Column
     private LocalDateTime pairUserSettingTime;
 
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "authorUserEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TodoEntity> todoEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -147,6 +148,7 @@ public class UserEntity extends BaseTimeEntity {
     public void updatePairUserEntity(UserEntity userEntity) {
         this.pairUserEntity = userEntity;
         this.pairUserSettingTime = LocalDateTime.now();
+        userEntity.setPairUserEntity(this);
     }
 
     public void addUserNotificationSettingEntities(UserNotificationSettingEntity userNotificationSettingEntity) {
@@ -158,5 +160,9 @@ public class UserEntity extends BaseTimeEntity {
     public void deletePairUserEntity() {
         this.pairUserEntity = null;
         this.pairUserSettingTime = null;
+    }
+
+    public boolean isTodoAuthorization(UserEntity userEntity) {
+        return this.equals(userEntity) || this.equals(userEntity.getPairUserEntity());
     }
 }

@@ -1,13 +1,13 @@
-package com.dongrami.todo.dto;
+package com.dongrami.todo.dto.response;
 
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoStatus;
+import com.dongrami.user.dto.response.ResponseUserInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public record TodoDto(
+public record ResponseTodoDetail(
         @Schema(description = "PK")
         Long id,
 
@@ -20,17 +20,17 @@ public record TodoDto(
         @Schema(description = "할 일 상태")
         TodoStatus todoStatus,
 
-        @Schema(description = "할 일 날짜")
-        LocalDate todoDate,
-
         @Schema(description = "알림 시간")
         LocalDateTime notificationDateTime,
 
         @Schema(description = "핀 설정 여부")
-        boolean isPinned,
+        Boolean isPinned,
 
         @Schema(description = "핀 설정 시간")
         LocalDateTime pinnedDateTime,
+
+        @Schema(description = "작성자 정보")
+        ResponseUserInfo writerInfo,
 
         @Schema(description = "생성 시간")
         LocalDateTime createdDateTime,
@@ -38,16 +38,16 @@ public record TodoDto(
         @Schema(description = "수정 시간")
         LocalDateTime updatedDateTime
 ) {
-    public static TodoDto of(TodoEntity todoEntity) {
-        return new TodoDto(
+    public static ResponseTodoDetail of(TodoEntity todoEntity) {
+        return new ResponseTodoDetail(
                 todoEntity.getId(),
                 todoEntity.getContent(),
                 todoEntity.getMemo(),
                 todoEntity.getTodoStatus(),
-                todoEntity.getTodoDate(),
                 todoEntity.getNotificationDateTime(),
                 todoEntity.isPinned(),
                 todoEntity.getPinnedDateTime(),
+                ResponseUserInfo.of(todoEntity.getAuthorUserEntity()),
                 todoEntity.getCreatedDateTime(),
                 todoEntity.getUpdatedDateTime()
         );

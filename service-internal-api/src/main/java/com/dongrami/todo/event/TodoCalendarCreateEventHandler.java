@@ -32,7 +32,7 @@ public class TodoCalendarCreateEventHandler {
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
         Optional<CalendarEntity> optionalCalendarEntity = calendarRepository.findByUserEntityAndCalendarDate(
-                todoEntity.getUserEntity(),
+                todoEntity.getAuthorUserEntity(),
                 todoEntity.getTodoDate()
         );
 
@@ -47,7 +47,7 @@ public class TodoCalendarCreateEventHandler {
     private void createCalendar(TodoEntity todoEntity) {
         CalendarEntity calendarEntity = CalendarEntity.builder()
                 .todoEntity(todoEntity)
-                .userEntity(todoEntity.getUserEntity())
+                .userEntity(todoEntity.getAuthorUserEntity())
                 .diaryEntity(null)
                 .calendarDate(todoEntity.getTodoDate())
                 .build();

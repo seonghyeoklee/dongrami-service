@@ -3,11 +3,11 @@ package com.dongrami.todo.ui;
 import com.dongrami.common.ApiResponse;
 import com.dongrami.todo.application.TodoReadService;
 import com.dongrami.todo.application.TodoWriteService;
-import com.dongrami.todo.dto.request.RequestCreateTodoDto;
-import com.dongrami.todo.dto.request.RequestCreateTodoRememberDto;
-import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
-import com.dongrami.todo.dto.response.ResponseTodoAchievementRateDto;
-import com.dongrami.todo.dto.response.ResponseTodoDto;
+import com.dongrami.todo.dto.request.RequestCreateTodo;
+import com.dongrami.todo.dto.request.RequestCreateTodoRemember;
+import com.dongrami.todo.dto.request.RequestUpdateTodo;
+import com.dongrami.todo.dto.response.ResponseTodoAchievementRate;
+import com.dongrami.todo.dto.response.ResponseTodoDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,11 +28,14 @@ public class TodoController implements TodoControllerInterface {
     private final TodoWriteService todoWriteService;
     private final TodoReadService todoReadService;
 
+    /**
+     * 할일 목록 조회 (페이징)
+     */
     @GetMapping("/todos")
     public ResponseEntity<?> getTodoPage(@AuthenticationPrincipal User principal,
                                          Pageable pageable,
                                          @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate) {
-        Page<ResponseTodoDto> responses = todoReadService.getTodoPageByCurrentDate(principal.getUsername(), pageable, currentDate);
+        Page<ResponseTodoDetail> responses = todoReadService.getTodoPageByCurrentDate(principal.getUsername(), pageable, currentDate);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(responses)
@@ -41,7 +44,7 @@ public class TodoController implements TodoControllerInterface {
 
     @GetMapping("/todos/{todoId}")
     public ResponseEntity<?> getTodoById(@AuthenticationPrincipal User principal, @PathVariable Long todoId) {
-        ResponseTodoDto response = todoReadService.getTodoById(principal.getUsername(), todoId);
+        ResponseTodoDetail response = todoReadService.getTodoById(principal.getUsername(), todoId);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(response)
@@ -50,8 +53,8 @@ public class TodoController implements TodoControllerInterface {
 
     @PostMapping("/todos")
     public ResponseEntity<?> createTodo(@AuthenticationPrincipal User principal,
-                                        @Valid @RequestBody RequestCreateTodoDto request) {
-        ResponseTodoDto response = todoWriteService.createTodo(principal.getUsername(), request);
+                                        @Valid @RequestBody RequestCreateTodo request) {
+        ResponseTodoDetail response = todoWriteService.createTodo(principal.getUsername(), request);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(response)
@@ -61,7 +64,7 @@ public class TodoController implements TodoControllerInterface {
     @PutMapping("/todos/{todoId}")
     public ResponseEntity<?> updateTodo(@AuthenticationPrincipal User principal,
                                         @PathVariable Long todoId,
-                                        @Valid @RequestBody RequestUpdateTodoDto request) {
+                                        @Valid @RequestBody RequestUpdateTodo request) {
         todoWriteService.updateTodo(principal.getUsername(), todoId, request);
 
         return ResponseEntity.ok().body(
@@ -81,16 +84,16 @@ public class TodoController implements TodoControllerInterface {
     @GetMapping("/todos/achievement-rate")
     public ResponseEntity<?> getTodoAchievementRate(@AuthenticationPrincipal User principal,
                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate) {
-        int achievementRate = todoReadService.getTodoAchievementRate(principal.getUsername(), currentDate);
+        double achievementRate = todoReadService.getTodoAchievementRate(principal.getUsername(), currentDate);
 
         return ResponseEntity.ok().body(
-                ApiResponse.success(ResponseTodoAchievementRateDto.from(achievementRate))
+                ApiResponse.success(ResponseTodoAchievementRate.of(achievementRate))
         );
     }
 
     @GetMapping("/todos/remember")
     public ResponseEntity<?> getTodoRemember(@AuthenticationPrincipal User principal) {
-        List<ResponseTodoDto> responses = todoReadService.getTodoRemember(principal.getUsername());
+        List<ResponseTodoDetail> responses = todoReadService.getTodoRemember(principal.getUsername());
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(responses)
@@ -99,9 +102,9 @@ public class TodoController implements TodoControllerInterface {
 
     @PostMapping("/todos/remember")
     public ResponseEntity<?> createTodoRemember(@AuthenticationPrincipal User principal,
-                                                @Valid @RequestBody RequestCreateTodoRememberDto request
+                                                @Valid @RequestBody RequestCreateTodoRemember request
     ) {
-        todoWriteService.createTodoRemember(principal.getUsername(), request.getTodoId());
+        todoWriteService.createTodoRemember(principal.getUsername(), request.todoId());
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()

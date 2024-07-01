@@ -2,6 +2,7 @@ package com.dongrami.todo.repository.support;
 
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoStatus;
+import com.dongrami.user.domain.UserEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -17,21 +18,20 @@ import static com.dongrami.todo.domain.QTodoEntity.todoEntity;
 
 @RequiredArgsConstructor
 public class TodoRepositoryImpl implements TodoRepositorySupport {
-
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<TodoEntity> findTodoPageByCurrentDate(Pageable pageable, LocalDate currentDate, List<Long> userIds) {
+    public Page<TodoEntity> findTodoPageByCurrentDate(Pageable pageable, LocalDate currentDate, UserEntity userEntity) {
         int totalCount = queryFactory
                 .select(todoEntity)
                 .from(todoEntity)
-                .where(searchByBuilder(currentDate, userIds))
+                .where(searchByBuilder(currentDate, userEntity))
                 .fetch().size();
 
         JPAQuery<TodoEntity> query = queryFactory
                 .select(todoEntity)
                 .from(todoEntity)
-                .where(searchByBuilder(currentDate, userIds))
+                .where(searchByBuilder(currentDate, userEntity))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(todoEntity.pinnedDateTime.desc())
@@ -41,18 +41,18 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
     }
 
     @Override
-    public List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(LocalDate currentDate, List<Long> userIds) {
+    public List<TodoEntity> findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(LocalDate currentDate, UserEntity userEntity) {
         return queryFactory
                 .selectFrom(todoEntity)
                 .where(
-                        todoEntity.userEntity.id.in(userIds)
+                        todoEntity.userEntity.in(userEntity, userEntity.getPairUserEntity())
                                 .and(todoEntity.todoDate.eq(currentDate))
                                 .and(todoEntity.todoStatus.ne(TodoStatus.DELETED))
                 )
                 .fetch();
     }
 
-    private BooleanBuilder searchByBuilder(LocalDate currentDate, List<Long> userIds) {
+    private BooleanBuilder searchByBuilder(LocalDate currentDate, UserEntity userEntity) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(todoEntity.todoStatus.ne(TodoStatus.DELETED));
 
@@ -60,11 +60,10 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
             builder.and(todoEntity.todoDate.eq(currentDate));
         }
 
-        if (userIds != null && !userIds.isEmpty()) {
-            builder.and(todoEntity.userEntity.id.in(userIds));
+        if (userEntity != null) {
+            builder.and(todoEntity.userEntity.in(userEntity, userEntity.getPairUserEntity()));
         }
 
         return builder;
     }
-
 }

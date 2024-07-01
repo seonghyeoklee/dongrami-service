@@ -29,9 +29,4 @@ public class TodoRememberEntity extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_todo_remember_user"))
     private UserEntity userEntity;
-
-    @Comment("삭제 여부")
-    @Column
-    private boolean isDeleted;
-
 }

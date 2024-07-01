@@ -9,9 +9,9 @@ import com.dongrami.todo.domain.TodoEmojiEntity;
 import com.dongrami.todo.domain.TodoEntity;
 import com.dongrami.todo.domain.TodoRememberEntity;
 import com.dongrami.todo.domain.TodoStatus;
-import com.dongrami.todo.dto.request.RequestCreateTodoDto;
-import com.dongrami.todo.dto.request.RequestUpdateTodoDto;
-import com.dongrami.todo.dto.response.ResponseTodoDto;
+import com.dongrami.todo.dto.request.RequestCreateTodo;
+import com.dongrami.todo.dto.request.RequestUpdateTodo;
+import com.dongrami.todo.dto.response.ResponseTodoDetail;
 import com.dongrami.todo.event.TodoCalendarCreateEvent;
 import com.dongrami.todo.repository.TodoRememberRepository;
 import com.dongrami.todo.repository.TodoRepository;
@@ -24,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -36,13 +34,13 @@ public class TodoWriteService {
     private final TodoRememberRepository todoRememberRepository;
     private final EmojiRepository emojiRepository;
 
-    public ResponseTodoDto createTodo(String userUniqueId, RequestCreateTodoDto request) {
+    public ResponseTodoDetail createTodo(String userUniqueId, RequestCreateTodo request) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = TodoEntity.create(
-                request.getContent(),
-                request.getMemo(),
-                request.getNotificationDateTime(),
+                request.content(),
+                request.memo(),
+                request.notificationDateTime(),
                 TodoStatus.NOT_COMPLETED,
                 userEntity
         );
@@ -51,10 +49,10 @@ public class TodoWriteService {
 
         Events.publish(new TodoCalendarCreateEvent(savedTodoEntity.getId()));
 
-        return ResponseTodoDto.from(savedTodoEntity);
+        return ResponseTodoDetail.of(savedTodoEntity);
     }
 
-    public void updateTodo(String userUniqueId, Long todoId, RequestUpdateTodoDto request) {
+    public void updateTodo(String userUniqueId, Long todoId, RequestUpdateTodo request) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
@@ -64,13 +62,13 @@ public class TodoWriteService {
             throw new BaseException(ErrorCode.TODO_ALREADY_DELETED_CANNOT_UPDATE);
         }
 
-        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
+        if (!userEntity.isTodoAuthorization(todoEntity.getAuthorUserEntity())) {
             throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
 
         todoEntity.update(
-                request.getContent(),
-                request.getTodoStatus()
+                request.content(),
+                request.todoStatus()
         );
     }
 
@@ -80,7 +78,7 @@ public class TodoWriteService {
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
-        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
+        if (!userEntity.isTodoAuthorization(todoEntity.getAuthorUserEntity())) {
             throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
 
@@ -96,7 +94,6 @@ public class TodoWriteService {
         TodoRememberEntity todoRememberEntity = TodoRememberEntity.builder()
                 .userEntity(userEntity)
                 .todoEntity(todoEntity)
-                .isDeleted(false)
                 .build();
 
         todoRememberRepository.save(todoRememberEntity);
@@ -108,7 +105,7 @@ public class TodoWriteService {
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
-        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
+        if (!userEntity.isTodoAuthorization(todoEntity.getAuthorUserEntity())) {
             throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
 
@@ -121,7 +118,7 @@ public class TodoWriteService {
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
-        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
+        if (!userEntity.isTodoAuthorization(todoEntity.getAuthorUserEntity())) {
             throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
 
@@ -134,7 +131,7 @@ public class TodoWriteService {
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
-        if (!todoEntity.isContainsUserIds(getUserIds(userEntity))) {
+        if (!userEntity.isTodoAuthorization(todoEntity.getAuthorUserEntity())) {
             throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
 
@@ -148,7 +145,7 @@ public class TodoWriteService {
                 .notificationDateTime(notificationDateTime)
                 .isPinned(todoEntity.isPinned())
                 .pinnedDateTime(LocalDateTime.now())
-                .userEntity(userEntity)
+                .authorUserEntity(userEntity)
                 .build();
 
         todoRepository.save(copyTodoEntity);
@@ -181,10 +178,4 @@ public class TodoWriteService {
 
         todoEntity.addTodoEmoji(todoEmojiEntity);
     }
-
-    private List<Long> getUserIds(UserEntity userEntity) {
-        UserEntity pairUserEntity = userEntity.getPairUserEntity();
-        return List.of(Objects.requireNonNullElse(pairUserEntity, userEntity).getId());
-    }
-
 }
