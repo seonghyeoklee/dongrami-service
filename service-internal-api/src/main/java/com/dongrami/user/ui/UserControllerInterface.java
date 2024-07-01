@@ -2,11 +2,9 @@ package com.dongrami.user.ui;
 
 import com.dongrami.user.dto.request.RequestDeactivation;
 import com.dongrami.user.dto.request.RequestInviteCode;
+import com.dongrami.user.dto.request.RequestUpdateNotification;
 import com.dongrami.user.dto.request.RequestUpdateProfileInfo;
-import com.dongrami.user.dto.response.ResponseCountTodoAndDiary;
-import com.dongrami.user.dto.response.ResponseInviteCode;
-import com.dongrami.user.dto.response.ResponseProfileInfo;
-import com.dongrami.user.dto.response.ResponseUserInfo;
+import com.dongrami.user.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -97,4 +95,23 @@ public interface UserControllerInterface {
             }
     )
     ResponseEntity<?> updateInviteCode(@Parameter(hidden = true) User principal, @Valid @RequestBody RequestInviteCode request);
+
+    @Operation(
+            summary = "알림 설정 조회 API",
+            description = "사용자의 알림을 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공",
+                            content = @Content(schema = @Schema(implementation = ResponseUserNotification.class))),
+            }
+    )
+    ResponseEntity<?> getNotification(@Parameter(hidden = true) User principal);
+
+    @Operation(
+            summary = "알림 설정 API",
+            description = "사용자의 알림을 설정합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+            }
+    )
+    ResponseEntity<?> updateNotification(@Parameter(hidden = true) User principal, @Valid @RequestBody RequestUpdateNotification request);
 }

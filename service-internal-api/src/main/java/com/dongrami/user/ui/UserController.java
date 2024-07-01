@@ -5,11 +5,9 @@ import com.dongrami.user.application.UserService;
 import com.dongrami.user.domain.UserEntity;
 import com.dongrami.user.dto.request.RequestDeactivation;
 import com.dongrami.user.dto.request.RequestInviteCode;
+import com.dongrami.user.dto.request.RequestUpdateNotification;
 import com.dongrami.user.dto.request.RequestUpdateProfileInfo;
-import com.dongrami.user.dto.response.ResponseCountTodoAndDiary;
-import com.dongrami.user.dto.response.ResponseInviteCode;
-import com.dongrami.user.dto.response.ResponseProfileInfo;
-import com.dongrami.user.dto.response.ResponseUserInfo;
+import com.dongrami.user.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +15,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -106,6 +105,30 @@ public class UserController implements UserControllerInterface {
     @PostMapping("/users/invite")
     public ResponseEntity<?> updateInviteCode(@AuthenticationPrincipal User principal, @Valid @RequestBody RequestInviteCode request) {
         userService.updateInviteCode(principal.getUsername(), request);
+
+        return ResponseEntity.ok(
+                ApiResponse.success()
+        );
+    }
+
+    /**
+     * 알림 설정 조회
+     */
+    @GetMapping("/users/notification")
+    public ResponseEntity<?> getNotification(@AuthenticationPrincipal User principal) {
+        List<ResponseUserNotification> responses = userService.getNotification(principal.getUsername());
+
+        return ResponseEntity.ok(
+                ApiResponse.success(responses)
+        );
+    }
+
+    /**
+     * 알림 설정
+     */
+    @PutMapping("/users/notification")
+    public ResponseEntity<?> updateNotification(@AuthenticationPrincipal User principal, @Valid @RequestBody RequestUpdateNotification request) {
+        userService.updateNotification(principal.getUsername(), request);
 
         return ResponseEntity.ok(
                 ApiResponse.success()

@@ -78,6 +78,9 @@ public class UserEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DiaryEntity> diaryEntities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserNotificationSettingEntity> userNotificationSettingEntities = new ArrayList<>();
+
     public static UserEntity createUser(
             String userId,
             String username,
@@ -138,5 +141,11 @@ public class UserEntity extends BaseTimeEntity {
 
     public void updatePairUserEntity(UserEntity userEntity) {
         this.pairUserEntity = userEntity;
+    }
+
+    public void addUserNotificationSettingEntities(UserNotificationSettingEntity userNotificationSettingEntity) {
+        if (userNotificationSettingEntities != null) {
+            this.userNotificationSettingEntities.add(userNotificationSettingEntity);
+        }
     }
 }
