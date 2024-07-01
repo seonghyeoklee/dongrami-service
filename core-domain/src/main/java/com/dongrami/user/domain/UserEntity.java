@@ -154,4 +154,9 @@ public class UserEntity extends BaseTimeEntity {
             this.userNotificationSettingEntities.add(userNotificationSettingEntity);
         }
     }
+
+    public void deletePairUserEntity() {
+        this.pairUserEntity = null;
+        this.pairUserSettingTime = null;
+    }
 }

@@ -1,10 +1,12 @@
 package com.dongrami.user.ui;
 
 import com.dongrami.user.dto.request.RequestDeactivation;
-import com.dongrami.user.dto.request.RequestInviteCode;
 import com.dongrami.user.dto.request.RequestUpdateNotification;
 import com.dongrami.user.dto.request.RequestUpdateProfileInfo;
-import com.dongrami.user.dto.response.*;
+import com.dongrami.user.dto.response.ResponseCountTodoAndDiary;
+import com.dongrami.user.dto.response.ResponseProfileInfo;
+import com.dongrami.user.dto.response.ResponseUserInfo;
+import com.dongrami.user.dto.response.ResponseUserNotification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -76,35 +78,6 @@ public interface UserControllerInterface {
             }
     )
     ResponseEntity<?> countTodoAndDiary(@Parameter(hidden = true) User principal);
-
-    @Operation(
-            summary = "짝꿍 초대 코드 조회 API",
-            description = "짝꿍 초대 코드를 조회합니다.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "성공",
-                            content = @Content(schema = @Schema(implementation = ResponseInviteCode.class))),
-            }
-    )
-    ResponseEntity<?> getInviteCode(@Parameter(hidden = true) User principal);
-
-    @Operation(
-            summary = "짝꿍 초대 코드 입력 API",
-            description = "짝꿍 초대 코드를 입력합니다.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-            }
-    )
-    ResponseEntity<?> updateInviteCode(@Parameter(hidden = true) User principal, @Valid @RequestBody RequestInviteCode request);
-
-    @Operation(
-            summary = "짝꿍 정보 조회 API",
-            description = "짝꿍 정보를 조회합니다.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "성공",
-                            content = @Content(schema = @Schema(implementation = ResponsePairUserInfo.class))),
-            }
-    )
-    ResponseEntity<?> getPairUserInfo(@Parameter(hidden = true) User principal);
 
     @Operation(
             summary = "알림 설정 조회 API",

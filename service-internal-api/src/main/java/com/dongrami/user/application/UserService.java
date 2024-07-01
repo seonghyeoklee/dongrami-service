@@ -135,4 +135,10 @@ public class UserService {
                 userEntity.getPairUserSettingTime()
         );
     }
+
+    public void deletePairUser(String userUniqueId) {
+        UserEntity userEntity = getUserByUserUniqueId(userUniqueId);
+
+        userEntity.deletePairUserEntity();
+    }
 }
