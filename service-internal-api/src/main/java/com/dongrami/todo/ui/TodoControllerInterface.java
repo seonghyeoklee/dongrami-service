@@ -128,5 +128,4 @@ public interface TodoControllerInterface {
             }
     )
     ResponseEntity<?> createTodoEmoji(@Parameter(hidden = true) User principal, @PathVariable Long todoId, @PathVariable Long emojiId);
-
 }

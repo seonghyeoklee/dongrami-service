@@ -42,6 +42,9 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
+    /**
+     * 할일 조회
+     */
     @GetMapping("/todos/{todoId}")
     public ResponseEntity<?> getTodoById(@AuthenticationPrincipal User principal, @PathVariable Long todoId) {
         ResponseTodoDetail response = todoReadService.getTodoById(principal.getUsername(), todoId);
@@ -51,6 +54,9 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
+    /**
+     * 할일 생성
+     */
     @PostMapping("/todos")
     public ResponseEntity<?> createTodo(@AuthenticationPrincipal User principal,
                                         @Valid @RequestBody RequestCreateTodo request) {
@@ -61,6 +67,9 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
+    /**
+     * 할일 수정
+     */
     @PutMapping("/todos/{todoId}")
     public ResponseEntity<?> updateTodo(@AuthenticationPrincipal User principal,
                                         @PathVariable Long todoId,
@@ -72,25 +81,34 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
-    @PatchMapping("/todos/{id}")
-    public ResponseEntity<?> deleteTodo(@AuthenticationPrincipal User principal, @PathVariable Long id) {
-        todoWriteService.deleteTodo(principal.getUsername(), id);
+    /**
+     * 할일 삭제
+     */
+    @DeleteMapping("/todos/{todoId}")
+    public ResponseEntity<?> deleteTodo(@AuthenticationPrincipal User principal, @PathVariable Long todoId) {
+        todoWriteService.deleteTodo(principal.getUsername(), todoId);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success()
         );
     }
 
+    /**
+     * 할일 달성률 조회
+     */
     @GetMapping("/todos/achievement-rate")
     public ResponseEntity<?> getTodoAchievementRate(@AuthenticationPrincipal User principal,
                                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate) {
-        double achievementRate = todoReadService.getTodoAchievementRate(principal.getUsername(), currentDate);
+        int achievementRate = todoReadService.getTodoAchievementRate(principal.getUsername(), currentDate);
 
         return ResponseEntity.ok().body(
                 ApiResponse.success(ResponseTodoAchievementRate.of(achievementRate))
         );
     }
 
+    /**
+     * 저장된 할일 조회
+     */
     @GetMapping("/todos/remember")
     public ResponseEntity<?> getTodoRemember(@AuthenticationPrincipal User principal) {
         List<ResponseTodoDetail> responses = todoReadService.getTodoRemember(principal.getUsername());
@@ -100,6 +118,9 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
+    /**
+     * 할일 저장하기
+     */
     @PostMapping("/todos/remember")
     public ResponseEntity<?> createTodoRemember(@AuthenticationPrincipal User principal,
                                                 @Valid @RequestBody RequestCreateTodoRemember request
@@ -111,7 +132,10 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
-    @PatchMapping("/todos/{todoId}/completed")
+    /**
+     * 할일 완료 상태 변경
+     */
+    @PutMapping("/todos/{todoId}/completed")
     public ResponseEntity<?> changeTodoStatus(@AuthenticationPrincipal User principal,
                                               @PathVariable Long todoId) {
         todoWriteService.changeTodoStatus(principal.getUsername(), todoId);
@@ -121,7 +145,10 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
-    @PatchMapping("/todos/{todoId}/pinned")
+    /**
+     * 할일 고정 상태 변경
+     */
+    @PutMapping("/todos/{todoId}/pinned")
     public ResponseEntity<?> changeTodoPinned(@AuthenticationPrincipal User principal,
                                               @PathVariable Long todoId,
                                               @RequestParam boolean isPinned) {
@@ -132,6 +159,9 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
+    /**
+     * 할일 내일로 복사
+     */
     @PostMapping("/todos/{todoId}/tomorrow")
     public ResponseEntity<?> copyTodoToNextDay(@AuthenticationPrincipal User principal,
                                                @PathVariable Long todoId) {
@@ -142,6 +172,9 @@ public class TodoController implements TodoControllerInterface {
         );
     }
 
+    /**
+     * 할일 이모지 반응 추가
+     */
     @PostMapping("/todos/{todoId}/emoji/{emojiId}")
     public ResponseEntity<?> createTodoEmoji(@AuthenticationPrincipal User principal,
                                              @PathVariable Long todoId,
@@ -153,5 +186,4 @@ public class TodoController implements TodoControllerInterface {
                 ApiResponse.success()
         );
     }
-
 }

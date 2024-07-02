@@ -93,7 +93,7 @@ public class TodoEntity extends BaseTimeEntity {
             throw new BaseException(ErrorCode.TODO_ALREADY_DELETED);
         }
         this.todoStatus = TodoStatus.DELETED;
-        this.todoDeleteInfo = new TodoDeleteInfo(deletedUserEntity);
+        this.todoDeleteInfo = TodoDeleteInfo.of(deletedUserEntity);
     }
 
     public void changeTodoStatus() {

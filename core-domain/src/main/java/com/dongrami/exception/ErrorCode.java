@@ -39,7 +39,12 @@ public enum ErrorCode {
     TODO_ALREADY_COMPLETED_CANNOT_UPDATE(400, "TD003", "이미 완료된 할 일은 수정이 불가능합니다."),
     TODO_ALREADY_DELETED(400, "TD004", "이미 삭제된 할 일입니다."),
     TODO_INVALID_AUTHORIZATION(400, "TD005", "해당 할 일에 권한이 없습니다."),
-
+    TODO_ALREADY_DELETED_CANNOT_REMEMBER(400, "TD006", "이미 삭제된 할 일은 기억하기가 불가능합니다."),
+    TODO_ALREADY_DELETED_CANNOT_CHANGE_STATUS(400, "TD007", "이미 삭제된 할 일은 상태 변경이 불가능합니다."),
+    TODO_ALREADY_DELETED_CANNOT_COPY_TO_NEXT_DAY(400, "TD008", "이미 삭제된 할 일은 내일하기 기능이 불가능합니다."),
+    TODO_ALREADY_DELETED_CANNOT_PINNED(400, "TD009", "이미 삭제된 할 일은 핀하기 기능이 불가능합니다."),
+    TODO_ALREADY_DELETED_CANNOT_EMOJI(400, "TD010", "이미 삭제된 할 일은 이모지 추가가 불가능합니다."),
+    TODO_ALREADY_DELETED_CANNOT_DELETE(400, "TD011", "이미 삭제된 할 일은 삭제가 불가능합니다."),
     DELETE_USER_NOT_NULL(400, "DU001", "삭제 사용자는 null이 될 수 없습니다."),
 
     // 일기
@@ -65,9 +70,10 @@ public enum ErrorCode {
     PAIR_USER_NOT_EXIST(400, "PU002", "짝꿍이 존재하지 않습니다."),
 
     // 알림
-    NOTIFICATION_SETTING_NOT_FOUND(400, "NT001", "알림이 존재하지 않습니다."),;
+    NOTIFICATION_SETTING_NOT_FOUND(400, "NT001", "알림이 존재하지 않습니다."),
+    ;
 
     private final int status;
     private final String code;
     private final String message;
-    }
+}

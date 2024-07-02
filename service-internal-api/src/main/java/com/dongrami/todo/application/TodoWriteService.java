@@ -78,6 +78,10 @@ public class TodoWriteService {
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
+        if (todoEntity.isDeleted()) {
+            throw new BaseException(ErrorCode.TODO_ALREADY_DELETED_CANNOT_DELETE);
+        }
+
         if (!userEntity.isTodoAuthorization(todoEntity.getAuthorUserEntity())) {
             throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
@@ -90,6 +94,10 @@ public class TodoWriteService {
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
+
+        if (todoEntity.isDeleted()) {
+            throw new BaseException(ErrorCode.TODO_ALREADY_DELETED_CANNOT_REMEMBER);
+        }
 
         TodoRememberEntity todoRememberEntity = TodoRememberEntity.builder()
                 .userEntity(userEntity)
@@ -105,6 +113,10 @@ public class TodoWriteService {
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
+        if (todoEntity.isDeleted()) {
+            throw new BaseException(ErrorCode.TODO_ALREADY_DELETED_CANNOT_CHANGE_STATUS);
+        }
+
         if (!userEntity.isTodoAuthorization(todoEntity.getAuthorUserEntity())) {
             throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
@@ -118,6 +130,10 @@ public class TodoWriteService {
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
 
+        if (todoEntity.isDeleted()) {
+            throw new BaseException(ErrorCode.TODO_ALREADY_DELETED_CANNOT_PINNED);
+        }
+
         if (!userEntity.isTodoAuthorization(todoEntity.getAuthorUserEntity())) {
             throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
         }
@@ -130,6 +146,10 @@ public class TodoWriteService {
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
+
+        if (todoEntity.isDeleted()) {
+            throw new BaseException(ErrorCode.TODO_ALREADY_DELETED_CANNOT_COPY_TO_NEXT_DAY);
+        }
 
         if (!userEntity.isTodoAuthorization(todoEntity.getAuthorUserEntity())) {
             throw new BaseException(ErrorCode.TODO_INVALID_AUTHORIZATION);
@@ -166,6 +186,10 @@ public class TodoWriteService {
 
         TodoEntity todoEntity = todoRepository.findById(todoId)
                 .orElseThrow(() -> new BaseException(ErrorCode.TODO_NOT_EXIST));
+
+        if (todoEntity.isDeleted()) {
+            throw new BaseException(ErrorCode.TODO_ALREADY_DELETED_CANNOT_EMOJI);
+        }
 
         EmojiEntity emojiEntity = emojiRepository.findById(emojiId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NO_CONTENT));

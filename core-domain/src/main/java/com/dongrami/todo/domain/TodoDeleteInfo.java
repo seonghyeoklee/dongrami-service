@@ -31,10 +31,13 @@ public class TodoDeleteInfo {
         this.deletedUserEntity = deletedUserEntity;
     }
 
+    public static TodoDeleteInfo of(UserEntity deletedUserEntity) {
+        return new TodoDeleteInfo(deletedUserEntity);
+    }
+
     private void validateDeletedUserEntity(UserEntity deletedUserEntity) {
         if (deletedUserEntity == null) {
             throw new BaseException(ErrorCode.DELETE_USER_NOT_NULL);
         }
     }
-
 }

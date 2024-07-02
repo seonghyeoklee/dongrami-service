@@ -45,7 +45,7 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
         return queryFactory
                 .selectFrom(todoEntity)
                 .where(
-                        todoEntity.userEntity.in(userEntity, userEntity.getPairUserEntity())
+                        todoEntity.authorUserEntity.in(userEntity, userEntity.getPairUserEntity())
                                 .and(todoEntity.todoDate.eq(currentDate))
                                 .and(todoEntity.todoStatus.ne(TodoStatus.DELETED))
                 )
@@ -61,7 +61,7 @@ public class TodoRepositoryImpl implements TodoRepositorySupport {
         }
 
         if (userEntity != null) {
-            builder.and(todoEntity.userEntity.in(userEntity, userEntity.getPairUserEntity()));
+            builder.and(todoEntity.authorUserEntity.in(userEntity, userEntity.getPairUserEntity()));
         }
 
         return builder;

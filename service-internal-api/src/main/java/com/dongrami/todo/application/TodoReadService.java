@@ -48,7 +48,7 @@ public class TodoReadService {
         return todoRepository.findTodoPageByCurrentDate(pageable, currentDate, userEntity).map(ResponseTodoDetail::of);
     }
 
-    public double getTodoAchievementRate(String userUniqueId, LocalDate currentDate) {
+    public int getTodoAchievementRate(String userUniqueId, LocalDate currentDate) {
         UserEntity userEntity = userService.getUserByUserUniqueId(userUniqueId);
 
         List<TodoEntity> todoEntities = todoRepository.findByUserEntityAndCreatedDateTimeAndIsDeletedFalse(currentDate, userEntity);
@@ -57,7 +57,7 @@ public class TodoReadService {
                 .filter(TodoEntity::isCompleted)
                 .count();
 
-        return Math.ceil((double) completedTodoCount / todoEntities.size() * 100);
+        return (int) Math.ceil((double) completedTodoCount / todoEntities.size() * 100);
     }
 
     public List<ResponseTodoDetail> getTodoRemember(String username) {
